@@ -21,17 +21,7 @@
                     "exists": true,
                     "type": "string",
                     "format": "file-path",
-                    "schema": "assets/schema_raw_input.json"
-                },
-                "bids": {
-                    "mimetype": "text/csv",
-                    "description": "Path to comma-separated file containing information about the input bids databases.",
-                    "help_text": "List of BIDS databases to load. See `assets/samplesheet_bids.csv`.",
-                    "fa_icon": "fas fa-folder-open",
-                    "exists": true,
-                    "type": "string",
-                    "format": "file-path",
-                    "schema": "assets/schema_bids_input.json"
+                    "schema": "assets/schema_input.json"
                 },
                 "bids_config": {
                     "type": "string",
@@ -41,6 +31,14 @@
                     "pattern": "^\\S+\\.json$",
                     "format": "file-path",
                     "mimetype": "text/json"
+                },
+                "fsbids": {
+                    "type": "string",
+                    "description": "Freesurfer BIDS derivative to use to load segmentations and parcellations.",
+                    "format": "directory-path",
+                    "help_text": "Freesurfer BIDS derivative to use to load segmentations and parcellations.",
+                    "fa_icon": "fas fa-folder-open",
+                    "mimetype": "text/plain"
                 },
                 "bidsignore": {
                     "type": "string",

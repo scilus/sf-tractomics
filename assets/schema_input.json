@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://raw.githubusercontent.com/AlexVCaron/nf-tractoflow/master/assets/schema_raw_input.json",
+    "$id": "https://raw.githubusercontent.com/scilus/nf-tractoflow/master/assets/schema_input.json",
     "title": "nf-tractoflow pipeline - params.input schema",
     "description": "Schema for the file provided with params.input",
     "type": "array",
