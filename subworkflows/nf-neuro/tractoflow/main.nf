@@ -2,12 +2,10 @@
 // PREPROCESSING
 include {   PREPROC_DWI                                               } from '../preproc_dwi/main'
 include {   PREPROC_T1                                                } from '../preproc_t1/main'
-include {   RECONST_DTIMETRICS as REGISTRATION_FA                     } from '../../../modules/nf-neuro/reconst/dtimetrics/main'
 include {   REGISTRATION as T1_REGISTRATION                           } from '../registration/main'
 include {   REGISTRATION_ANTSAPPLYTRANSFORMS as TRANSFORM_WMPARC      } from '../../../modules/nf-neuro/registration/antsapplytransforms/main'
 include {   REGISTRATION_ANTSAPPLYTRANSFORMS as TRANSFORM_APARC_ASEG  } from '../../../modules/nf-neuro/registration/antsapplytransforms/main'
 include {   REGISTRATION_ANTSAPPLYTRANSFORMS as TRANSFORM_LESION_MASK } from '../../../modules/nf-neuro/registration/antsapplytransforms/main'
-include {   REGISTRATION_ANTSAPPLYTRANSFORMS as TRANSFORM_BRAINMASK   } from '../../../modules/nf-neuro/registration/antsapplytransforms/main'
 include {   ANATOMICAL_SEGMENTATION                                   } from '../anatomical_segmentation/main'
 
 // RECONSTRUCTION
@@ -104,16 +102,6 @@ workflow TRACTOFLOW {
         ch_versions = ch_versions.mix(T1_REGISTRATION.out.versions.first())
 
         /* SEGMENTATION */
-
-        //
-        // MODULE: Run REGISTRATION_ANTSAPPLYTRANSFORMS (TRANSFORM_BRAINMASK)
-        //
-        TRANSFORM_BRAINMASK(
-            PREPROC_T1.out.mask_final
-                .join(PREPROC_DWI.out.b0)
-                .join(T1_REGISTRATION.out.transfo_image)
-        )
-        ch_versions = ch_versions.mix(TRANSFORM_BRAINMASK.out.versions.first())
 
         //
         // MODULE: Run REGISTRATION_ANTSAPPLYTRANSFORMS (TRANSFORM_WMPARC)
@@ -270,7 +258,6 @@ workflow TRACTOFLOW {
                                     .join(PREPROC_DWI.out.bval)
                                     .join(PREPROC_DWI.out.bvec)
         t1                      = T1_REGISTRATION.out.image_warped
-        brain_mask              = TRANSFORM_BRAINMASK.out.warped_image
         wm_mask                 = ANATOMICAL_SEGMENTATION.out.wm_mask
         gm_mask                 = ANATOMICAL_SEGMENTATION.out.gm_mask
         csf_mask                = ANATOMICAL_SEGMENTATION.out.csf_mask
