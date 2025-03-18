@@ -15,7 +15,7 @@ include { completionEmail           } from '../../nf-core/utils_nfcore_pipeline'
 include { completionSummary         } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NFCORE_PIPELINE     } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipeline'
-include { IO_READBIDS               } from '../../../modules/nf-neuro/io/readbids/main'
+include { IO_BIDS                   } from '../../nf-neuro/io_bids/main'
 include { IO_SAFECASTINPUTS         } from '../../../modules/local/io/safecastinputs'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -69,56 +69,70 @@ workflow PIPELINE_INITIALISATION {
     // Create channel from input file provided through params.input
     //
     if (params.input) {
-        ch_input_sheets = Channel
-            .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_raw_input.json"))
-            .map{
-                meta, dwi, bval, bvec, sbref, rev_dwi, rev_bval, rev_bvec, rev_sbref, t1, wmparc, aparc_aseg, lesion ->
-                    return [
-                        meta,
-                        dwi,
-                        bval,
-                        bvec,
-                        sbref ?: [],
-                        rev_dwi ?: [],
-                        rev_bval ?: [],
-                        rev_bvec ?: [],
-                        rev_sbref ?: [],
-                        t1,
-                        wmparc ?: [],
-                        aparc_aseg ?: [],
-                        lesion ?: []
-                    ]
-            }
-            .map{ samplesheet ->
-                validateInputSamplesheet(samplesheet)
-            }
-
-        IO_SAFECASTINPUTS(ch_input_sheets)
-        ch_samplesheet = ch_samplesheet.mix(IO_SAFECASTINPUTS.out.safe_inputs)
-    }
-
-    if (params.bids) {
-        ch_bids_sheets = Channel
-        .fromList(samplesheetToList(params.bids, "${projectDir}/asset/schema_bids_input.json"))
-        .map{
-            dbname, bidsfolder, fsfolder, bidsignore ->
-                return [[name: dbname], bidsfolder, fsfolder ?: [], bidsignore ?: []]
+        //
+        // params.input is either a BIDS compliant directory or a samplesheet
+        //   - if directory, we assume it is BIDS
+        //   - everything else is a samplesheet
+        //
+        if (file(params.input).isDirectory()) {
+            IO_BIDS(
+                Channel.fromPath(params.input),
+                Channel.value(params.fsbids ?: []),
+                Channel.value(params.bidsignore ?: [])
+            )
+            ch_samplesheet = IO_BIDS.out
+            ch_samplesheet.b0 = Channel.empty()
+            ch_samplesheet.lesion = Channel.empty()
         }
+        else {
+            ch_input_sheets = Channel
+                .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_raw_input.json"))
+                .map{
+                    meta, dwi, bval, bvec, sbref, rev_dwi, rev_bval, rev_bvec, rev_sbref, t1, wmparc, aparc_aseg, lesion ->
+                        return [
+                            meta,
+                            dwi,
+                            bval,
+                            bvec,
+                            sbref ?: [],
+                            rev_dwi ?: [],
+                            rev_bval ?: [],
+                            rev_bvec ?: [],
+                            rev_sbref ?: [],
+                            t1,
+                            wmparc ?: [],
+                            aparc_aseg ?: [],
+                            lesion ?: []
+                        ]
+                }
+                .map{ samplesheet ->
+                    validateInputSamplesheet(samplesheet)
+                }
 
-        IO_READBIDS ( ch_bids_sheets.map{ it[1..-1] } )
-        ch_versions = ch_versions.mix(IO_READBIDS.out.versions)
-
-        ch_bids_sheets = IO_READBIDS.out.bidsstructure
-            .map{ samplesheet ->
-                validateBidsSamplesheet(samplesheet)
-            }
-            .reduce{ a, b -> a + b }
-
-        ch_samplesheet = ch_samplesheet.mix(ch_bids_sheets)
+            IO_SAFECASTINPUTS(ch_input_sheets)
+            ch_samplesheet = IO_SAFECASTINPUTS.out.safe_inputs
+                .multiMap{ meta, dwi, bval, bvec, sbref, rev_dwi, rev_bval, rev_bvec, rev_sbref, t1, wmparc, aparc_aseg, lesion ->
+                    t1: [meta, t1]
+                    wmparc: [meta, wmparc]
+                    aparc_aseg: [meta, aparc_aseg]
+                    dwi_bval_bvec: [meta, dwi, bval, bvec]
+                    b0: [meta, sbref]
+                    rev_dwi_bval_bvec: [meta, rev_dwi, rev_bval, rev_bvec]
+                    rev_b0: [meta, rev_sbref]
+                    lesion: [meta, lesion]
+                }
+        }
     }
 
     emit:
-    samplesheet = ch_samplesheet
+    t1 = ch_samplesheet.t1
+    wmparc = ch_samplesheet.wmparc
+    aparc_aseg = ch_samplesheet.aparc_aseg
+    dwi_bval_bvec = ch_samplesheet.dwi_bval_bvec
+    b0 = ch_samplesheet.b0
+    rev_dwi_bval_bvec = ch_samplesheet.rev_dwi_bval_bvec
+    rev_b0 = ch_samplesheet.rev_b0
+    lesion = ch_samplesheet.lesion
     versions    = ch_versions
 }
 
@@ -179,59 +193,6 @@ def validateInputSamplesheet(input) {
     return input
 }
 
-def validateBidsSamplesheet(bids) {
-    ///
-    /// Unpack BIDS into subjects
-    ///
-    def jsonSlurper = new groovy.json.JsonSlurper()
-    return jsonSlurper.parseText(bids.getText()).each{ item ->
-        def sid = "sub-" + item.subject
-
-        if (item.session)
-        {
-            sid += "_ses-" + item.session
-        }
-
-        if (item.run)
-        {
-            sid += "_run-" + item.run
-        }
-
-        item.keySet().each{ key->
-            if(item[key] == 'todo')
-            {
-                error "Error ~ Please look at your tractoflow_bids_struct.json " +
-                "in Read_BIDS folder.\nPlease fix todo fields and give " +
-                "this file in input using --bids_config option instead of " +
-                "using --bids."
-            }
-            else if (item[key] == 'error_readout')
-            {
-                error "Error ~ Please look at your tractoflow_bids_struct.json " +
-                "in Read_BIDS folder.\nPlease fix error_readout fields. "+
-                "This error indicate that readout time looks wrong.\n"+
-                "Please correct the value or remove the subject in the json and " +
-                "give the updated file in input using --bids_config option instead of " +
-                "using --bids."
-            }
-        }
-
-        return [
-            [id: sid],
-            file(item.dwi),
-            file(item.bval),
-            file(item.bvec),
-            file(item.topup),
-            file(item.rev_dwi),
-            file(item.rev_bval),
-            file(item.rev_bvec),
-            file(item.rev_topup),
-            file(item.t1),
-            file(item.wmparc),
-            file(item.aparc_aseg)
-        ]
-    }
-}
 //
 // Generate methods description for MultiQC
 //

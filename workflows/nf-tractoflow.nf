@@ -8,8 +8,8 @@ include { paramsSummaryMap       } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_nf-tractoflow_pipeline'
-include { TRACTOFLOW as RUN } from '../subworkflows/nf-neuro/tractoflow'
-include { RECONST_SHSIGNAL } from '../modules/local/reconst/shsignal'
+include { TRACTOFLOW as RUN      } from '../subworkflows/nf-neuro/tractoflow'
+include { RECONST_SHSIGNAL       } from '../modules/nf-neuro/reconst/shsignal'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -18,9 +18,15 @@ include { RECONST_SHSIGNAL } from '../modules/local/reconst/shsignal'
 */
 
 workflow NF_TRACTOFLOW {
-
     take:
-    ch_samplesheet // channel: samplesheet read in from --input
+    ch_t1
+    ch_wmparc
+    ch_aparc_aseg
+    ch_dwi_bval_bvec
+    ch_b0
+    ch_rev_dwi_bval_bvec
+    ch_rev_b0
+    ch_lesion
     main:
 
     ch_versions = Channel.empty()
@@ -41,42 +47,32 @@ workflow NF_TRACTOFLOW {
 
     /* Load bet template */
     if (params.template_t1) {
-        ch_bet_template = ch_samplesheet.map{ it[0] }
-            .combine(Channel.fromPath("${params.template_t1}/t1_template.nii.gz"))
-        ch_bet_probability = ch_samplesheet.map{ it[0] }
-            .combine(Channel.fromPath("${params.template_t1}/t1_brain_probability_map.nii.gz"))
+        template_directory = file(params.template_t1)
+        if (template_directory.exists() && template_directory.isDirectory()){
+            ch_bet_template = ch_t1.map{ it[0] }
+                .combine(Channel.fromPath(template_directory / "t1_template.nii.gz"))
+            ch_bet_probability = ch_t1.map{ it[0] }
+                .combine(Channel.fromPath(template_directory / "t1_brain_probability_map.nii.gz"))
+        }
     }
 
-    /* Unpack inputs */
-    ch_inputs = ch_samplesheet
-        .multiMap{ meta, dwi, bval, bvec, sbref, rev_dwi, rev_bval, rev_bvec, rev_sbref, t1, wmparc, aparc_aseg, lesion ->
-            dwi: [meta, dwi, bval, bvec]
-            sbref: [meta, sbref]
-            rev_dwi: [meta, rev_dwi, rev_bval, rev_bvec]
-            rev_sbref: [meta, rev_sbref]
-            t1: [meta, t1]
-            wmparc: [meta, wmparc]
-            aparc_aseg: [meta, aparc_aseg]
-            lesion: [meta, lesion]
-        }
-
     RUN(
-        ch_inputs.dwi,
-        ch_inputs.t1,
-        ch_inputs.sbref
+        ch_dwi_bval_bvec,
+        ch_t1,
+        ch_b0
             .filter{ it[1] },
-        ch_inputs.rev_dwi
+        ch_rev_dwi_bval_bvec
             .filter{ it[1] },
-        ch_inputs.rev_sbref
+        ch_rev_b0
             .filter{ it[1] },
-        ch_inputs.wmparc
+        ch_wmparc
             .filter{ it[1] },
-        ch_inputs.aparc_aseg
+        ch_aparc_aseg
             .filter{ it[1] },
         ch_topup_config,
         ch_bet_template,
         ch_bet_probability,
-        ch_inputs.lesion
+        ch_lesion
             .filter{ it[1] }
     )
     ch_versions = ch_versions.mix(RUN.out.versions)
@@ -87,7 +83,7 @@ workflow NF_TRACTOFLOW {
     if (params.sh_fitting)
         RECONST_SHSIGNAL(
             RUN.out.dwi
-                .join(RUN.out.brain_mask)
+                .map{ it + [[]] }
     )
 
     //
