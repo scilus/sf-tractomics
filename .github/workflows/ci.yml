@@ -24,7 +24,9 @@ jobs:
     # Only run on push if this is the nf-core dev branch (merged PRs)
     if: "${{ github.event_name != 'push' || (github.event_name == 'push' && github.repository == 'scilus/nf-tractoflow') }}"
     runs-on: ubuntu-latest
+    continue-on-error: ${{ matrix.experimental }}
     strategy:
+      fail-fast: true
       matrix:
         NXF_VER:
           - "24.04.2"
@@ -37,6 +39,10 @@ jobs:
           - "test"
         isMaster:
           - ${{ github.base_ref == 'master' }}
+        include:
+          - experimental: false
+          - experimental: true
+            NXF_VER: "latest-everything"
         # Exclude conda and singularity on dev
         exclude:
           - isMaster: false
