@@ -1,0 +1,304 @@
+nextflow_process {
+
+    name "Test Process RECONST_FODF"
+    script "../main.nf"
+    process "RECONST_FODF"
+
+    tag "modules"
+    tag "modules_nfcore"
+    tag "reconst"
+    tag "reconst/fodf"
+
+    tag "subworkflows"
+    tag "subworkflows/load_test_data"
+
+    setup {
+        run("LOAD_TEST_DATA", alias: "LOAD_DATA") {
+            script "../../../../../subworkflows/nf-neuro/load_test_data/main.nf"
+            process {
+                """
+                input[0] = Channel.from( [
+                    "DWIss2000-dir60.zip",
+                    "DWIms1000-2000-dir10-10.zip",
+                    "segmentation.zip",
+                    "dti.zip",
+                    "responses.zip"
+                ] )
+                input[1] = "test.load-test-data"
+                """
+            }
+        }
+    }
+
+    test("reconst - fodf") {
+
+        config "./nextflow.config"
+
+        when {
+            process {
+                """
+                ch_split_test_data = LOAD_DATA.out.test_data_directory
+                    .branch{
+                        ssst: it.simpleName == "DWIss2000-dir60"
+                        segmentation: it.simpleName == "segmentation"
+                        dti: it.simpleName == "dti"
+                        responses: it.simpleName == "responses"
+                    }
+                ch_dwi = ch_split_test_data.ssst.map{
+                    test_data_directory -> [
+                        [ id:'test' ],
+                        file("\${test_data_directory}/dwi.nii.gz"),
+                        file("\${test_data_directory}/dwi.bval"),
+                        file("\${test_data_directory}/dwi.bvec")
+                    ]
+                }
+                ch_mask = ch_split_test_data.segmentation.map{
+                    test_data_directory -> [
+                        [ id:'test' ],
+                        file("\${test_data_directory}/brainmask/brainmask.nii.gz")
+                    ]
+                }
+                ch_metrics = ch_split_test_data.dti.map{
+                    test_data_directory -> [
+                        [ id:'test' ],
+                        file("\${test_data_directory}/fa.nii.gz"),
+                        file("\${test_data_directory}/md.nii.gz")
+                    ]
+                }
+                ch_response = ch_split_test_data.responses.map{
+                    test_data_directory -> [
+                        [ id:'test' ],
+                        file("\${test_data_directory}/DWIss1000-dir32.txt")
+                    ]
+                }
+                input[0] = ch_dwi
+                    .join(ch_mask)
+                    .join(ch_metrics)
+                    .join(ch_response)
+                    .map{ it + [[], []] }
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    niftiMD5SUM(process.out.fodf.get(0).get(1), 6),
+                    file(process.out.peaks.get(0).get(1)).name,
+                    niftiMD5SUM(process.out.peak_values.get(0).get(1), 6),
+                    file(process.out.peak_indices.get(0).get(1)).name,
+                    process.out.afd_max,
+                    process.out.afd_total,
+                    niftiMD5SUM(process.out.afd_sum.get(0).get(1), 6),
+                    process.out.nufo,
+                    process.out.versions).match()}
+            )
+        }
+
+    }
+
+    test("reconst - fodf_with_shells") {
+
+        config "./nextflow_shells.config"
+
+        when {
+            process {
+                """
+                ch_split_test_data = LOAD_DATA.out.test_data_directory
+                    .branch{
+                        msmt: it.simpleName == "DWIms1000-2000-dir10-10"
+                        segmentation: it.simpleName == "segmentation"
+                        dti: it.simpleName == "dti"
+                        responses: it.simpleName == "responses"
+                    }
+                ch_dwi = ch_split_test_data.msmt.map{
+                    test_data_directory -> [
+                        [ id:'test' ],
+                        file("\${test_data_directory}/dwi.nii.gz"),
+                        file("\${test_data_directory}/dwi.bval"),
+                        file("\${test_data_directory}/dwi.bvec")
+                    ]
+                }
+                ch_mask = ch_split_test_data.segmentation.map{
+                    test_data_directory -> [
+                        [ id:'test' ],
+                        file("\${test_data_directory}/brainmask/brainmask.nii.gz")
+                    ]
+                }
+                ch_metrics = ch_split_test_data.dti.map{
+                    test_data_directory -> [
+                        [ id:'test' ],
+                        file("\${test_data_directory}/fa.nii.gz") ,
+                        file("\${test_data_directory}/md.nii.gz")
+                    ]
+                }
+                ch_response = ch_split_test_data.responses.map{
+                    test_data_directory -> [
+                        [ id:'test' ],
+                        file("\${test_data_directory}/DWIss1000-dir32.txt")
+                    ]
+                }
+                input[0] = ch_dwi
+                    .join(ch_mask)
+                    .join(ch_metrics)
+                    .join(ch_response)
+                    .map{ it + [[], []] }
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    niftiMD5SUM(process.out.fodf.get(0).get(1), 6),
+                    file(process.out.peaks.get(0).get(1)).name,
+                    niftiMD5SUM(process.out.peak_values.get(0).get(1), 6),
+                    file(process.out.peak_indices.get(0).get(1)).name,
+                    process.out.afd_max,
+                    process.out.afd_total,
+                    niftiMD5SUM(process.out.afd_sum.get(0).get(1), 6),
+                    process.out.nufo,
+                    process.out.versions).match()}
+            )
+        }
+
+    }
+
+    test("reconst - fodf_no_metrics") {
+
+        config "./nextflow_no_metrics.config"
+
+        when {
+            process {
+                """
+                ch_split_test_data = LOAD_DATA.out.test_data_directory
+                    .branch{
+                        ssst: it.simpleName == "DWIss2000-dir60"
+                        segmentation: it.simpleName == "segmentation"
+                        dti: it.simpleName == "dti"
+                        responses: it.simpleName == "responses"
+                    }
+                ch_dwi = ch_split_test_data.ssst.map{
+                    test_data_directory -> [
+                        [ id:'test' ],
+                        file("\${test_data_directory}/dwi.nii.gz"),
+                        file("\${test_data_directory}/dwi.bval"),
+                        file("\${test_data_directory}/dwi.bvec")
+                    ]
+                }
+                ch_mask = ch_split_test_data.segmentation.map{
+                    test_data_directory -> [
+                        [ id:'test' ],
+                        file("\${test_data_directory}/brainmask/brainmask.nii.gz")
+                    ]
+                }
+                ch_metrics = ch_split_test_data.dti.map{
+                    test_data_directory -> [
+                        [ id:'test' ],
+                        file("\${test_data_directory}/fa.nii.gz"),
+                        file("\${test_data_directory}/md.nii.gz")
+                    ]
+                }
+                ch_response = ch_split_test_data.responses.map{
+                    test_data_directory -> [
+                        [ id:'test' ],
+                        file("\${test_data_directory}/DWIss1000-dir32.txt")
+                    ]
+                }
+                input[0] = ch_dwi
+                    .join(ch_mask)
+                    .join(ch_metrics)
+                    .join(ch_response)
+                    .map{ it + [[], []] }
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    niftiMD5SUM(process.out.fodf.get(0).get(1), 6),
+                    process.out.versions).match()}
+            )
+        }
+
+    }
+
+    test("reconst - fodf_msmt") {
+
+        config "./nextflow_msmt.config"
+
+        when {
+            process {
+                """
+                ch_split_test_data = LOAD_DATA.out.test_data_directory
+                    .branch{
+                        msmt: it.simpleName == "DWIms1000-2000-dir10-10"
+                        segmentation: it.simpleName == "segmentation"
+                        dti: it.simpleName == "dti"
+                        responses: it.simpleName == "responses"
+                    }
+                ch_dwi = ch_split_test_data.msmt.map{
+                    test_data_directory -> [
+                        [ id:'test' ],
+                        file("\${test_data_directory}/dwi.nii.gz"),
+                        file("\${test_data_directory}/dwi.bval"),
+                        file("\${test_data_directory}/dwi.bvec")
+                    ]
+                }
+                ch_mask = ch_split_test_data.segmentation.map{
+                    test_data_directory -> [
+                        [ id:'test' ],
+                        file("\${test_data_directory}/brainmask/brainmask.nii.gz")
+                    ]
+                }
+                ch_metrics = ch_split_test_data.dti.map{
+                    test_data_directory -> [
+                        [ id:'test' ],
+                        file("\${test_data_directory}/fa.nii.gz"),
+                        file("\${test_data_directory}/md.nii.gz")
+                    ]
+                }
+                ch_response = ch_split_test_data.responses.map{
+                    test_data_directory -> [
+                        [ id:'test' ],
+                        file("\${test_data_directory}/DWIms1000-2000-dir32-60_wm.txt"),
+                        file("\${test_data_directory}/DWIms1000-2000-dir32-60_gm.txt"),
+                        file("\${test_data_directory}/DWIms1000-2000-dir32-60_csf.txt")
+                    ]
+                }
+                input[0] = ch_dwi
+                    .join(ch_mask)
+                    .join(ch_metrics)
+                    .join(ch_response)
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    file(process.out.fodf.get(0).get(1)).name,
+                    file(process.out.wm_fodf.get(0).get(1)).name,
+                    file(process.out.gm_fodf.get(0).get(1)).name,
+                    file(process.out.csf_fodf.get(0).get(1)).name,
+                    file(process.out.vf.get(0).get(1)).name,
+                    file(process.out.vf_rgb.get(0).get(1)).name,
+                    file(process.out.peaks.get(0).get(1)).name,
+                    file(process.out.peak_values.get(0).get(1)).name,
+                    file(process.out.peak_indices.get(0).get(1)).name,
+                    file(process.out.afd_max.get(0).get(1)).name,
+                    file(process.out.afd_total.get(0).get(1)).name,
+                    file(process.out.afd_sum.get(0).get(1)).name,
+                    file(process.out.nufo.get(0).get(1)).name,
+                    process.out.vent_mask,
+                    process.out.versions).match()}
+            )
+        }
+
+    }
+
+}

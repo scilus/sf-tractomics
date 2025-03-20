@@ -1,2 +1,0 @@
-preproc/topup:
-  - "modules/nf-scil/preproc/topup/**"

@@ -4,11 +4,52 @@
 
 ## Introduction
 
-<!-- TODO nf-core: Add documentation about anything specific to running your pipeline. For general topics, please point to (and add to) the main nf-core website. -->
+## BIDS input
+
+scilus/nf-tractoflow supports a **BIDS compliant dataset** in inputs, using the `--input` parameter. Optionally, the `--fsbids` input
+parameter can be supplied to load a **freesurfer sidecar**, with precomputed parcellations and segmentations (`wmparc` and `aparc+aseg`).
+If the `--bidsignore` input is given, its content will be used to filter both `--input` and `--fsbids`. Valid `--input` and `--fsbids`
+inputs abide the following structure :
+
+```
+    Assuming  ─>  FP : Forward Phase encoding
+              ─>  RP : Reverse Phase encoding
+
+    --input=/path/to/[bids]
+                      |
+                      ├── S1
+                      |   ├── dwi
+                      |   |   ├── *dir-FP_*dwi.nii.gz
+                      |   |   ├── *dir-FP_*dwi.json
+                      |   |   ├── *dir-FP_*dwi.bval
+                      |   |   ├── *dir-FP_*dwi.bvec
+                      |   |   ├── *dir-RP_*dwi.nii.gz     (optional)
+                      |   |   ├── *dir-RP_*dwi.json       (optional)
+                      |   |   ├── *dir-RP_*dwi.bval       (optional)
+                      |   |   └── *dir-RP_*dwi.bvec       (optional)
+                      |   ├── anat
+                      |   |   ├── *T1w.nii.gz
+                      |   |   └── *T1w.json
+                      |   └── fmap
+                      |       ├── *epi.nii.gz             (optional)
+                      |       └── *epi.json               (optional)
+                      └── S2
+                          ⋮
+
+    --fsbids=/path/to/[fsbids]
+                      |
+                      ├── S1
+                      |   ├── mri
+                      |   |   ├── *aparc+aseg.nii.gz
+                      |   |   └── *wmparc.nii.gz
+                      └── S2
+                          ⋮
+
+```
 
 ## Samplesheet input
 
-You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row as shown in the examples below.
+You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 13 columns, and a header row as shown in the examples below.
 
 ```bash
 --input '[path to samplesheet file]'
@@ -16,37 +57,47 @@ You will need to create a samplesheet with information about the samples you wou
 
 ### Multiple runs of the same sample
 
-The `sample` identifiers have to be the same when you have re-sequenced the same sample more than once e.g. to increase sequencing depth. The pipeline will concatenate the raw reads before performing any downstream analysis. Below is an example for the same sample sequenced across 3 lanes:
+Multiple runs of the same `sample` are supported, but their **sample ID** must differ. They will be processed and outputted
+separately, no averaging or ensembling is performed by the pipeline.
 
 ```csv title="samplesheet.csv"
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP1,AEG588A1_S1_L003_R1_001.fastq.gz,AEG588A1_S1_L003_R2_001.fastq.gz
-CONTROL_REP1,AEG588A1_S1_L004_R1_001.fastq.gz,AEG588A1_S1_L004_R2_001.fastq.gz
+sample,dwi,bval,bvec,sbref,rev_dwi,rev_bval,rev_bvec,rev_sbref,t1,wmparc,apar_aseg,lesion
+CONTROL_RUN1,ctrl_run-3_dwi.nii.gz,ctrl_run-3.bval,ctrl_run-3.bvec,,,,,ctrl_run-3_revb0.nii.gz,ctrl_run-3_t1.nii.gz,,,
+CONTROL_RUN2,ctrl_run-2_dwi.nii.gz,ctrl_run-2.bval,ctrl_run-2.bvec,,,,,ctrl_run-2_revb0.nii.gz,ctrl_run-2_t1.nii.gz,,,
+CONTROL_RUN3,ctrl_run-3_dwi.nii.gz,ctrl_run-3.bval,ctrl_run-3.bvec,,,,,ctrl_run-3_revb0.nii.gz,ctrl_run-3_t1.nii.gz,,,
 ```
 
 ### Full samplesheet
 
-The pipeline will auto-detect whether a sample is single- or paired-end using the information provided in the samplesheet. The samplesheet can have as many columns as you desire, however, there is a strict requirement for the first 3 columns to match those defined in the table below.
-
-A final samplesheet file consisting of both single- and paired-end data may look something like the one below. This is for 6 samples, where `TREATMENT_REP3` has been sequenced twice.
+The pipeline detects almost all information required about your protocol from the data added in your samplesheet. Reverse phase
+acquired images are determined by importance, using the **full DWI** if available, and deferring to the **single band** references
+(sbref) if needed. It will load and use lesions masks when needed, as well as parcellations and segmentations from freesurfer, if provided.
 
 ```csv title="samplesheet.csv"
-sample,fastq_1,fastq_2
-CONTROL_REP1,AEG588A1_S1_L002_R1_001.fastq.gz,AEG588A1_S1_L002_R2_001.fastq.gz
-CONTROL_REP2,AEG588A2_S2_L002_R1_001.fastq.gz,AEG588A2_S2_L002_R2_001.fastq.gz
-CONTROL_REP3,AEG588A3_S3_L002_R1_001.fastq.gz,AEG588A3_S3_L002_R2_001.fastq.gz
-TREATMENT_REP1,AEG588A4_S4_L003_R1_001.fastq.gz,
-TREATMENT_REP2,AEG588A5_S5_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L003_R1_001.fastq.gz,
-TREATMENT_REP3,AEG588A6_S6_L004_R1_001.fastq.gz,
+sample,dwi,bval,bvec,sbref,rev_dwi,rev_bval,rev_bvec,rev_sbref,t1,wmparc,aparc_aseg,lesion
+CONTROL_RUN1,ctrl_run-3_dwi.nii.gz,ctrl_run-3.bval,ctrl_run-3.bvec,,,,,ctrl_run-3_revb0.nii.gz,ctrl_run-3_t1.nii.gz,,,
+CONTROL_RUN2,ctrl_run-2_dwi.nii.gz,ctrl_run-2.bval,ctrl_run-2.bvec,,,,,ctrl_run-2_revb0.nii.gz,ctrl_run-2_t1.nii.gz,,,
+CONTROL_RUN3,ctrl_run-3_dwi.nii.gz,ctrl_run-3.bval,ctrl_run-3.bvec,,,,,ctrl_run-3_revb0.nii.gz,ctrl_run-3_t1.nii.gz,,,
+CONTROL_FDWI,ctrl_dwi.nii.gz,ctrl_dwi.bval,ctrl_dwi.bvec,,ctrl_rev.nii.gz,ctrl_rev.bval,ctrl_rev.bvec,,ctrl_t1.nii.gz,,,
+PATIENT1,patient1_dwi.nii.gz,patient1.bval,patient1.bvec,,,,,patient1_revb0.nii.gz,patient1_t1.nii.gz,patient1_wmparc.nii.gz,patient1_aparc+aseg.nii.gz,patient1_lesions.nii.gz
+PATIENT2,patient2_dwi.nii.gz,patient2.bval,patient2.bvec,,,,,patient2_revb0.nii.gz,patient2_t1.nii.gz,patient2_wmparc.nii.gz,patient2_aparc+aseg.nii.gz,patient2_lesions.nii.gz
 ```
 
-| Column    | Description                                                                                                                                                                            |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `sample`  | Custom sample name. This entry will be identical for multiple sequencing libraries/runs from the same sample. Spaces in sample names are automatically converted to underscores (`_`). |
-| `fastq_1` | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
-| `fastq_2` | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz".                                                             |
+| Column       | Description                                                                                                                                                               |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `sample`     | Name for the sample/subject that will be used to identify it in the pipeline through processing. Spaces in sample names are automatically converted to underscores (`_`). |
+| `dwi`        | Input Diffusion Weighted Imaging 4D volume (.nii/.nii.gz).                                                                                                                |
+| `bval`       | Input b-values (gradient weights) for each direction in the associated DWI 4D volume (.bval).                                                                             |
+| `bvec`       | Input b-vectors (gradient directions) for each direction in the associated DWI 4D volume (.bvec).                                                                         |
+| `sbref`      | Single-band acquired b0 reference for the DWI 4D volume (.nii/.nii.gz).                                                                                                   |
+| `rev_dwi`    | Reverse phase acquired Difusion Weighted Imaging 4D volume (.nii/.nii.gz).                                                                                                |
+| `rev_bval`   | Input b-values (gradient weights) for each direction in the associated reverse phase acquired DWI 4D volume (.bval).                                                      |
+| `rev_bvec`   | Input b-vectors (gradient directions) for each direction in the associated reverse phase acquired DWI 4D volume (.bvec).                                                  |
+| `rev_sbref`  | Single-band acquired b0 reference for the reverse phase acquired DWI 4D volume (.nii/.nii.gz).                                                                            |
+| `t1`         | Anatomical T1-weighted volume (.nii/.nii.gz).                                                                                                                             |
+| `wmparc`     | White Matter parcellation obtained from freesurfer (.nii/.nii.gz).                                                                                                        |
+| `aparc_aseg` | Brain parcellation and segmentation obtained from freesurfer (.nii/.nii.gz).                                                                                              |
+| `lesion`     | Lesions mask (.nii/.nii.gz).                                                                                                                                              |
 
 An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
 
@@ -56,6 +107,12 @@ The typical command for running the pipeline is as follows:
 
 ```bash
 nextflow run scilus/nf-tractoflow --input ./samplesheet.csv --outdir ./results  -profile docker
+```
+
+If using `bids` :
+
+```bash
+nextflow run scilus/nf-tractoflow --input /path/to/bids/database --outdir ./results  -profile docker
 ```
 
 This will launch the pipeline with the `docker` configuration profile. See below for more information about profiles.

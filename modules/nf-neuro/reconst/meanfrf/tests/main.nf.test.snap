@@ -1,0 +1,31 @@
+{
+    "reconst - meanfrf": {
+        "content": [
+            {
+                "0": [
+                    [
+                        "test",
+                        "test_mean_frf.txt:md5,92f823e2fb057161b9d6a046a589c0cc"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,0726c38b1e767e3e19f34b087306a364"
+                ],
+                "meanfrf": [
+                    [
+                        "test",
+                        "test_mean_frf.txt:md5,92f823e2fb057161b9d6a046a589c0cc"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,0726c38b1e767e3e19f34b087306a364"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.10.2"
+        },
+        "timestamp": "2024-12-17T01:44:09.840777788"
+    }
+}

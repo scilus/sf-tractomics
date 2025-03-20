@@ -1,0 +1,4 @@
+subject,dwi,bval,bvec,sbref,rev_dwi,rev_bval,rev_bvec,rev_sbref,t1,wmparc,aparc_aseg,lesion
+sub-01,/path/to/sub-01/dwi.nii.gz,/path/to/sub-01/dwi.bval,/path/to/sub-01/dwi.bvec,/path/to/sub-01/sbref.nii.gz,/path/to/sub-01/rev_dwi.nii.gz,/path/to/sub-01/rev_dwi.bval,/path/to/sub-01/rev_dwi.bvec,/path/to/sub-01/rev_sbref.nii.gz,/path/to/sub-01/t1.nii.gz,/path/to/sub-01/wmparc.nii.gz,/path/to/sub-01/aparc_aseg.nii.gz,lesion.nii.gz
+sub-02,/path/to/sub-02/dwi.nii.gz,/path/to/sub-02/dwi.bval,/path/to/sub-02/dwi.bvec,,,,,/path/to/sub-02/rev_sbref.nii.gz,/path/to/sub-02/t1.nii.gz,,,
+sub-03,/path/to/sub-03/dwi.nii.gz,/path/to/sub-03/dwi.bval,/path/to/sub-03/dwi.bvec,,/path/to/sub-03/rev_dwi.nii.gz,/path/to/sub-03/rev_dwi.bval,/path/to/sub-03/rev_dwi.bvec,,/path/to/sub-03/t1.nii.gz,,,

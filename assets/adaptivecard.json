@@ -5,7 +5,7 @@
             "contentType": "application/vnd.microsoft.card.adaptive",
             "contentUrl": null,
             "content": {
-                "\$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
                 "msteams": {
                     "width": "Full"
                 },
@@ -50,12 +50,11 @@
                         "title": "Pipeline Configuration",
                         "card": {
                             "type": "AdaptiveCard",
-                            "\$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+                            "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
                             "body": [
                                 {
                                     "type": "FactSet",
-                                    "facts": [<% out << summary.collect{ k,v -> "{\"title\": \"$k\", \"value\" : \"$v\"}"}.join(",\n") %>
-                                    ]
+                                    "facts": []
                                 }
                             ]
                         }

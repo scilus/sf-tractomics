@@ -7,7 +7,7 @@
                 "nf-core": {
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "f0719ae309075ae4a291533883847c3f7c441dad",
+                        "git_sha": "81880787133db07d9b4c1febd152c090eb8325dc",
                         "installed_by": ["modules"]
                     }
                 }
@@ -32,152 +32,192 @@
                 }
             }
         },
-        "https://github.com/scilus/nf-scil.git": {
+        "https://github.com/scilus/nf-neuro.git": {
             "modules": {
-                "nf-scil": {
+                "nf-neuro": {
                     "betcrop/antsbet": {
-                        "branch": "review/alex_preproc_dwi",
-                        "git_sha": "317f9f98b9b1faa93e72ff61560bb765d6fdc364",
+                        "branch": "main",
+                        "git_sha": "b8949dd284432bbe1399dbc3f54cdf9191855f8e",
                         "installed_by": ["preproc_t1"]
                     },
-                    "betcrop/cropvolume": {
-                        "branch": "review/alex_preproc_dwi",
-                        "git_sha": "8a5ea101e53d2bb73618ca71bf9817df0e470e37",
-                        "installed_by": ["preproc_dwi", "preproc_t1"]
-                    },
                     "betcrop/fslbetcrop": {
-                        "branch": "review/alex_preproc_dwi",
-                        "git_sha": "de49903e49cabf71a942b43e6320617aa8dc8a43",
-                        "installed_by": ["preproc_dwi"]
+                        "branch": "main",
+                        "git_sha": "d51aa53995a45009b8e077cfc41c7335a87ae1db",
+                        "installed_by": ["preproc_dwi", "topup_eddy"]
+                    },
+                    "betcrop/synthbet": {
+                        "branch": "main",
+                        "git_sha": "dca20370d97a69c6a91c80843f417206212568e6",
+                        "installed_by": ["preproc_t1"]
                     },
                     "denoising/mppca": {
-                        "branch": "review/alex_preproc_dwi",
-                        "git_sha": "317f9f98b9b1faa93e72ff61560bb765d6fdc364",
+                        "branch": "main",
+                        "git_sha": "2e222d18c89e5547a6bf5c0c74673baeb63bcd52",
                         "installed_by": ["preproc_dwi"]
                     },
                     "denoising/nlmeans": {
-                        "branch": "review/alex_preproc_dwi",
-                        "git_sha": "317f9f98b9b1faa93e72ff61560bb765d6fdc364",
+                        "branch": "main",
+                        "git_sha": "261a7e0606645eeaf863e401cb9fc99c130b3a19",
                         "installed_by": ["preproc_t1"]
                     },
+                    "image/cropvolume": {
+                        "branch": "main",
+                        "git_sha": "3e2e971f5bdaafcd5f72cb9c69f9d0b2a6f20de3",
+                        "installed_by": ["preproc_dwi", "preproc_t1"]
+                    },
                     "image/resample": {
-                        "branch": "review/alex_preproc_dwi",
-                        "git_sha": "85eebbc9e881e1ac930a22ceada63c44c099e1d3",
-                        "installed_by": ["preproc_t1", "preproc_dwi"]
+                        "branch": "main",
+                        "git_sha": "36e010a236a0bd86334ab99b0cac4f7c4ff51532",
+                        "installed_by": ["preproc_dwi", "preproc_t1"]
                     },
                     "io/readbids": {
-                        "branch": "review/alex_preproc_dwi",
-                        "git_sha": "317f9f98b9b1faa93e72ff61560bb765d6fdc364",
-                        "installed_by": ["modules"]
+                        "branch": "main",
+                        "git_sha": "8e03029b9ca8f73b35a48a53c9498725360d8b07",
+                        "installed_by": ["io_bids"]
                     },
                     "preproc/eddy": {
                         "branch": "main",
-                        "git_sha": "a275f58196407fb05d4d9730ca781f584b00048c",
+                        "git_sha": "9b1c19bd5073aec628e4b9fe11bfc7510e038e09",
                         "installed_by": ["topup_eddy"]
                     },
+                    "preproc/gibbs": {
+                        "branch": "main",
+                        "git_sha": "6b380f7a9c594b71a4ee713b510ee38b2e40677b",
+                        "installed_by": ["preproc_dwi"]
+                    },
                     "preproc/n4": {
-                        "branch": "review/alex_preproc_dwi",
-                        "git_sha": "317f9f98b9b1faa93e72ff61560bb765d6fdc364",
+                        "branch": "main",
+                        "git_sha": "18273a2cef9ffdaf7088e305b9c4ebf4dd439079",
                         "installed_by": ["preproc_dwi", "preproc_t1"]
                     },
                     "preproc/normalize": {
-                        "branch": "review/alex_preproc_dwi",
-                        "git_sha": "317f9f98b9b1faa93e72ff61560bb765d6fdc364",
+                        "branch": "main",
+                        "git_sha": "a439fe5eda4249ba0c9d221ba04ede81c1c29f40",
                         "installed_by": ["preproc_dwi"]
                     },
                     "preproc/topup": {
                         "branch": "main",
-                        "git_sha": "8863c9b6f0757b9c41920b5222d10d2c580009d2",
+                        "git_sha": "0228ee7a52df57340e4373fc278c71f4662c388a",
                         "installed_by": ["topup_eddy"]
                     },
                     "reconst/dtimetrics": {
-                        "branch": "review/alex_preproc_dwi",
-                        "git_sha": "317f9f98b9b1faa93e72ff61560bb765d6fdc364",
-                        "installed_by": ["modules"]
+                        "branch": "main",
+                        "git_sha": "452075a707a9769b0509fc33a1051e8ba80799bf",
+                        "installed_by": ["tractoflow"]
                     },
                     "reconst/fodf": {
-                        "branch": "review/alex_preproc_dwi",
-                        "git_sha": "62979e1455a723b1f1a149a4353cbcc2dcd318ba",
-                        "installed_by": ["modules"]
+                        "branch": "main",
+                        "git_sha": "452075a707a9769b0509fc33a1051e8ba80799bf",
+                        "installed_by": ["tractoflow"]
                     },
                     "reconst/frf": {
-                        "branch": "review/alex_preproc_dwi",
-                        "git_sha": "317f9f98b9b1faa93e72ff61560bb765d6fdc364",
-                        "installed_by": ["modules"]
+                        "branch": "main",
+                        "git_sha": "452075a707a9769b0509fc33a1051e8ba80799bf",
+                        "installed_by": ["tractoflow"]
                     },
                     "reconst/meanfrf": {
-                        "branch": "review/alex_preproc_dwi",
-                        "git_sha": "317f9f98b9b1faa93e72ff61560bb765d6fdc364",
+                        "branch": "main",
+                        "git_sha": "a372865103842ddb9b240539e7ec147df9862604",
+                        "installed_by": ["tractoflow"]
+                    },
+                    "reconst/shsignal": {
+                        "branch": "main",
+                        "git_sha": "7e14d496291cdbd3bb44b38e65d563fa14f7478f",
                         "installed_by": ["modules"]
                     },
-                    "register/anattodwi": {
-                        "branch": "review/alex_preproc_dwi",
-                        "git_sha": "317f9f98b9b1faa93e72ff61560bb765d6fdc364",
+                    "registration/anattodwi": {
+                        "branch": "main",
+                        "git_sha": "f9eba772a9198dbfca2cf03a71b1a07edbc598af",
                         "installed_by": ["registration"]
                     },
                     "registration/ants": {
-                        "branch": "review/alex_preproc_dwi",
-                        "git_sha": "317f9f98b9b1faa93e72ff61560bb765d6fdc364",
+                        "branch": "main",
+                        "git_sha": "8b713829fd96b11f3cee6c6f4d502848cbc392d1",
                         "installed_by": ["registration"]
                     },
                     "registration/antsapplytransforms": {
-                        "branch": "review/alex_preproc_dwi",
-                        "git_sha": "4c7e79daf65774c9f11937d0dcab117ae6eb64a1",
-                        "installed_by": ["modules"]
+                        "branch": "main",
+                        "git_sha": "8b713829fd96b11f3cee6c6f4d502848cbc392d1",
+                        "installed_by": ["tractoflow"]
+                    },
+                    "registration/easyreg": {
+                        "branch": "main",
+                        "git_sha": "47cd7af16914614d41cee6099aa994d04a6f8380",
+                        "installed_by": ["registration"]
+                    },
+                    "registration/synthregistration": {
+                        "branch": "main",
+                        "git_sha": "a439fe5eda4249ba0c9d221ba04ede81c1c29f40",
+                        "installed_by": ["registration"]
                     },
                     "segmentation/fastseg": {
-                        "branch": "review/alex_preproc_dwi",
-                        "git_sha": "317f9f98b9b1faa93e72ff61560bb765d6fdc364",
+                        "branch": "main",
+                        "git_sha": "cb567ddcd631be744545dbac139a8b0ff21e55e8",
                         "installed_by": ["anatomical_segmentation"]
                     },
                     "segmentation/freesurferseg": {
-                        "branch": "review/alex_preproc_dwi",
-                        "git_sha": "62979e1455a723b1f1a149a4353cbcc2dcd318ba",
+                        "branch": "main",
+                        "git_sha": "72c629dd20bf72ae4c580717123ff57516d24f3d",
+                        "installed_by": ["anatomical_segmentation"]
+                    },
+                    "segmentation/synthseg": {
+                        "branch": "main",
+                        "git_sha": "b041bd20d966f5e87bb528f500ccd3cfb1245f3d",
                         "installed_by": ["anatomical_segmentation"]
                     },
                     "tracking/localtracking": {
-                        "branch": "review/alex_preproc_dwi",
-                        "git_sha": "62979e1455a723b1f1a149a4353cbcc2dcd318ba",
-                        "installed_by": ["modules"]
+                        "branch": "main",
+                        "git_sha": "b8f82569a1160bf13138b6278c0e22caf88c4e22",
+                        "installed_by": ["tractoflow"]
                     },
                     "tracking/pfttracking": {
-                        "branch": "review/alex_preproc_dwi",
-                        "git_sha": "317f9f98b9b1faa93e72ff61560bb765d6fdc364",
-                        "installed_by": ["modules"]
+                        "branch": "main",
+                        "git_sha": "12dd6cf0fa5cdac800c7960b3c42c960d5760907",
+                        "installed_by": ["tractoflow"]
                     },
                     "utils/extractb0": {
-                        "branch": "review/alex_preproc_dwi",
-                        "git_sha": "317f9f98b9b1faa93e72ff61560bb765d6fdc364",
-                        "installed_by": ["topup_eddy", "preproc_dwi"]
+                        "branch": "main",
+                        "git_sha": "baf69f6658ab3874264d2081aeb5a2388f861bb2",
+                        "installed_by": ["preproc_dwi", "topup_eddy"]
                     }
                 }
             },
             "subworkflows": {
-                "nf-scil": {
+                "nf-neuro": {
                     "anatomical_segmentation": {
-                        "branch": "review/alex_preproc_dwi",
-                        "git_sha": "f19275c7cd2c78b5201fd9707b00aa6e6730efa8",
+                        "branch": "main",
+                        "git_sha": "72c629dd20bf72ae4c580717123ff57516d24f3d",
+                        "installed_by": ["tractoflow"]
+                    },
+                    "io_bids": {
+                        "branch": "main",
+                        "git_sha": "9f9ad793400c5783e7766d3e5131a2a403300ac9",
                         "installed_by": ["subworkflows"]
                     },
                     "preproc_dwi": {
                         "branch": "main",
-                        "git_sha": "455be4fdaff99dcb1d81f8adff17da933f71cc87",
-                        "installed_by": ["subworkflows"]
+                        "git_sha": "e7ecaddd48ac16eebc751f076530e2de74efafd9",
+                        "installed_by": ["tractoflow"]
                     },
                     "preproc_t1": {
-                        "branch": "review/alex_preproc_dwi",
-                        "git_sha": "2d0ec09328b7ee6697406a177046f6482a3c2ba7",
-                        "installed_by": ["subworkflows"]
+                        "branch": "main",
+                        "git_sha": "84317cd68567fa8651c120bd19028177f90d41ae",
+                        "installed_by": ["tractoflow"]
                     },
                     "registration": {
-                        "branch": "review/alex_preproc_dwi",
-                        "git_sha": "10d399e7b2dcdf6891e33170d2e7ba66b9147411",
-                        "installed_by": ["subworkflows"]
+                        "branch": "main",
+                        "git_sha": "a439fe5eda4249ba0c9d221ba04ede81c1c29f40",
+                        "installed_by": ["tractoflow"]
                     },
                     "topup_eddy": {
                         "branch": "main",
-                        "git_sha": "7543d392b565b1a56885c813dd3c896163ce8fcc",
+                        "git_sha": "e7ecaddd48ac16eebc751f076530e2de74efafd9",
                         "installed_by": ["preproc_dwi"]
+                    },
+                    "tractoflow": {
+                        "branch": "main",
+                        "git_sha": "a439fe5eda4249ba0c9d221ba04ede81c1c29f40",
+                        "installed_by": ["subworkflows"]
                     }
                 }
             }

@@ -1,2 +1,0 @@
-subworkflows/preproc_t1:
-  - subworkflows/nf-scil/preproc_t1/**

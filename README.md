@@ -53,7 +53,7 @@ Now, you can run the pipeline using:
 ```bash
 nextflow run scilus/nf-tractoflow \
    -profile <docker/singularity/.../institute> \
-   --input samplesheet.csv \
+   <--input|--bids> samplesheet.csv \
    --outdir <OUTDIR>
 ```
 

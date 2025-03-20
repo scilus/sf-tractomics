@@ -12,13 +12,27 @@ indent_style = space
 indent_size = 2
 
 # These files are edited and tested upstream in nf-core/modules
-[/modules/nf-core/**]
+[modules/nf-core/**]
 charset = unset
 end_of_line = unset
 insert_final_newline = unset
 trim_trailing_whitespace = unset
 indent_style = unset
-[/subworkflows/nf-core/**]
+[subworkflows/nf-core/**]
+charset = unset
+end_of_line = unset
+insert_final_newline = unset
+trim_trailing_whitespace = unset
+indent_style = unset
+
+# Same for nf-neuro
+[modules/nf-neuro/**]
+charset = unset
+end_of_line = unset
+insert_final_newline = unset
+trim_trailing_whitespace = unset
+indent_style = unset
+[subworkflows/nf-neuro/**]
 charset = unset
 end_of_line = unset
 insert_final_newline = unset

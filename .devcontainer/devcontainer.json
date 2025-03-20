@@ -3,7 +3,15 @@
     "image": "nfcore/gitpod:latest",
     "remoteUser": "gitpod",
     "runArgs": ["--privileged"],
-
+    "features": {
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+    },
+    "containerEnv": {
+        "NFCORE_MODULES_GIT_REMOTE": "https://github.com/scilus/nf-neuro.git",
+        "NFCORE_MODULES_BRANCH": "main",
+        "NFCORE_SUBWORKFLOWS_GIT_REMOTE": "https://github.com/scilus/nf-neuro.git",
+        "NFCORE_SUBWORKFLOWS_BRANCH": "main"
+    },
     // Configure tool-specific properties.
     "customizations": {
         // Configure properties specific to VS Code.

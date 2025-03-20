@@ -1,0 +1,78 @@
+---
+name: "tracking_localtracking"
+description: process local tracking
+keywords:
+  - Tractography
+  - Local tracking
+  - Diffusion MRI
+tools:
+  - "scilpy":
+      description: "The Sherbrooke Connectivity Imaging Lab (SCIL) Python dMRI processing toolbox."
+      homepage: "https://github.com/scilus/scilpy.git"
+
+input:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. `[ id:'test', single_end:false ]`
+
+  - wm:
+      type: file
+      description: Nifti image white matter mask.
+      pattern: "*.{nii,nii.gz}"
+
+  - fodf:
+      type: file
+      description: Nifti image of spherical harmonic file (fodf)
+      pattern: "*.{nii,nii.gz}"
+
+  - fa:
+      type: file
+      description: NIfti image binary mask for fa mask
+      pattern: "*.{nii,nii.gz}"
+
+output:
+  - meta:
+      type: map
+      description: |
+        Groovy Map containing sample information
+        e.g. `[ id:'test', single_end:false ]`
+
+  - trk:
+      type: file
+      description: Tractogram output file.
+      pattern: "*.{trk,tck}"
+
+  - config:
+      type: file
+      description: Json file containing tracking parameters.
+      pattern: "*.{json}"
+
+  - seedmask:
+      type: file
+      description: Nifti seeding mask for tracking.
+      pattern: "*.{nii,nii.gz}"
+
+  - trackmask:
+      type: file
+      description: Nifti tracking mask
+      pattern: "*.{nii,nii.gz}"
+
+  - mqc:
+      type: file
+      description: PNG file containing quality control image for tracking. Made for use in MultiQC report.
+      pattern: "*local_tracking_mqc.png"
+
+  - global_mqc:
+      type: file
+      description: JSON file containing basic measurements of whole tractogram. Made for use in MultiQC report.
+      pattern: "*local_tracking_stats.json"
+
+  - versions:
+      type: file
+      description: File containing software versions
+      pattern: "versions.yml"
+
+authors:
+  - "@scilus"

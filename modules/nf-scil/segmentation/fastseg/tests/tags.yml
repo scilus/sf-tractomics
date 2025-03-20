@@ -1,2 +1,0 @@
-segmentation/fastseg:
-  - "modules/nf-scil/segmentation/fastseg/**"

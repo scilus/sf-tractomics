@@ -1,2 +1,0 @@
-subworkflows/registration:
-  - subworkflows/nf-scil/registration/**

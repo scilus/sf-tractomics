@@ -1,0 +1,81 @@
+{
+    "eddy_full": {
+        "content": [
+            "test__dwi_corrected.nii.gz",
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test__dwi_eddy_corrected.bval:md5,4c61c53078316c31b4d5daf446a3d6ac"
+                ]
+            ],
+            "test__dwi_eddy_corrected.bvec",
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test__b0_bet_mask.nii.gz:md5,3e6bf62a42cb7f1f2c8e0d3024fb9fcb"
+                ]
+            ],
+            "test__dwi_eddy_mqc.gif",
+            "test__rev_dwi_eddy_mqc.gif",
+            [
+                "versions.yml:md5,95220463b44e9e5778729aaa87c09b3f"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.10.3"
+        },
+        "timestamp": "2025-02-27T14:57:09.691201694"
+    },
+    "eddy_light": {
+        "content": [
+            "test__dwi_corrected.nii.gz",
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test__dwi_eddy_corrected.bval:md5,8192e97b08e8032382397bb844b31892"
+                ]
+            ],
+            "test__dwi_eddy_corrected.bvec",
+            [
+                [
+                    {
+                        "id": "test",
+                        "single_end": false
+                    },
+                    "test__b0_bet_mask.nii.gz:md5,3e6bf62a42cb7f1f2c8e0d3024fb9fcb"
+                ]
+            ],
+            "test__dwi_eddy_mqc.gif",
+            [
+                "versions.yml:md5,95220463b44e9e5778729aaa87c09b3f"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.10.3"
+        },
+        "timestamp": "2025-02-27T14:58:37.693170403"
+    },
+    "eddy - stub-run": {
+        "content": [
+            [
+                "versions.yml:md5,95220463b44e9e5778729aaa87c09b3f"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "24.10.4"
+        },
+        "timestamp": "2025-02-23T21:27:53.190124319"
+    }
+}

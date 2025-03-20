@@ -1,4 +1,0 @@
-database,bidsfolder,fsfolder,bidsignore
-db1,/path/to/db1,,
-db2,/path/to/db2,/path/to/db2/fsfolder,
-db3,/path/to/db3,/path/to/db3/fsfolder,/path/to/db3/.bidsignore
