@@ -228,7 +228,7 @@
                 },
                 "template_t1": {
                     "type": "string",
-                    "default": "/human-data/mni_152_sym_09c/t1",
+                    "default": "$projectDir/assets/templates/mni_152_sym_09c/t1",
                     "description": "Path to the template for antsBrainExtraction. The folder must contain t1_template.nii.gz and t1_brain_probability_map.nii.gz. The default path is the human_data folder in the singularity container",
                     "help_text": "Path to the template for antsBrainExtraction. The folder must contain t1_template.nii.gz and t1_brain_probability_map.nii.gz. The default path is the human_data folder in the singularity container",
                     "format": "directory-path"
