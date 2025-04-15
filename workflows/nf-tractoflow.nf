@@ -46,14 +46,15 @@ workflow NF_TRACTOFLOW {
     }
 
     /* Load bet template */
-    if (params.template_t1) {
-        template_directory = file(params.template_t1)
-        if (template_directory.exists() && template_directory.isDirectory()){
-            ch_bet_template = ch_t1.map{ it[0] }
-                .combine(Channel.fromPath(template_directory / "t1_template.nii.gz"))
-            ch_bet_probability = ch_t1.map{ it[0] }
-                .combine(Channel.fromPath(template_directory / "t1_brain_probability_map.nii.gz"))
-        }
+    template_directory = file(params.template_t1 ?: "$projectDir/assets/templates/mni_152_sym_09c/t1")
+    if (template_directory.exists() && template_directory.isDirectory()){
+        ch_bet_template = ch_t1.map{ it[0] }
+            .combine(Channel.fromPath(template_directory / "t1_template.nii.gz"))
+        ch_bet_probability = ch_t1.map{ it[0] }
+            .combine(Channel.fromPath(template_directory / "t1_brain_probability_map.nii.gz"))
+    }
+    else {
+        error "A T1w template is required for brain extraction. Provide its directory with params.template_t1."
     }
 
     RUN(

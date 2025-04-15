@@ -80,9 +80,16 @@ workflow PIPELINE_INITIALISATION {
                 Channel.value(params.fsbids ?: []),
                 Channel.value(params.bidsignore ?: [])
             )
-            ch_samplesheet = IO_BIDS.out
-            ch_samplesheet.b0 = Channel.empty()
-            ch_samplesheet.lesion = Channel.empty()
+            ch_samplesheet = [
+                t1: IO_BIDS.out.ch_t1,
+                wmparc: IO_BIDS.out.ch_wmparc,
+                aparc_aseg: IO_BIDS.out.ch_aparc_aseg,
+                dwi_bval_bvec: IO_BIDS.out.ch_dwi_bval_bvec,
+                b0: Channel.empty(),
+                rev_dwi_bval_bvec: IO_BIDS.out.ch_rev_dwi_bval_bvec,
+                rev_b0: IO_BIDS.out.ch_rev_b0,
+                lesion: Channel.empty()
+            ]
         }
         else {
             ch_input_sheets = Channel

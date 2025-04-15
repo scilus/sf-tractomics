@@ -20,7 +20,7 @@
                     "fa_icon": "fas fa-folder-open",
                     "exists": true,
                     "type": "string",
-                    "format": "file-path",
+                    "format": "path",
                     "schema": "assets/schema_input.json"
                 },
                 "bids_config": {
@@ -222,9 +222,8 @@
                 },
                 "template_t1": {
                     "type": "string",
-                    "default": "/human-data/mni_152_sym_09c/t1",
-                    "description": "Path to the template for antsBrainExtraction. The folder must contain t1_template.nii.gz and t1_brain_probability_map.nii.gz. The default path is the human_data folder in the singularity container",
-                    "help_text": "Path to the template for antsBrainExtraction. The folder must contain t1_template.nii.gz and t1_brain_probability_map.nii.gz. The default path is the human_data folder in the singularity container",
+                    "description": "Path to the template for antsBrainExtraction. The folder must contain t1_template.nii.gz and t1_brain_probability_map.nii.gz. Defaults to the mni_152_sym_09c template directory delivered with the pipeline in the assets directory.",
+                    "help_text": "Path to the template for antsBrainExtraction. The folder must contain t1_template.nii.gz and t1_brain_probability_map.nii.gz. Defaults to the mni_152_sym_09c template directory delivered with the pipeline in the assets directory.",
                     "format": "directory-path"
                 }
             }
@@ -818,7 +817,8 @@
             "properties": {
                 "preproc_dwi_run_denoising": {
                     "type": "boolean",
-                    "hidden": true
+                    "hidden": true,
+                    "default": true
                 },
                 "preproc_dwi_run_degibbs": {
                     "type": "boolean",
@@ -826,23 +826,28 @@
                 },
                 "topup_eddy_run_topup": {
                     "type": "boolean",
-                    "hidden": true
+                    "hidden": true,
+                    "default": true
                 },
                 "topup_eddy_run_eddy": {
                     "type": "boolean",
-                    "hidden": true
+                    "hidden": true,
+                    "default": true
                 },
                 "preproc_dwi_run_N4": {
                     "type": "boolean",
-                    "hidden": true
+                    "hidden": true,
+                    "default": true
                 },
                 "preproc_t1_run_denoising": {
                     "type": "boolean",
-                    "hidden": true
+                    "hidden": true,
+                    "default": true
                 },
                 "preproc_t1_run_N4": {
                     "type": "boolean",
-                    "hidden": true
+                    "hidden": true,
+                    "default": true
                 },
                 "preproc_t1_run_synthbet": {
                     "type": "boolean",
@@ -850,19 +855,23 @@
                 },
                 "preproc_t1_run_ants_bet": {
                     "type": "boolean",
-                    "hidden": true
+                    "hidden": true,
+                    "default": true
                 },
                 "preproc_t1_run_crop": {
                     "type": "boolean",
-                    "hidden": true
+                    "hidden": true,
+                    "default": true
                 },
                 "preproc_dwi_run_resampling": {
                     "type": "boolean",
-                    "hidden": true
+                    "hidden": true,
+                    "default": true
                 },
                 "preproc_t1_run_resampling": {
                     "type": "boolean",
-                    "hidden": true
+                    "hidden": true,
+                    "default": true
                 },
                 "frf_average_from_data": {
                     "type": "boolean",
@@ -870,7 +879,8 @@
                 },
                 "run_pft": {
                     "type": "boolean",
-                    "hidden": true
+                    "hidden": true,
+                    "default": true
                 }
             }
         }
