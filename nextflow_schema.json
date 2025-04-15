@@ -11,7 +11,10 @@
             "fa_icon": "fas fa-terminal",
             "description": "Define where the pipeline should find input data and save output data.",
             "help_text": "Specify input samplesheet and output directory",
-            "required": ["input", "outdir"],
+            "required": [
+                "input",
+                "outdir"
+            ],
             "properties": {
                 "input": {
                     "mimetype": "text/csv",
@@ -20,7 +23,7 @@
                     "fa_icon": "fas fa-folder-open",
                     "exists": true,
                     "type": "string",
-                    "format": "file-path",
+                    "format": "path",
                     "schema": "assets/schema_input.json"
                 },
                 "bids_config": {
@@ -175,7 +178,10 @@
                     "default": "eddy_cpu",
                     "description": "Command to use to run Eddy.",
                     "help_text": "Command to use to run Eddy.",
-                    "enum": ["eddy_cpu", "eddy_cuda10.2"]
+                    "enum": [
+                        "eddy_cpu",
+                        "eddy_cuda10.2"
+                    ]
                 },
                 "bet_topup_before_eddy_f": {
                     "type": "number",
@@ -252,7 +258,12 @@
                     "default": "lin",
                     "description": "DWI interpolation method.",
                     "help_text": "DWI interpolation method",
-                    "enum": ["nn", "lin", "quad", "cubic"]
+                    "enum": [
+                        "nn",
+                        "lin",
+                        "quad",
+                        "cubic"
+                    ]
                 },
                 "run_resample_t1": {
                     "type": "boolean",
@@ -272,7 +283,12 @@
                     "default": "lin",
                     "description": "T1 interpolation method.",
                     "help_text": "T1 interpolation method.",
-                    "enum": ["nn", "lin", "quad", "cubic"]
+                    "enum": [
+                        "nn",
+                        "lin",
+                        "quad",
+                        "cubic"
+                    ]
                 }
             }
         },
@@ -356,7 +372,10 @@
                     "default": "descoteaux07",
                     "description": "fODF basis.",
                     "help_text": "fODF basis.",
-                    "enum": ["descoteaux07", "tournier07"]
+                    "enum": [
+                        "descoteaux07",
+                        "tournier07"
+                    ]
                 },
                 "fodf_metrics_a_factor": {
                     "type": "number",
@@ -399,7 +418,10 @@
                     "default": "descoteaux07",
                     "description": "SH basis used for the optional SH fitting.",
                     "help_text": "SH basis used for the optional SH fitting.",
-                    "enum": ["descoteaux07", "tournier07"]
+                    "enum": [
+                        "descoteaux07",
+                        "tournier07"
+                    ]
                 },
                 "sh_fitting_order": {
                     "type": "integer",
@@ -431,7 +453,11 @@
                     "default": "wm",
                     "description": "[PFT] Seeding mask type.",
                     "help_text": "[PFT] Seeding mask type.",
-                    "enum": ["wm", "interface", "fa"]
+                    "enum": [
+                        "wm",
+                        "interface",
+                        "fa"
+                    ]
                 },
                 "pft_fa_seeding_mask_threshold": {
                     "type": "number",
@@ -446,14 +472,20 @@
                     "default": "prob",
                     "description": "[PFT] Tracking algorithm.",
                     "help_text": "[PFT] Tracking algorithm.",
-                    "enum": ["prob", "det"]
+                    "enum": [
+                        "prob",
+                        "det"
+                    ]
                 },
                 "pft_seeding": {
                     "type": "string",
                     "default": "npv",
                     "description": "[PFT] Seeding type.",
                     "help_text": "[PFT] Seeding type.",
-                    "enum": ["npv", "nt"]
+                    "enum": [
+                        "npv",
+                        "nt"
+                    ]
                 },
                 "pft_nbr_seeds": {
                     "type": "integer",
@@ -558,7 +590,11 @@
                     "default": "wm",
                     "description": "[LOCAL] seeding mask type.",
                     "help_text": "[LOCAL] seeding mask type.",
-                    "enum": ["wm", "fa", "interface"]
+                    "enum": [
+                        "wm",
+                        "fa",
+                        "interface"
+                    ]
                 },
                 "local_fa_seeding_mask_threshold": {
                     "type": "number",
@@ -573,7 +609,10 @@
                     "description": "[LOCAL] tracking mask type.",
                     "help_text": "[LOCAL] tracking mask type.",
                     "default": "wm",
-                    "enum": ["wm", "fa"]
+                    "enum": [
+                        "wm",
+                        "fa"
+                    ]
                 },
                 "local_fa_tracking_mask_threshold": {
                     "type": "number",
@@ -588,14 +627,20 @@
                     "default": "prob",
                     "description": "[LOCAL] Tracking algorithm.",
                     "help_text": "[LOCAL] Tracking algorithm.",
-                    "enum": ["prob", "det"]
+                    "enum": [
+                        "prob",
+                        "det"
+                    ]
                 },
                 "local_seeding": {
                     "type": "string",
                     "default": "npv",
                     "description": "[LOCAL] Seeding type.",
                     "help_text": "[LOCAL] Seeding type.",
-                    "enum": ["npv", "nt"]
+                    "enum": [
+                        "npv",
+                        "nt"
+                    ]
                 },
                 "local_nbr_seeds": {
                     "type": "integer",
@@ -742,7 +787,14 @@
                     "description": "Method used to save pipeline results to output directory.",
                     "help_text": "The Nextflow `publishDir` option specifies which intermediate files should be saved to the output directory. This option tells the pipeline what method should be used to move these files. See [Nextflow docs](https://www.nextflow.io/docs/latest/process.html#publishdir) for details.",
                     "fa_icon": "fas fa-copy",
-                    "enum": ["symlink", "rellink", "link", "copy", "copyNoFollow", "move"],
+                    "enum": [
+                        "symlink",
+                        "rellink",
+                        "link",
+                        "copy",
+                        "copyNoFollow",
+                        "move"
+                    ],
                     "hidden": true
                 },
                 "email_on_fail": {
@@ -818,7 +870,8 @@
             "properties": {
                 "preproc_dwi_run_denoising": {
                     "type": "boolean",
-                    "hidden": true
+                    "hidden": true,
+                    "default": true
                 },
                 "preproc_dwi_run_degibbs": {
                     "type": "boolean",
@@ -826,23 +879,28 @@
                 },
                 "topup_eddy_run_topup": {
                     "type": "boolean",
-                    "hidden": true
+                    "hidden": true,
+                    "default": true
                 },
                 "topup_eddy_run_eddy": {
                     "type": "boolean",
-                    "hidden": true
+                    "hidden": true,
+                    "default": true
                 },
                 "preproc_dwi_run_N4": {
                     "type": "boolean",
-                    "hidden": true
+                    "hidden": true,
+                    "default": true
                 },
                 "preproc_t1_run_denoising": {
                     "type": "boolean",
-                    "hidden": true
+                    "hidden": true,
+                    "default": true
                 },
                 "preproc_t1_run_N4": {
                     "type": "boolean",
-                    "hidden": true
+                    "hidden": true,
+                    "default": true
                 },
                 "preproc_t1_run_synthbet": {
                     "type": "boolean",
@@ -850,19 +908,23 @@
                 },
                 "preproc_t1_run_ants_bet": {
                     "type": "boolean",
-                    "hidden": true
+                    "hidden": true,
+                    "default": true
                 },
                 "preproc_t1_run_crop": {
                     "type": "boolean",
-                    "hidden": true
+                    "hidden": true,
+                    "default": true
                 },
                 "preproc_dwi_run_resampling": {
                     "type": "boolean",
-                    "hidden": true
+                    "hidden": true,
+                    "default": true
                 },
                 "preproc_t1_run_resampling": {
                     "type": "boolean",
-                    "hidden": true
+                    "hidden": true,
+                    "default": true
                 },
                 "frf_average_from_data": {
                     "type": "boolean",
@@ -870,7 +932,8 @@
                 },
                 "run_pft": {
                     "type": "boolean",
-                    "hidden": true
+                    "hidden": true,
+                    "default": true
                 }
             }
         }
