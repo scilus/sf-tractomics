@@ -1,4 +1,16 @@
 {
+    "tracking - localtracking - stub-run": {
+        "content": [
+            [
+                "versions.yml:md5,57f53115d05b0b9fe954ae1617ae2014"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "25.04.7"
+        },
+        "timestamp": "2025-09-22T22:41:55.481286285"
+    },
     "tracking - localtracking - wm": {
         "content": [
             "test__local_tracking.trk",
@@ -17,7 +29,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test__local_seeding_mask.nii.gz:md5,6180aeda681e4443e56287ef1e1aee83"
+                    "test__local_seeding_mask.nii.gz:md5,0e098ec82a05ceaa2e94073510cbcdee"
                 ]
             ],
             [
@@ -26,18 +38,18 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test__local_tracking_mask.nii.gz:md5,6180aeda681e4443e56287ef1e1aee83"
+                    "test__local_tracking_mask.nii.gz:md5,0e098ec82a05ceaa2e94073510cbcdee"
                 ]
             ],
             [
-                "versions.yml:md5,0088e7190e395324acbb8fce5c474750"
+                "versions.yml:md5,78970d61ffd26ee69c4dda97a2ddcead"
             ]
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2024-10-24T19:38:16.835402429"
+        "timestamp": "2025-09-22T22:41:28.48656546"
     },
     "tracking - localtracking - fa": {
         "content": [
@@ -70,13 +82,13 @@
                 ]
             ],
             [
-                "versions.yml:md5,0088e7190e395324acbb8fce5c474750"
+                "versions.yml:md5,78970d61ffd26ee69c4dda97a2ddcead"
             ]
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.04.4"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2024-10-24T19:37:54.047881093"
+        "timestamp": "2025-09-22T22:40:54.584018789"
     }
 }

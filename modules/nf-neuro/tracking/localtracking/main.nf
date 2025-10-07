@@ -2,9 +2,7 @@ process TRACKING_LOCALTRACKING {
     tag "$meta.id"
     label 'process_high_memory'
 
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://scil.usherbrooke.ca/containers/scilus_2.0.2.sif':
-        'scilus/scilus:2.0.2' }"
+    container "scilus/scilpy:2.2.0_gpu"
 
     input:
     tuple val(meta), path(wm), path(fodf), path(fa)
@@ -24,10 +22,13 @@ process TRACKING_LOCALTRACKING {
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
 
-    def local_fa_tracking_mask_threshold = task.ext.local_fa_tracking_mask_threshold ? task.ext.local_fa_tracking_mask_threshold : ""
-    def local_fa_seeding_mask_threshold = task.ext.local_fa_seeding_mask_threshold ? task.ext.local_fa_seeding_mask_threshold : ""
-    def local_tracking_mask = task.ext.local_tracking_mask_type ? "${task.ext.local_tracking_mask_type}" : ""
-    def local_seeding_mask = task.ext.local_seeding_mask_type ? "${task.ext.local_seeding_mask_type}" : ""
+    def local_fa_tracking_mask_threshold = task.ext.local_fa_tracking_mask_threshold ?: 0.1
+    def local_fa_seeding_mask_threshold = task.ext.local_fa_seeding_mask_threshold ?: 0.1
+    def local_wm_tracking_mask_threshold = task.ext.local_wm_tracking_mask_threshold ?: 0.5
+    def local_wm_seeding_mask_threshold = task.ext.local_wm_seeding_mask_threshold ?: 0.5
+
+    def local_tracking_mask = task.ext.local_tracking_mask_type ?: "wm"
+    def local_seeding_mask = task.ext.local_seeding_mask_type ?: "wm"
 
     def local_step = task.ext.local_step ? "--step " + task.ext.local_step : ""
     def local_random_seed = task.ext.local_random_seed ? "--seed " + task.ext.local_random_seed : ""
@@ -38,7 +39,7 @@ process TRACKING_LOCALTRACKING {
     def local_theta = task.ext.local_theta ? "--theta "  + task.ext.local_theta : ""
     def local_sfthres = task.ext.local_sfthres ? "--sfthres "  + task.ext.local_sfthres : ""
     def local_algo = task.ext.local_algo ? "--algo " + task.ext.local_algo: ""
-    def compress = task.ext.local_compress_streamlines ? "--compress " + task.ext.local_compress_value : ""
+    def compress = task.ext.local_compress_value ? "--compress " + task.ext.local_compress_value : ""
     def basis = task.ext.basis ? "--sh_basis " + task.ext.basis : ""
 
     def gpu_batch_size = task.ext.gpu_batch_size ? "--batch_size " + task.ext.gpu_batch_size : ""
@@ -52,12 +53,14 @@ process TRACKING_LOCALTRACKING {
     export OPENBLAS_NUM_THREADS=1
 
     if [ "${local_tracking_mask}" == "wm" ]; then
-        scil_volume_math.py convert $wm ${prefix}__local_tracking_mask.nii.gz \
+        scil_volume_math lower_threshold $wm \
+            $local_wm_tracking_mask_threshold \
+            ${prefix}__local_tracking_mask.nii.gz \
             --data_type uint8 -f
         cp $wm tmp_anat_qc.nii.gz
 
     elif [ "${local_tracking_mask}" == "fa" ]; then
-        scil_volume_math.py lower_threshold $fa \
+        scil_volume_math lower_threshold $fa \
             $local_fa_tracking_mask_threshold \
             ${prefix}__local_tracking_mask.nii.gz \
             --data_type uint8 -f
@@ -65,24 +68,26 @@ process TRACKING_LOCALTRACKING {
     fi
 
     if [ "${local_seeding_mask}" == "wm" ]; then
-        scil_volume_math.py convert $wm ${prefix}__local_seeding_mask.nii.gz \
+        scil_volume_math lower_threshold $wm \
+            $local_wm_seeding_mask_threshold \
+            ${prefix}__local_seeding_mask.nii.gz \
             --data_type uint8 -f
 
     elif [ "${local_seeding_mask}" == "fa" ]; then
-        scil_volume_math.py lower_threshold $fa \
+        scil_volume_math lower_threshold $fa \
             $local_fa_seeding_mask_threshold \
             ${prefix}__local_seeding_mask.nii.gz \
             --data_type uint8 -f
     fi
 
-    scil_tracking_local.py $fodf ${prefix}__local_seeding_mask.nii.gz \
+    scil_tracking_local $fodf ${prefix}__local_seeding_mask.nii.gz \
             ${prefix}__local_tracking_mask.nii.gz tmp.trk $enable_gpu\
             $local_algo $local_seeding $local_nbr_seeds\
             $local_random_seed $local_step $local_theta\
             $local_sfthres $local_min_len\
             $local_max_len $compress $basis -f
 
-    scil_tractogram_remove_invalid.py tmp.trk\
+    scil_tractogram_remove_invalid tmp.trk\
             ${prefix}__local_tracking.trk\
             --remove_single_point -f
 
@@ -107,24 +112,26 @@ process TRACKING_LOCALTRACKING {
 
     if $run_qc;
     then
-        scil_viz_bundle_screenshot_mosaic.py tmp_anat_qc.nii.gz ${prefix}__local_tracking.trk\
+        scil_viz_bundle_screenshot_mosaic tmp_anat_qc.nii.gz ${prefix}__local_tracking.trk\
             ${prefix}__local_tracking_mqc.png --opacity_background 1 --light_screenshot
-        scil_tractogram_print_info.py ${prefix}__local_tracking.trk >> ${prefix}__local_tracking_stats.json
+        scil_tractogram_print_info ${prefix}__local_tracking.trk >> ${prefix}__local_tracking_stats.json
     fi
     rm -f tmp_anat_qc.nii.gz
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        scilpy: \$(pip list | grep scilpy | tr -s ' ' | cut -d' ' -f2)
+        scilpy: \$(uv pip -q -n list | grep scilpy | tr -s ' ' | cut -d' ' -f2)
     END_VERSIONS
     """
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    scil_tracking_local.py -h
-    scil_tractogram_remove_invalid.py -h
-    scil_volume_math.py -h
+    scil_tracking_local -h
+    scil_tractogram_remove_invalid -h
+    scil_volume_math -h
+    scil_viz_bundle_screenshot_mosaic -h
+    scil_tractogram_print_info -h
 
     touch ${prefix}__local_tracking.trk
     touch ${prefix}__local_tracking_config.json
@@ -135,7 +142,7 @@ process TRACKING_LOCALTRACKING {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        scilpy: \$(pip list | grep scilpy | tr -s ' ' | cut -d' ' -f2)
+        scilpy: \$(uv pip -q -n list | grep scilpy | tr -s ' ' | cut -d' ' -f2)s
     END_VERSIONS
     """
 }

@@ -18,20 +18,20 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test__b0_bet_mask.nii.gz:md5,3e6bf62a42cb7f1f2c8e0d3024fb9fcb"
+                    "test__b0_bet_mask.nii.gz:md5,884e1028fb86b5556e1caac18a8d6e1f"
                 ]
             ],
             "test__dwi_eddy_mqc.gif",
             "test__rev_dwi_eddy_mqc.gif",
             [
-                "versions.yml:md5,95220463b44e9e5778729aaa87c09b3f"
+                "versions.yml:md5,391aaaa56a128085dd7d0eb3d251e7c9"
             ]
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.10.3"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-02-27T14:57:09.691201694"
+        "timestamp": "2025-09-22T19:31:54.387195357"
     },
     "eddy_light": {
         "content": [
@@ -52,30 +52,30 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test__b0_bet_mask.nii.gz:md5,3e6bf62a42cb7f1f2c8e0d3024fb9fcb"
+                    "test__b0_bet_mask.nii.gz:md5,884e1028fb86b5556e1caac18a8d6e1f"
                 ]
             ],
             "test__dwi_eddy_mqc.gif",
             [
-                "versions.yml:md5,95220463b44e9e5778729aaa87c09b3f"
+                "versions.yml:md5,391aaaa56a128085dd7d0eb3d251e7c9"
             ]
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.10.3"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-02-27T14:58:37.693170403"
+        "timestamp": "2025-09-22T19:34:45.235612012"
     },
     "eddy - stub-run": {
         "content": [
             [
-                "versions.yml:md5,95220463b44e9e5778729aaa87c09b3f"
+                "versions.yml:md5,391aaaa56a128085dd7d0eb3d251e7c9"
             ]
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.10.4"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-02-23T21:27:53.190124319"
+        "timestamp": "2025-09-22T19:35:17.057589231"
     }
 }

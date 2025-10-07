@@ -3,9 +3,7 @@ process RECONST_DTIMETRICS {
     tag "$meta.id"
     label 'process_single'
 
-    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
-        'https://scil.usherbrooke.ca/containers/scilus_latest.sif':
-        'scilus/scilus:latest' }"
+    container "scilus/scilus:2.2.0"
 
     input:
         tuple val(meta), path(dwi), path(bval), path(bvec), path(b0mask)
@@ -75,16 +73,25 @@ process RECONST_DTIMETRICS {
     export OMP_NUM_THREADS=1
     export OPENBLAS_NUM_THREADS=1
 
-    scil_dwi_extract_shell.py $dwi $bval $bvec $dti_shells \
+    scil_dwi_extract_shell $dwi $bval $bvec $dti_shells \
                 dwi_dti_shells.nii.gz bval_dti_shells bvec_dti_shells \
                 $dwi_shell_tolerance -f
 
-    scil_dti_metrics.py dwi_dti_shells.nii.gz bval_dti_shells bvec_dti_shells \
+    scil_dti_metrics dwi_dti_shells.nii.gz bval_dti_shells bvec_dti_shells \
         --not_all $args $b0_threshold -f
+
+    ransac_metrics=\$(echo "$args" | awk '{for(i=1; i<NF; i++) if (\$i ~ /^--(ad|rd|md)\$/) print \$(i+1)}')
+    for metrics in \${ransac_metrics};
+    do
+        scil_volume_remove_outliers_ransac \${metrics} \${metrics} -f;
+    done
 
     if [ "$run_qc" = true ] && [ "$args" != '' ];
     then
-        mv ${prefix}__residual_residuals_stats.png ${prefix}__residual_residuals_stats.png_bk
+        if [ -f ${prefix}__residual_residuals_stats.png ];
+        then
+            mv ${prefix}__residual_residuals_stats.png ${prefix}__residual_residuals_stats.png_bk
+        fi
 
         nii_files=\$(echo "$args" | awk '{for(i=1; i<NF; i++) if (\$i ~ /^--(fa|ad|rd|md|rgb|residual)\$/) print \$(i+1)}')
 
@@ -112,10 +119,11 @@ process RECONST_DTIMETRICS {
 
             image=\${image/${prefix}__/}
             image=\${image/.nii.gz/}
+            mrconvert ${prefix}__\${image}.nii.gz ${prefix}__\${image}_viz.nii.gz -stride -1,2,3
             viz_params="--display_slice_number --display_lr --size 256 256"
-            scil_viz_volume_screenshot.py ${prefix}__\${image}.nii.gz ${prefix}__\${image}_coronal.png \${viz_params} --slices \${coronal_dim} --axis coronal
-            scil_viz_volume_screenshot.py ${prefix}__\${image}.nii.gz ${prefix}__\${image}_axial.png \${viz_params} --slices \${axial_dim} --axis axial
-            scil_viz_volume_screenshot.py ${prefix}__\${image}.nii.gz ${prefix}__\${image}_sagittal.png \${viz_params} --slices \${sagittal_dim} --axis sagittal
+            scil_viz_volume_screenshot ${prefix}__\${image}_viz.nii.gz ${prefix}__\${image}_coronal.png \${viz_params} --slices \${coronal_dim} --axis coronal
+            scil_viz_volume_screenshot ${prefix}__\${image}_viz.nii.gz ${prefix}__\${image}_axial.png \${viz_params} --slices \${axial_dim} --axis axial
+            scil_viz_volume_screenshot ${prefix}__\${image}_viz.nii.gz ${prefix}__\${image}_sagittal.png \${viz_params} --slices \${sagittal_dim} --axis sagittal
 
             convert +append ${prefix}__\${image}_coronal_slice_\${coronal_dim}.png \
                     ${prefix}__\${image}_axial_slice_\${axial_dim}.png  \
@@ -127,13 +135,16 @@ process RECONST_DTIMETRICS {
 
         rm -rf *slice*
         convert -append *png ${prefix}__dti_mqc.png
-        mv ${prefix}__residual_residuals_stats.png_bk ${prefix}__residual_residuals_stats.png
+        if [ -f ${prefix}__residual_residuals_stats.png_bk ];
+        then
+            mv ${prefix}__residual_residuals_stats.png_bk ${prefix}__residual_residuals_stats.png
+        fi
     fi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        scilpy: \$(pip list --disable-pip-version-check --no-python-version-warning | grep scilpy | tr -s ' ' | cut -d' ' -f2)
-        mrtrix: \$(mrinfo -version 2>&1 | sed -n 's/== mrinfo \\([0-9.]\\+\\).*/\\1/p')
+        scilpy: \$(uv -q -n pip list | grep scilpy | tr -s ' ' | cut -d' ' -f2)
+        mrtrix: \$(mrinfo -version 2>&1 | grep "== mrinfo" | sed -E 's/== mrinfo ([0-9.]+).*/\\1/')
         imagemagick: \$(convert -version | sed -n 's/.*ImageMagick \\([0-9]\\{1,\\}\\.[0-9]\\{1,\\}\\.[0-9]\\{1,\\}\\).*/\\1/p')
     END_VERSIONS
     """
@@ -142,8 +153,19 @@ process RECONST_DTIMETRICS {
     def prefix = task.ext.prefix ?: "${meta.id}"
 
     """
-    scil_dwi_extract_shell.py -h
-    scil_dti_metrics.py -h
+    set +e
+    function handle_code () {
+    local code=\$?
+    ignore=( 1 )
+    [[ " \${ignore[@]} " =~ " \$code " ]] || exit \$code
+    }
+    trap 'handle_code' ERR
+
+    scil_dwi_extract_shell -h
+    scil_dti_metrics -h
+    scil_volume_remove_outliers_ransac -h
+    convert -h
+    mrinfo -h
 
     touch ${prefix}__ad.nii.gz
     touch ${prefix}__evecs.nii.gz
@@ -176,8 +198,9 @@ process RECONST_DTIMETRICS {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        scilpy: \$(pip list --disable-pip-version-check --no-python-version-warning | grep scilpy | tr -s ' ' | cut -d' ' -f2)
-        mrtrix: \$(mrinfo -version 2>&1 | sed -n 's/== mrinfo \\([0-9.]\\+\\).*/\\1/p')
+        scilpy: \$(uv -q -n pip list | grep scilpy | tr -s ' ' | cut -d' ' -f2)
+        mrtrix: \$(mrinfo -version 2>&1 | grep "== mrinfo" | sed -E 's/== mrinfo ([0-9.]+).*/\\1/')
+        imagemagick: \$(convert -version | sed -n 's/.*ImageMagick \\([0-9]\\{1,\\}\\.[0-9]\\{1,\\}\\.[0-9]\\{1,\\}\\).*/\\1/p')
     END_VERSIONS
     """
 }
