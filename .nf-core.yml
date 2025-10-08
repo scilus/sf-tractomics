@@ -8,6 +8,7 @@ lint:
     - .github/workflows/awstest.yml
     - .github/workflows/awsfulltest.yml
     - conf/igenomes.config
+    - conf/igenomes_ignored.config
   files_unchanged:
     - CODE_OF_CONDUCT.md
     - assets/nf-core-tractoflow_logo_light.png
@@ -19,7 +20,10 @@ lint:
   nextflow_config:
     - manifest.name
     - manifest.homePage
-nf_core_version: 3.2.0
+  schema_description: false
+  schema_lint: false
+  schema_params: false
+nf_core_version: 3.3.2
 repository_type: pipeline
 template:
   author: "@AlexVCaron"
