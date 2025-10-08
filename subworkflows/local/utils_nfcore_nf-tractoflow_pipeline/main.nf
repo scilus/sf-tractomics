@@ -56,7 +56,6 @@ workflow PIPELINE_INITIALISATION {
         workflow,
         validate_params,
         null,
-        // TODO: Update the following parameters
         false,
         false,
         false,
