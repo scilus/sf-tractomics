@@ -49,6 +49,12 @@
                     "format": "file-path",
                     "mimetype": "text/plain"
                 },
+                "clean_bids": {
+                    "type": "boolean",
+                    "description": "If set, it will remove all the participants that are missing any information.",
+                    "fa_icon": "fas fa-wrench",
+                    "help_text": "If set, it will remove all the participants that are missing any information."
+                },
                 "b0_thr_extract_b0": {
                     "type": "integer",
                     "default": 10,
