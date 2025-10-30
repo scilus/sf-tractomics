@@ -15,7 +15,8 @@ RUN apt-get update --quiet && \
         tree \
         graphviz \
         vim \
-        software-properties-common && \
+        software-properties-common \
+        libatomic1 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
