@@ -30,7 +30,8 @@ workflow NF_TRACTOFLOW {
     main:
 
     ch_versions = Channel.empty()
-    ch_multiqc_files = Channel.empty()
+    ch_mqc_files = Channel.empty()
+    ch_common_mqc_files = Channel.empty()
     ch_topup_config = Channel.empty()
     ch_bet_template = Channel.empty()
     ch_bet_probability = Channel.empty()
@@ -77,6 +78,15 @@ workflow NF_TRACTOFLOW {
             .filter{ it[1] }
     )
     ch_versions = ch_versions.mix(RUN.out.versions)
+    ch_mqc_files = ch_mqc_files.mix(RUN.out.mqc)
+
+    // Collate/filter QC files/images
+    ch_mqc_files = ch_mqc_files
+        .groupTuple()
+        .map { meta, files_list ->
+            def files = files_list.flatten().findAll { it != null }
+            return tuple(meta, files)
+        }
 
     //
     // Run RECONST/SH_METRICS
@@ -114,7 +124,7 @@ workflow NF_TRACTOFLOW {
     summary_params      = paramsSummaryMap(
         workflow, parameters_schema: "nextflow_schema.json")
     ch_workflow_summary = Channel.value(paramsSummaryMultiqc(summary_params))
-    ch_multiqc_files = ch_multiqc_files.mix(
+    ch_common_mqc_files = ch_common_mqc_files.mix(
         ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
     ch_multiqc_custom_methods_description = params.multiqc_methods_description ?
         file(params.multiqc_methods_description, checkIfExists: true) :
@@ -122,8 +132,8 @@ workflow NF_TRACTOFLOW {
     ch_methods_description                = Channel.value(
         methodsDescriptionText(ch_multiqc_custom_methods_description))
 
-    ch_multiqc_files = ch_multiqc_files.mix(ch_collated_versions)
-    ch_multiqc_files = ch_multiqc_files.mix(
+    ch_common_mqc_files = ch_common_mqc_files.mix(ch_collated_versions)
+    ch_common_mqc_files = ch_common_mqc_files.mix(
         ch_methods_description.collectFile(
             name: 'methods_description_mqc.yaml',
             sort: true
@@ -131,7 +141,8 @@ workflow NF_TRACTOFLOW {
     )
 
     MULTIQC (
-        ch_multiqc_files.collect(),
+        ch_mqc_files,
+        ch_common_mqc_files.collect(),
         ch_multiqc_config.toList(),
         ch_multiqc_custom_config.toList(),
         ch_multiqc_logo.toList(),

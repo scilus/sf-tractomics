@@ -97,7 +97,15 @@ workflow {
         params.plaintext_email,
         params.outdir,
         params.monochrome_logs,
-        SCILUS_NF_TRACTOFLOW.out.multiqc_report
+        // The last argument of this function
+        // will try to send the multiqc report(s)
+        // by email. As of now, the reports are
+        // too heavy to be sent by email. In the
+        // meantime, we disable this feature.
+        // In the future, the global report could
+        // potentially be sent here if its size
+        // is reasonable (might only contain graphs).
+        [] // SCILUS_NF_TRACTOFLOW.out.multiqc_report
     )
 }
 
