@@ -9,7 +9,7 @@ Content-Type: text/html; charset=utf-8
 $email_html
 
 --nfcoremimeboundary
-Content-Type: image/png;name="scilus-nf-tractoflow_logo.png"
+Content-Type: image/png;name="scilus-nf-tractoflow_logo_light.png"
 Content-Transfer-Encoding: base64
 Content-ID: <nfcorepipelinelogo>
 Content-Disposition: inline; filename="scilus-nf-tractoflow_logo_light.png"
@@ -27,9 +27,10 @@ Content-Disposition: inline; filename="scilus-nf-tractoflow_logo_light.png"
 
 <%
 if (mqcFile){
-def mqcFileObj = new File("$mqcFile")
-if (mqcFileObj.length() < mqcMaxSize){
-out << """
+    try {
+        def mqcFileObj = new File("$mqcFile")
+        if (mqcFileObj.length() < mqcMaxSize){
+            out << """
 --nfcoremimeboundary
 Content-Type: text/html; name=\"multiqc_report\"
 Content-Transfer-Encoding: base64
@@ -47,7 +48,14 @@ ${mqcFileObj.
     flatten().
     join( '\n' )}
 """
-}}
+        }
+    } catch (Exception e) {
+        out << "\n\nERROR in mqcFile section: ${e.message}\n"
+        out << "Stack trace: ${e.printStackTrace()}\n"
+        out << "mqcFile value: $mqcFile\n"
+        out << "mqcMaxSize value: $mqcMaxSize\n"
+    }
+}
 %>
 
 --nfcoremimeboundary--
