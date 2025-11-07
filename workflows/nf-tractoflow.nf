@@ -8,7 +8,7 @@ include { paramsSummaryMap       } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_nf-tractoflow_pipeline'
-include { TRACTOFLOW as RUN      } from '../subworkflows/nf-neuro/tractoflow'
+include { TRACTOFLOW             } from '../subworkflows/nf-neuro/tractoflow'
 include { RECONST_SHSIGNAL       } from '../modules/nf-neuro/reconst/shsignal'
 
 /*
@@ -57,7 +57,7 @@ workflow NF_TRACTOFLOW {
         error "A T1w template is required for brain extraction. Provide its directory with params.template_t1."
     }
 
-    RUN(
+    TRACTOFLOW(
         ch_dwi_bval_bvec,
         ch_t1,
         ch_b0
@@ -76,14 +76,14 @@ workflow NF_TRACTOFLOW {
         ch_lesion
             .filter{ it[1] }
     )
-    ch_versions = ch_versions.mix(RUN.out.versions)
+    ch_versions = ch_versions.mix(TRACTOFLOW.out.versions)
 
     //
     // Run RECONST/SH_METRICS
     //
     if (params.sh_fitting)
         RECONST_SHSIGNAL(
-            RUN.out.dwi
+            TRACTOFLOW.out.dwi
                 .map{ it + [[]] }
         )
 
