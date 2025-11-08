@@ -6,87 +6,87 @@
             "modules": {
                 "nf-neuro": {
                     "betcrop/antsbet": {
-                        "branch": "feat/collect-qc-files",
+                        "branch": "quick-fixes",
                         "git_sha": "ae84c5015de38e1f80b0637a07cf72937db89a6f",
                         "installed_by": ["preproc_t1"]
                     },
                     "betcrop/fslbetcrop": {
-                        "branch": "feat/collect-qc-files",
+                        "branch": "quick-fixes",
                         "git_sha": "247d96886548c83b01812a61f5b1393fa4e911e7",
                         "installed_by": ["preproc_dwi", "topup_eddy"]
                     },
                     "betcrop/synthbet": {
-                        "branch": "feat/collect-qc-files",
+                        "branch": "quick-fixes",
                         "git_sha": "60e21b273653eec3b710b91562e714c74ef4d0c7",
                         "installed_by": ["preproc_t1"]
                     },
                     "denoising/mppca": {
-                        "branch": "feat/collect-qc-files",
+                        "branch": "quick-fixes",
                         "git_sha": "1c7984a32135efc6547518cff5724312013bcd4f",
                         "installed_by": ["preproc_dwi"]
                     },
                     "denoising/nlmeans": {
-                        "branch": "feat/collect-qc-files",
+                        "branch": "quick-fixes",
                         "git_sha": "d82c5908b24bec271a5db1471bbf18764318b9db",
                         "installed_by": ["preproc_t1"]
                     },
                     "image/cropvolume": {
-                        "branch": "feat/collect-qc-files",
+                        "branch": "quick-fixes",
                         "git_sha": "44a8807e115f15d720ff952229c7d7540952b587",
                         "installed_by": ["preproc_t1"]
                     },
                     "image/resample": {
-                        "branch": "feat/collect-qc-files",
+                        "branch": "quick-fixes",
                         "git_sha": "a3fbaa40d649f221b099322105936afe09115c0c",
                         "installed_by": ["preproc_dwi", "preproc_t1"]
                     },
                     "io/readbids": {
-                        "branch": "main",
-                        "git_sha": "b7c3c2c1485d23ebaabeb552001c0d6a73134a50",
+                        "branch": "quick-fixes",
+                        "git_sha": "fbe7568e466613487af44a62e9cb4e023eefd5d3",
                         "installed_by": ["io_bids"]
                     },
                     "preproc/eddy": {
-                        "branch": "feat/collect-qc-files",
+                        "branch": "quick-fixes",
                         "git_sha": "90eb8505e8e5081c64f7599c105c40525263902e",
                         "installed_by": ["topup_eddy"]
                     },
                     "preproc/gibbs": {
-                        "branch": "feat/collect-qc-files",
+                        "branch": "quick-fixes",
                         "git_sha": "60e21b273653eec3b710b91562e714c74ef4d0c7",
                         "installed_by": ["preproc_dwi"]
                     },
                     "preproc/n4": {
-                        "branch": "feat/collect-qc-files",
+                        "branch": "quick-fixes",
                         "git_sha": "6243a8961471549d479d882b1cf3a7bd7106c527",
                         "installed_by": ["preproc_dwi", "preproc_t1"]
                     },
                     "preproc/normalize": {
-                        "branch": "feat/collect-qc-files",
+                        "branch": "quick-fixes",
                         "git_sha": "6dd708169f742b1bcd01b94936abec6ca87de0f0",
                         "installed_by": ["preproc_dwi"]
                     },
                     "preproc/topup": {
-                        "branch": "feat/collect-qc-files",
+                        "branch": "quick-fixes",
                         "git_sha": "ae84c5015de38e1f80b0637a07cf72937db89a6f",
                         "installed_by": ["topup_eddy"]
                     },
                     "reconst/dtimetrics": {
-                        "branch": "feat/collect-qc-files",
+                        "branch": "quick-fixes",
                         "git_sha": "bd5f1aece0ad185cad52911346aa62c225dfff4d",
                         "installed_by": ["tractoflow"]
                     },
                     "reconst/fodf": {
-                        "branch": "feat/collect-qc-files",
+                        "branch": "quick-fixes",
                         "git_sha": "c399791d89aad88aceedec1bc5221dfeb0952cd5",
                         "installed_by": ["tractoflow"]
                     },
                     "reconst/frf": {
-                        "branch": "feat/collect-qc-files",
+                        "branch": "quick-fixes",
                         "git_sha": "a51881f1c316e0e52b68fa66d7465c32339e2142",
                         "installed_by": ["tractoflow"]
                     },
                     "reconst/meanfrf": {
-                        "branch": "feat/collect-qc-files",
+                        "branch": "quick-fixes",
                         "git_sha": "f9676160a7d9e71ad072c39f32bcc7e7f1621d7a",
                         "installed_by": ["tractoflow"]
                     },
@@ -96,62 +96,62 @@
                         "installed_by": ["modules"]
                     },
                     "registration/anattodwi": {
-                        "branch": "feat/collect-qc-files",
+                        "branch": "quick-fixes",
                         "git_sha": "74181e9f66228d5e35e80d408086d676ce73b0ab",
                         "installed_by": ["registration"]
                     },
                     "registration/ants": {
-                        "branch": "feat/collect-qc-files",
+                        "branch": "quick-fixes",
                         "git_sha": "74181e9f66228d5e35e80d408086d676ce73b0ab",
                         "installed_by": ["registration"]
                     },
                     "registration/antsapplytransforms": {
-                        "branch": "feat/collect-qc-files",
+                        "branch": "quick-fixes",
                         "git_sha": "74181e9f66228d5e35e80d408086d676ce73b0ab",
                         "installed_by": ["tractoflow"]
                     },
                     "registration/convert": {
-                        "branch": "feat/collect-qc-files",
+                        "branch": "quick-fixes",
                         "git_sha": "5865aa6a296886ce6165c8ffe27e05215fc708cd",
                         "installed_by": ["registration"]
                     },
                     "registration/easyreg": {
-                        "branch": "feat/collect-qc-files",
+                        "branch": "quick-fixes",
                         "git_sha": "70ec5c35fbe3d0615c87497b02f7f289b24e4819",
                         "installed_by": ["registration"]
                     },
                     "registration/synthmorph": {
-                        "branch": "feat/collect-qc-files",
+                        "branch": "quick-fixes",
                         "git_sha": "10b76807b5e4e3dd5251725f7fe9cfd895ff5b03",
                         "installed_by": ["registration"]
                     },
                     "segmentation/fastseg": {
-                        "branch": "feat/collect-qc-files",
+                        "branch": "quick-fixes",
                         "git_sha": "247d96886548c83b01812a61f5b1393fa4e911e7",
                         "installed_by": ["anatomical_segmentation"]
                     },
                     "segmentation/freesurferseg": {
-                        "branch": "feat/collect-qc-files",
+                        "branch": "quick-fixes",
                         "git_sha": "247d96886548c83b01812a61f5b1393fa4e911e7",
                         "installed_by": ["anatomical_segmentation"]
                     },
                     "segmentation/synthseg": {
-                        "branch": "feat/collect-qc-files",
+                        "branch": "quick-fixes",
                         "git_sha": "60e21b273653eec3b710b91562e714c74ef4d0c7",
                         "installed_by": ["anatomical_segmentation"]
                     },
                     "tracking/localtracking": {
-                        "branch": "feat/collect-qc-files",
+                        "branch": "quick-fixes",
                         "git_sha": "b21f41f92e1ee439300b7060fc0296b56c6511b9",
                         "installed_by": ["tractoflow"]
                     },
                     "tracking/pfttracking": {
-                        "branch": "feat/collect-qc-files",
+                        "branch": "quick-fixes",
                         "git_sha": "b21f41f92e1ee439300b7060fc0296b56c6511b9",
                         "installed_by": ["tractoflow"]
                     },
                     "utils/extractb0": {
-                        "branch": "feat/collect-qc-files",
+                        "branch": "quick-fixes",
                         "git_sha": "0245a01f7ab9bec0753e2235fba489e3353f1a33",
                         "installed_by": ["preproc_dwi", "topup_eddy"]
                     }
@@ -160,38 +160,38 @@
             "subworkflows": {
                 "nf-neuro": {
                     "anatomical_segmentation": {
-                        "branch": "feat/collect-qc-files",
+                        "branch": "quick-fixes",
                         "git_sha": "c18142d4ce012e5e79a6e54817c0ace83755150d",
                         "installed_by": ["tractoflow"]
                     },
                     "io_bids": {
-                        "branch": "main",
+                        "branch": "quick-fixes",
                         "git_sha": "9cdfcfcec58de632de847f403c2a3c1a53d40bde",
                         "installed_by": ["subworkflows"]
                     },
                     "preproc_dwi": {
-                        "branch": "feat/collect-qc-files",
+                        "branch": "quick-fixes",
                         "git_sha": "ab4e37b436b6082fb8e79ffdfbaebdf882dec21d",
                         "installed_by": ["tractoflow"]
                     },
                     "preproc_t1": {
-                        "branch": "feat/collect-qc-files",
+                        "branch": "quick-fixes",
                         "git_sha": "8e0d67ab92fd874c365792bc197f01731a270afd",
                         "installed_by": ["tractoflow"]
                     },
                     "registration": {
-                        "branch": "feat/collect-qc-files",
+                        "branch": "quick-fixes",
                         "git_sha": "74181e9f66228d5e35e80d408086d676ce73b0ab",
                         "installed_by": ["tractoflow"]
                     },
                     "topup_eddy": {
-                        "branch": "feat/collect-qc-files",
+                        "branch": "quick-fixes",
                         "git_sha": "74181e9f66228d5e35e80d408086d676ce73b0ab",
                         "installed_by": ["preproc_dwi"]
                     },
                     "tractoflow": {
-                        "branch": "feat/collect-qc-files",
-                        "git_sha": "6f85488b671e2308cb59709b3c622806debd516f",
+                        "branch": "quick-fixes",
+                        "git_sha": "fbe7568e466613487af44a62e9cb4e023eefd5d3",
                         "installed_by": ["subworkflows"]
                     }
                 }

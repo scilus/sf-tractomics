@@ -96,8 +96,8 @@ workflow TRACTOFLOW {
         // SUBWORKFLOW: Run REGISTRATION
         //
         T1_REGISTRATION(
-            PREPROC_T1.out.t1_final,
             PREPROC_DWI.out.b0,
+            PREPROC_T1.out.t1_final,
             RECONST_DTIMETRICS.out.fa,
             Channel.empty(),
             Channel.empty(),
@@ -152,7 +152,7 @@ workflow TRACTOFLOW {
             Channel.empty()
         )
         ch_versions = ch_versions.mix(ANATOMICAL_SEGMENTATION.out.versions.first())
-        ch_mqc_files = ch_mqc_files.mix(ANATOMICAL_SEGMENTATION.out.qc_score)
+        ch_global_mqc_files = ch_global_mqc_files.mix(ANATOMICAL_SEGMENTATION.out.qc_score)
 
         /* RECONSTRUCTION - PART II - needs anatomy */
 
