@@ -80,6 +80,11 @@
                         "git_sha": "c399791d89aad88aceedec1bc5221dfeb0952cd5",
                         "installed_by": ["tractoflow"]
                     },
+                    "reconst/freewater": {
+                        "branch": "quick-fixes",
+                        "git_sha": "fd7d3fcca3b62e479dd59132734fba896d88858b",
+                        "installed_by": ["modules"]
+                    },
                     "reconst/frf": {
                         "branch": "quick-fixes",
                         "git_sha": "a51881f1c316e0e52b68fa66d7465c32339e2142",
