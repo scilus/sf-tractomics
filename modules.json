@@ -90,6 +90,11 @@
                         "git_sha": "f9676160a7d9e71ad072c39f32bcc7e7f1621d7a",
                         "installed_by": ["tractoflow"]
                     },
+                    "reconst/qball": {
+                        "branch": "quick-fixes",
+                        "git_sha": "5420aa212ac5ad3f255f50ca5b0d5995693f8c35",
+                        "installed_by": ["modules"]
+                    },
                     "reconst/shsignal": {
                         "branch": "main",
                         "git_sha": "f9676160a7d9e71ad072c39f32bcc7e7f1621d7a",
