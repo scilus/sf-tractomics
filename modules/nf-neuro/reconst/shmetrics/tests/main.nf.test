@@ -1,0 +1,92 @@
+nextflow_process {
+
+    name "Test Process RECONST_SHMETRICS"
+    script "../main.nf"
+    process "RECONST_SHMETRICS"
+
+    tag "modules"
+    tag "modules_nfneuro"
+    tag "reconst"
+    tag "reconst/shmetrics"
+
+    tag "subworkflows"
+    tag "subworkflows/load_test_data"
+
+    setup {
+            run("LOAD_TEST_DATA", alias: "LOAD_DATA") {
+                script "../../../../../subworkflows/nf-neuro/load_test_data/main.nf"
+                process {
+                    """
+                    input[0] = Channel.from( [ "processing.zip" ] )
+                    input[1] = "test.load-test-data"
+                    """
+                }
+            }
+        }
+
+    test("reconst - shmetrics") {
+
+        config "./nextflow.config"
+
+        when {
+            process {
+                """
+                input[0] = LOAD_DATA.out.test_data_directory.map{
+                    test_data_directory -> [
+                        [ id:'test', single_end:false ], // meta map
+                        file("\${test_data_directory}/fodf.nii.gz"),
+                        [],
+                        file("\${test_data_directory}/fa.nii.gz"),
+                        file("\${test_data_directory}/md.nii.gz")
+                    ]
+                }
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    file(process.out.peaks.get(0).get(1)).name,
+                    file(process.out.peak_indices.get(0).get(1)).name,
+                    niftiMD5SUM(process.out.peak_values.get(0).get(1), 6),
+                    niftiMD5SUM(process.out.afd_max.get(0).get(1), 6),
+                    niftiMD5SUM(process.out.afd_total.get(0).get(1), 6),
+                    niftiMD5SUM(process.out.afd_sum.get(0).get(1), 1),
+                    niftiMD5SUM(process.out.nufo.get(0).get(1), 6),
+                    niftiMD5SUM(process.out.vent_mask.get(0).get(1), 6),
+                    process.out.versions
+                ).match() }
+            )
+        }
+    }
+
+    test("reconst - shmetrics - stub-run") {
+        tag "stub"
+        options "-stub-run"
+
+        when {
+            process {
+                """
+                input[0] = LOAD_DATA.out.test_data_directory.map{
+                    test_data_directory -> [
+                        [ id:'test', single_end:false ], // meta map
+                        file("\${test_data_directory}/fodf.nii.gz"),
+                        [],
+                        file("\${test_data_directory}/fa.nii.gz"),
+                        file("\${test_data_directory}/md.nii.gz")
+                    ]
+                }
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.versions).match() }
+            )
+        }
+
+    }
+}

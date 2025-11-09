@@ -1,0 +1,34 @@
+{
+    "reconst - shmetrics - stub-run": {
+        "content": [
+            [
+                "versions.yml:md5,9bd2b90c1a1148e83d8037357a93ef04"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "25.04.7"
+        },
+        "timestamp": "2025-09-22T20:18:36.560384817"
+    },
+    "reconst - shmetrics": {
+        "content": [
+            "test__peaks.nii.gz",
+            "test__peak_indices.nii.gz",
+            "test__peak_values.nii.gz:md5:header,431b1cae3ef9b6fb9fd012a7c4bbbf2f,data,72943c0123dd662b6d237ffe92373b85",
+            "test__afd_max.nii.gz:md5:header,c5e41f89848f91c53a9a7be44970d4b1,data,a7cb5485f23516738c2dac6c50db9c61",
+            "test__afd_total.nii.gz:md5:header,c5e41f89848f91c53a9a7be44970d4b1,data,7345a2dfed03d48715a505916a8bbfc5",
+            "test__afd_sum.nii.gz:md5:header,c5e41f89848f91c53a9a7be44970d4b1,data,0160b88bb94bbd947928a3a0c8736f91",
+            "test__nufo.nii.gz:md5:header,c5e41f89848f91c53a9a7be44970d4b1,data,786f036ddab6d83d14d27664dfc5258f",
+            "test__ventricles_mask.nii.gz:md5:header,c5e41f89848f91c53a9a7be44970d4b1,data,c99be28705f53b65f3dd406c53e273e6",
+            [
+                "versions.yml:md5,9bd2b90c1a1148e83d8037357a93ef04"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "25.04.7"
+        },
+        "timestamp": "2025-09-24T00:51:38.107144086"
+    }
+}

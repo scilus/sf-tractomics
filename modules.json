@@ -90,6 +90,11 @@
                         "git_sha": "f9676160a7d9e71ad072c39f32bcc7e7f1621d7a",
                         "installed_by": ["tractoflow"]
                     },
+                    "reconst/shmetrics": {
+                        "branch": "quick-fixes",
+                        "git_sha": "2dfca810725af917cb981206040aa3211fb18dc4",
+                        "installed_by": ["modules"]
+                    },
                     "reconst/shsignal": {
                         "branch": "main",
                         "git_sha": "f9676160a7d9e71ad072c39f32bcc7e7f1621d7a",
