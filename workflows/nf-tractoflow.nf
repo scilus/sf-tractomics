@@ -10,6 +10,7 @@ include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pi
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_nf-tractoflow_pipeline'
 include { TRACTOFLOW             } from '../subworkflows/nf-neuro/tractoflow'
 include { RECONST_SHSIGNAL       } from '../modules/nf-neuro/reconst/shsignal'
+include { RECONST_SHMETRICS      } from '../modules/nf-neuro/reconst/shmetrics/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -86,6 +87,19 @@ workflow NF_TRACTOFLOW {
             TRACTOFLOW.out.dwi
                 .map{ it + [[]] }
         )
+
+    //
+    // Spherical Harmonics Metrics
+    //
+    if (params.run_sh_metrics) {
+        ch_shmetrics_input = TRACTOFLOW.out.fodf
+            .join(TRACTOFLOW.out.b0_mask)
+            .join(TRACTOFLOW.out.dti_fa)
+            .join(TRACTOFLOW.out.dti_md)
+
+        RECONST_SHMETRICS( ch_shmetrics_input )
+        ch_versions = ch_versions.mix(RECONST_SHMETRICS.out.versions.first())
+    }
 
     //
     // Collate and save software versions
