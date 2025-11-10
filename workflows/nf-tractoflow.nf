@@ -143,12 +143,14 @@ workflow NF_TRACTOFLOW {
         STATS_METRICSINROI( ch_input_metricsinroi )
         ch_versions = ch_versions.mix(STATS_METRICSINROI.out.versions)
 
+        // Merge all JSON metrics into a single file
         ch_input_mergejson = STATS_METRICSINROI.out.mqc.collect()
             .map{ _meta, json -> json }
+            .toList()
+            .map{ jsons -> [[id:"all"], jsons] }
 
-        ch_input_mergejson.view()
-        // STATS_MERGEJSON( ch_input_mergejson )
-        // ch_versions = ch_versions.mix(STATS_MERGEJSON.out.versions)
+        STATS_MERGEJSON( ch_input_mergejson )
+        ch_versions = ch_versions.mix(STATS_MERGEJSON.out.versions)
     }
 
     //
