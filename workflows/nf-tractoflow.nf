@@ -10,7 +10,10 @@ include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pi
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_nf-tractoflow_pipeline'
 include { TRACTOFLOW             } from '../subworkflows/nf-neuro/tractoflow'
 include { RECONST_SHSIGNAL       } from '../modules/nf-neuro/reconst/shsignal'
-
+include { STATS_METRICSINROI     } from '../modules/nf-neuro/stats/metricsinroi/main'
+include { REGISTRATION_ANTS as REGISTER_ATLAS_BUNDLES } from '../modules/nf-neuro/registration/ants/main'
+include { REGISTRATION_ANTSAPPLYTRANSFORMS as TRANSFORM_ATLAS_BUNDLES } from '../modules/nf-neuro/registration/antsapplytransforms/main.nf'
+include { BUNDLE_IIT            } from '../modules/local/bundle/iit/main'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
@@ -86,6 +89,59 @@ workflow NF_TRACTOFLOW {
             TRACTOFLOW.out.dwi
                 .map{ it + [[]] }
         )
+
+    if (params.run_atlas_based_tractometry) {
+        //
+        // IIT ATLAS
+        //
+
+        // Extract bundle masks from IIT atlas
+        ch_iit_template_bundles = channel.fromPath( params.iit_atlas.bundle_masks_dir + "/*.nii.gz", checkIfExists: true ).collect()
+        ch_iit_template_thr = channel.fromPath( params.iit_atlas.bundle_masks_thresholds, checkIfExists: true )
+        BUNDLE_IIT(ch_iit_template_bundles, ch_iit_template_thr)
+
+        // Register IIT atlas to subject space
+        ch_iit_template_b0 = channel.fromPath( params.iit_atlas.template_b0 )
+        ch_input_register_iit = TRACTOFLOW.out.b0
+            .combine(ch_iit_template_b0)
+            .map{ meta, b0, template_b0 -> [meta, b0, template_b0, []] }
+        REGISTER_ATLAS_BUNDLES(ch_input_register_iit)
+
+        // Apply the transformation to subject space to the bundles
+        ch_iit_transform_bundles = TRACTOFLOW.out.b0
+            // .join(REGISTER_ATLAS_BUNDLES.out.warp)
+            // .join(REGISTER_ATLAS_BUNDLES.out.affine)
+            // .combine(BUNDLE_IIT.out.bundle_masks.toList())
+            // .map {
+            //     meta, b0, warp, affine, bundles ->
+            //         [meta, bundles, b0, warp, affine]
+            // }
+        // ch_iit_transform_bundles.view()
+        // TRANSFORM_ATLAS_BUNDLES(ch_iit_transform_bundles)
+
+        // Prepare volume ROI metric extraction
+        // Start by collecting DTI metrics
+        // ch_input_volume_roistats = TRACTOFLOW.out.dti_fa
+        //     .join(TRACTOFLOW.out.dti_md)
+        //     .join(TRACTOFLOW.out.dti_rd)
+        //     .join(TRACTOFLOW.out.dti_ad)
+
+        //
+        // EXTRACT ROI VOLUME STATISTICS
+        //
+        // Input: [meta, [metrics_list], [masks]]
+
+        // ch_input_volume_roistats = ch_input_volume_roistats
+        //     .map {tuple ->
+        //         def meta = tuple[0]
+        //         def metrics = tuple[1..-1]
+        //         return [meta, metrics]
+        //     }
+        //     .join(TRANSFORM_ATLAS_BUNDLES.out.warped_image.combine([]))
+
+        // STATS_METRICSINROI( ch_input_volume_roistats )
+        // ch_versions = ch_versions.mix(STATS_METRICSINROI.out.versions)
+    }
 
     //
     // Collate and save software versions
