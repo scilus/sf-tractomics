@@ -17,10 +17,9 @@ process BUNDLE_IIT {
 
     script:
     """
-    ls -lah
     # Create masks for each bundle based on provided thresholds
     while read -r name thr; do
-        scil_volume_math lower_threshold "\${name}.nii.gz" \$thr "\${name}_mask.nii.gz"
+        scil_volume_math lower_threshold "\${name}.nii.gz" \$thr "\${name}.nii.gz" -f
     done < ${thresholds_txt_file}
 
     cat <<-END_VERSIONS > versions.yml
