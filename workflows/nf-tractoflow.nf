@@ -14,6 +14,7 @@ include { STATS_METRICSINROI     } from '../modules/nf-neuro/stats/metricsinroi/
 include { REGISTRATION_ANTS as REGISTER_ATLAS_BUNDLES } from '../modules/nf-neuro/registration/ants/main'
 include { REGISTRATION_ANTSAPPLYTRANSFORMS as TRANSFORM_ATLAS_BUNDLES } from '../modules/nf-neuro/registration/antsapplytransforms/main.nf'
 include { BUNDLE_IIT            } from '../modules/local/bundle/iit/main'
+include { STATS_MERGEJSON       } from '../modules/nf-neuro/stats/mergejson/main'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
@@ -120,7 +121,7 @@ workflow NF_TRACTOFLOW {
 
         // Prepare volume ROI metric extraction
         // Start by collecting DTI metrics
-        ch_input_volume_roistats = TRACTOFLOW.out.dti_fa
+        ch_input_metricsinroi = TRACTOFLOW.out.dti_fa
             .join(TRACTOFLOW.out.dti_md)
             .join(TRACTOFLOW.out.dti_rd)
             .join(TRACTOFLOW.out.dti_ad)
@@ -130,7 +131,7 @@ workflow NF_TRACTOFLOW {
         //
         // Input: [meta, [metrics_list], [masks]]
 
-        ch_input_volume_roistats = ch_input_volume_roistats
+        ch_input_metricsinroi = ch_input_metricsinroi
             .map {tuple ->
                 def meta = tuple[0]
                 def metrics = tuple[1..-1]
@@ -139,8 +140,15 @@ workflow NF_TRACTOFLOW {
             .join(TRANSFORM_ATLAS_BUNDLES.out.warped_image)
             .map { meta, metrics, bundles -> [meta, metrics, bundles, []]}
 
-        STATS_METRICSINROI( ch_input_volume_roistats )
+        STATS_METRICSINROI( ch_input_metricsinroi )
         ch_versions = ch_versions.mix(STATS_METRICSINROI.out.versions)
+
+        ch_input_mergejson = STATS_METRICSINROI.out.mqc.collect()
+            .map{ _meta, json -> json }
+
+        ch_input_mergejson.view()
+        // STATS_MERGEJSON( ch_input_mergejson )
+        // ch_versions = ch_versions.mix(STATS_MERGEJSON.out.versions)
     }
 
     //
