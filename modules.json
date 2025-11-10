@@ -196,7 +196,7 @@
                     },
                     "tractoflow": {
                         "branch": "quick-fixes",
-                        "git_sha": "5ab56ea9170feb3a3ad75985e42b3fdab501e4fd",
+                        "git_sha": "de978a978ccdfc6dd69ba00ce7999c87dd2920e5",
                         "installed_by": ["subworkflows"]
                     }
                 }
