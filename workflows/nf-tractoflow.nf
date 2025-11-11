@@ -10,11 +10,12 @@ include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pi
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_nf-tractoflow_pipeline'
 include { TRACTOFLOW             } from '../subworkflows/nf-neuro/tractoflow'
 include { RECONST_SHSIGNAL       } from '../modules/nf-neuro/reconst/shsignal'
-include { STATS_METRICSINROI     } from '../modules/nf-neuro/stats/metricsinroi/main'
 include { REGISTRATION_ANTS as REGISTER_ATLAS_BUNDLES } from '../modules/nf-neuro/registration/ants/main'
 include { REGISTRATION_ANTSAPPLYTRANSFORMS as TRANSFORM_ATLAS_BUNDLES } from '../modules/nf-neuro/registration/antsapplytransforms/main.nf'
-include { BUNDLE_IIT            } from '../modules/local/bundle/iit/main'
-include { STATS_MERGEJSON       } from '../modules/nf-neuro/stats/mergejson/main'
+include { BUNDLE_IIT             } from '../modules/local/bundle/iit/main'
+include { VOLUME_ROISTATS        } from '../modules/local/volume/roistats/main'
+include { VOLUME_COLLECTSTATS    } from '../modules/local/volume/collectstats/main'
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
@@ -121,7 +122,7 @@ workflow NF_TRACTOFLOW {
 
         // Prepare volume ROI metric extraction
         // Start by collecting DTI metrics
-        ch_input_metricsinroi = TRACTOFLOW.out.dti_fa
+        ch_input_volume_roistats = TRACTOFLOW.out.dti_fa
             .join(TRACTOFLOW.out.dti_md)
             .join(TRACTOFLOW.out.dti_rd)
             .join(TRACTOFLOW.out.dti_ad)
@@ -131,26 +132,20 @@ workflow NF_TRACTOFLOW {
         //
         // Input: [meta, [metrics_list], [masks]]
 
-        ch_input_metricsinroi = ch_input_metricsinroi
+        ch_input_volume_roistats = ch_input_volume_roistats
             .map {tuple ->
                 def meta = tuple[0]
                 def metrics = tuple[1..-1]
                 return [meta, metrics]
             }
             .join(TRANSFORM_ATLAS_BUNDLES.out.warped_image)
-            .map { meta, metrics, bundles -> [meta, metrics, bundles, []]}
+        VOLUME_ROISTATS(ch_input_volume_roistats)
 
-        STATS_METRICSINROI( ch_input_metricsinroi )
-        ch_versions = ch_versions.mix(STATS_METRICSINROI.out.versions)
-
-        // Merge all JSON metrics into a single file
-        ch_input_mergejson = STATS_METRICSINROI.out.mqc.collect()
-            .map{ _meta, json -> json }
-            .toList()
-            .map{ jsons -> [[id:"all", session: "", run: ""], jsons] }
-
-        STATS_MERGEJSON( ch_input_mergejson )
-        ch_versions = ch_versions.mix(STATS_MERGEJSON.out.versions)
+        //
+        // COLLECT/GROUP ROI STATS
+        //
+        ch_iit_roi_stats = VOLUME_ROISTATS.out.stats_csv.collect()
+        VOLUME_COLLECTSTATS(ch_iit_roi_stats)
     }
 
     //

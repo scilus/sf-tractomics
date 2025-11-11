@@ -9,7 +9,7 @@ process BUNDLE_IIT {
     path thresholds_txt_file
 
     output:
-    path "*.nii.gz",        emit: bundle_masks
+    path "*_mask.nii.gz",   emit: bundle_masks
     path "versions.yml",    emit: versions
 
     when:
@@ -20,16 +20,9 @@ process BUNDLE_IIT {
     mkdir -p /tmp
     export HOME=/tmp
 
-    # Move all input bundles to a dedicated folder to avoid
-    # name conflicts.
-    mkdir -p bundles_density_maps
-    for f in \$(ls *.nii.gz); do
-        mv "\$f" "bundles_density_maps/\$f"
-    done
-
     # Create masks for each bundle based on provided thresholds
     while read -r name thr; do
-        scil_volume_math lower_threshold "bundles_density_maps/\${name}.nii.gz" \$thr "\${name}.nii.gz" -f
+        scil_volume_math lower_threshold "\${name}.nii.gz" \$thr "\${name}_mask.nii.gz" -f
     done < ${thresholds_txt_file}
 
     cat <<-END_VERSIONS > versions.yml
