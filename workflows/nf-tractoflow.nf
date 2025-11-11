@@ -147,7 +147,7 @@ workflow NF_TRACTOFLOW {
         ch_input_mergejson = STATS_METRICSINROI.out.mqc.collect()
             .map{ _meta, json -> json }
             .toList()
-            .map{ jsons -> [[id:"all"], jsons] }
+            .map{ jsons -> [[id:"all", session: "", run: ""], jsons] }
 
         STATS_MERGEJSON( ch_input_mergejson )
         ch_versions = ch_versions.mix(STATS_MERGEJSON.out.versions)
