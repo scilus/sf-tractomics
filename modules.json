@@ -100,6 +100,11 @@
                         "git_sha": "0fdd04fbe05e37bfe1273d23e1d49018297ea7de",
                         "installed_by": ["topup_eddy"]
                     },
+                    "reconst/diffusivitypriors": {
+                        "branch": "main",
+                        "git_sha": "f9676160a7d9e71ad072c39f32bcc7e7f1621d7a",
+                        "installed_by": ["modules"]
+                    },
                     "reconst/dtimetrics": {
                         "branch": "main",
                         "git_sha": "0fdd04fbe05e37bfe1273d23e1d49018297ea7de",

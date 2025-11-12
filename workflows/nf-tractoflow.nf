@@ -12,6 +12,8 @@ include { TRACTOFLOW             } from '../subworkflows/nf-neuro/tractoflow'
 include { RECONST_SHSIGNAL       } from '../modules/nf-neuro/reconst/shsignal'
 include { RECONST_NODDI          } from '../modules/nf-neuro/reconst/noddi/main'
 include { RECONST_NODDI as NODDI_KERNELS } from '../modules/nf-neuro/reconst/noddi/main'
+include { RECONST_DIFFUSIVITYPRIORS } from '../modules/nf-neuro/reconst/diffusivitypriors/main'
+include { RECONST_DIFFUSIVITYPRIORS as MEAN_PRIORS } from '../modules/nf-neuro/reconst/diffusivitypriors/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -93,6 +95,22 @@ workflow NF_TRACTOFLOW {
     // Run RECONST/NODDI
     //
     if (params.run_noddi) {
+        // Start by computing diffusivity priors for each subject.
+        RECONST_DIFFUSIVITYPRIORS(
+            TRACTOFLOW.out.dti_fa
+                .join(TRACTOFLOW.out.dti_ad)
+                .join(TRACTOFLOW.out.dti_rd)
+                .join(TRACTOFLOW.out.dti_md)
+                .map{ meta, fa, ad, rd, md -> [meta, fa, ad, rd, md, []] }
+        )
+
+        ch_input_mean_priors = RECONST_DIFFUSIVITYPRIORS.out
+            .priors.collect()
+        ch_input_mean_priors.view()
+        // MEAN_PRIORS(
+        //     ch_input_mean_priors
+        // )
+
         // The same kernels can be used across subjects.
         // Precompute them once here.
         ch_noddi_kernels_input = TRACTOFLOW.out.dwi
