@@ -49,7 +49,7 @@ process VOLUME_ROISTATS {
     first_bundle=\$(printf '%s\\n' \$bundles | head -n 1)
 
     # Extract the metrics names from this first bundle
-    metrics=\$(FIRST_BUNDLE="\$first_bundle" jq -r ".\"\$first_bundle\" | keys[]" ${prefix}__stats.json)
+    metrics=\$(FIRST_BUNDLE="\$first_bundle" jq -r ".\\"\$first_bundle\\" | keys[]" ${prefix}__stats.json)
 
     # Output the CSV file
     # echo "sid,bundle,\$(echo \${metrics} | sed -z 's/\\n/,/g')" > ${prefix}__stats.csv
