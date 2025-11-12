@@ -11,6 +11,7 @@ include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_nf-t
 include { TRACTOFLOW             } from '../subworkflows/nf-neuro/tractoflow'
 include { RECONST_SHSIGNAL       } from '../modules/nf-neuro/reconst/shsignal'
 include { RECONST_FREEWATER      } from '../modules/nf-neuro/reconst/freewater/main'
+include { RECONST_FREEWATER  as FREEWATER_KERNELS       } from '../modules/nf-neuro/reconst/freewater/main'
 include { RECONST_DTIMETRICS as FW_CORRECTED_DTIMETRICS } from '../modules/nf-neuro/reconst/dtimetrics/main'
 
 /*
@@ -91,12 +92,19 @@ workflow NF_TRACTOFLOW {
 
     // Free Water Elimination
     if (params.run_freewater_correction) {
-        ch_freewater_input = TRACTOFLOW.out.dwi
+        // The same kernels can be used across subjects.
+        // Precompute them once here.
+        ch_freewater_kernels = TRACTOFLOW.out.dwi
             .join(TRACTOFLOW.out.b0_mask)
             .map {
                 meta, dwi, bval, bvec, b0_mask ->
                     [meta, dwi, bval, bvec, b0_mask, []]
             }
+        FREEWATER_KERNELS( ch_freewater_kernels.first() )
+
+        ch_freewater_input = TRACTOFLOW.out.dwi
+            .join(TRACTOFLOW.out.b0_mask)
+            .combine( FREEWATER_KERNELS.out.kernels )
 
         RECONST_FREEWATER( ch_freewater_input )
         ch_versions = ch_versions.mix(RECONST_FREEWATER.out.versions.first())
