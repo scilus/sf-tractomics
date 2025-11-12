@@ -32,7 +32,7 @@
                 }
             }
         },
-        "https://github.com/scilus/nf-neuro.git": {
+        "https://github.com/nf-neuro/modules.git": {
             "modules": {
                 "nf-neuro": {
                     "betcrop/antsbet": {
@@ -63,7 +63,7 @@
                     "image/cropvolume": {
                         "branch": "main",
                         "git_sha": "44a8807e115f15d720ff952229c7d7540952b587",
-                        "installed_by": ["preproc_dwi", "preproc_t1"]
+                        "installed_by": ["preproc_t1"]
                     },
                     "image/resample": {
                         "branch": "main",
@@ -72,12 +72,12 @@
                     },
                     "io/readbids": {
                         "branch": "main",
-                        "git_sha": "b7c3c2c1485d23ebaabeb552001c0d6a73134a50",
+                        "git_sha": "13af86e8393572afea387587d5be53f12fccab0f",
                         "installed_by": ["io_bids"]
                     },
                     "preproc/eddy": {
                         "branch": "main",
-                        "git_sha": "90eb8505e8e5081c64f7599c105c40525263902e",
+                        "git_sha": "0fdd04fbe05e37bfe1273d23e1d49018297ea7de",
                         "installed_by": ["topup_eddy"]
                     },
                     "preproc/gibbs": {
@@ -87,7 +87,7 @@
                     },
                     "preproc/n4": {
                         "branch": "main",
-                        "git_sha": "6243a8961471549d479d882b1cf3a7bd7106c527",
+                        "git_sha": "0fdd04fbe05e37bfe1273d23e1d49018297ea7de",
                         "installed_by": ["preproc_dwi", "preproc_t1"]
                     },
                     "preproc/normalize": {
@@ -97,17 +97,17 @@
                     },
                     "preproc/topup": {
                         "branch": "main",
-                        "git_sha": "ae84c5015de38e1f80b0637a07cf72937db89a6f",
+                        "git_sha": "0fdd04fbe05e37bfe1273d23e1d49018297ea7de",
                         "installed_by": ["topup_eddy"]
                     },
                     "reconst/dtimetrics": {
                         "branch": "main",
-                        "git_sha": "bd5f1aece0ad185cad52911346aa62c225dfff4d",
+                        "git_sha": "0fdd04fbe05e37bfe1273d23e1d49018297ea7de",
                         "installed_by": ["tractoflow"]
                     },
                     "reconst/fodf": {
                         "branch": "main",
-                        "git_sha": "c399791d89aad88aceedec1bc5221dfeb0952cd5",
+                        "git_sha": "0fdd04fbe05e37bfe1273d23e1d49018297ea7de",
                         "installed_by": ["tractoflow"]
                     },
                     "reconst/frf": {
@@ -127,27 +127,32 @@
                     },
                     "registration/anattodwi": {
                         "branch": "main",
-                        "git_sha": "ae84c5015de38e1f80b0637a07cf72937db89a6f",
+                        "git_sha": "74181e9f66228d5e35e80d408086d676ce73b0ab",
                         "installed_by": ["registration"]
                     },
                     "registration/ants": {
                         "branch": "main",
-                        "git_sha": "ae84c5015de38e1f80b0637a07cf72937db89a6f",
+                        "git_sha": "0fdd04fbe05e37bfe1273d23e1d49018297ea7de",
                         "installed_by": ["registration"]
                     },
                     "registration/antsapplytransforms": {
                         "branch": "main",
-                        "git_sha": "ae84c5015de38e1f80b0637a07cf72937db89a6f",
+                        "git_sha": "0fdd04fbe05e37bfe1273d23e1d49018297ea7de",
                         "installed_by": ["tractoflow"]
+                    },
+                    "registration/convert": {
+                        "branch": "main",
+                        "git_sha": "5865aa6a296886ce6165c8ffe27e05215fc708cd",
+                        "installed_by": ["registration"]
                     },
                     "registration/easyreg": {
                         "branch": "main",
-                        "git_sha": "60e21b273653eec3b710b91562e714c74ef4d0c7",
+                        "git_sha": "70ec5c35fbe3d0615c87497b02f7f289b24e4819",
                         "installed_by": ["registration"]
                     },
-                    "registration/synthregistration": {
+                    "registration/synthmorph": {
                         "branch": "main",
-                        "git_sha": "60e21b273653eec3b710b91562e714c74ef4d0c7",
+                        "git_sha": "10b76807b5e4e3dd5251725f7fe9cfd895ff5b03",
                         "installed_by": ["registration"]
                     },
                     "segmentation/fastseg": {
@@ -186,12 +191,17 @@
                 "nf-neuro": {
                     "anatomical_segmentation": {
                         "branch": "main",
-                        "git_sha": "247d96886548c83b01812a61f5b1393fa4e911e7",
+                        "git_sha": "c18142d4ce012e5e79a6e54817c0ace83755150d",
                         "installed_by": ["tractoflow"]
                     },
                     "io_bids": {
                         "branch": "main",
-                        "git_sha": "9cdfcfcec58de632de847f403c2a3c1a53d40bde",
+                        "git_sha": "b7260db4681c80ff37964889c7a29223fc55d7de",
+                        "installed_by": ["subworkflows"]
+                    },
+                    "load_test_data": {
+                        "branch": "main",
+                        "git_sha": "0fdd04fbe05e37bfe1273d23e1d49018297ea7de",
                         "installed_by": ["subworkflows"]
                     },
                     "preproc_dwi": {
@@ -206,17 +216,17 @@
                     },
                     "registration": {
                         "branch": "main",
-                        "git_sha": "8e0d67ab92fd874c365792bc197f01731a270afd",
+                        "git_sha": "74181e9f66228d5e35e80d408086d676ce73b0ab",
                         "installed_by": ["tractoflow"]
                     },
                     "topup_eddy": {
                         "branch": "main",
-                        "git_sha": "90eb8505e8e5081c64f7599c105c40525263902e",
+                        "git_sha": "74181e9f66228d5e35e80d408086d676ce73b0ab",
                         "installed_by": ["preproc_dwi"]
                     },
                     "tractoflow": {
                         "branch": "main",
-                        "git_sha": "1b15b2bc719132d9fb450bd5e02b728872b82e35",
+                        "git_sha": "c4347d07187129da702138d380fa8b1b642cf2da",
                         "installed_by": ["subworkflows"]
                     }
                 }

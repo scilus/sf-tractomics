@@ -40,10 +40,10 @@ ENV NXF_EDGE=0
 ENV NXF_VER=24.10.4
 ENV NXF_HOME=/workspaces/.nextflow
 
-ENV NFNEURO_RAW_REPOSITORY="https://raw.githubusercontent.com/scilus/nf-neuro/main"
-ENV NFCORE_MODULES_GIT_REMOTE=https://github.com/scilus/nf-neuro.git
+ENV NFNEURO_RAW_REPOSITORY="https://raw.githubusercontent.com/nf-neuro/modules/main"
+ENV NFCORE_MODULES_GIT_REMOTE="https://github.com/nf-neuro/modules.git"
 ENV NFCORE_MODULES_BRANCH=main
-ENV NFCORE_SUBWORKFLOWS_GIT_REMOTE=https://github.com/scilus/nf-neuro.git
+ENV NFCORE_SUBWORKFLOWS_GIT_REMOTE="https://github.com/nf-neuro/modules.git"
 ENV NFCORE_SUBWORKFLOWS_BRANCH=main
 
 # Install conda
