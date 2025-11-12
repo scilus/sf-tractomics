@@ -10,7 +10,8 @@ include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pi
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_nf-tractoflow_pipeline'
 include { TRACTOFLOW             } from '../subworkflows/nf-neuro/tractoflow'
 include { RECONST_SHSIGNAL       } from '../modules/nf-neuro/reconst/shsignal'
-include { RECONST_NODDI } from '../modules/nf-neuro/reconst/noddi/main'
+include { RECONST_NODDI          } from '../modules/nf-neuro/reconst/noddi/main'
+include { RECONST_NODDI as NODDI_KERNELS } from '../modules/nf-neuro/reconst/noddi/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -92,9 +93,18 @@ workflow NF_TRACTOFLOW {
     // Run RECONST/NODDI
     //
     if (params.run_noddi) {
-        ch_noddi_input = TRACTOFLOW.out.dwi
+        // The same kernels can be used across subjects.
+        // Precompute them once here.
+        ch_noddi_kernels_input = TRACTOFLOW.out.dwi
             .join(TRACTOFLOW.out.b0_mask)
             .map{ meta, dwi, bval, bvec, b0_mask -> [meta, dwi, bval, bvec, b0_mask, []] }
+
+        NODDI_KERNELS( ch_noddi_kernels_input )
+        ch_versions = ch_versions.mix(NODDI_KERNELS.out.versions.first())
+
+        ch_noddi_input = TRACTOFLOW.out.dwi
+            .join(TRACTOFLOW.out.b0_mask)
+            .combine(NODDI_KERNELS.out.kernels)
 
         RECONST_NODDI( ch_noddi_input )
         ch_versions = ch_versions.mix(RECONST_NODDI.out.versions.first())
