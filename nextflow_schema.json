@@ -241,7 +241,7 @@
                 },
                 "dwi_resolution": {
                     "type": "number",
-                    "default": 1.0,
+                    "default": 1,
                     "description": "DWI resolution.",
                     "help_text": "DWI resolution.",
                     "minimum": 0
@@ -261,7 +261,7 @@
                 },
                 "t1_resolution": {
                     "type": "number",
-                    "default": 1.0,
+                    "default": 1,
                     "description": "T1 resolution.",
                     "help_text": "T1 resolution.",
                     "minimum": 0
@@ -359,7 +359,7 @@
                 },
                 "fodf_metrics_a_factor": {
                     "type": "number",
-                    "default": 2.0,
+                    "default": 2,
                     "description": "Multiplicative factor for AFD max in ventricles.",
                     "help_text": "Multiplicative factor for AFD max in ventricles.",
                     "minimum": 0
@@ -469,7 +469,7 @@
                 },
                 "pft_theta": {
                     "type": "number",
-                    "default": 20.0,
+                    "default": 20,
                     "description": "[PFT] Maximum angle between 2 steps.",
                     "help_text": "[PFT] Maximum angle between 2 steps.",
                     "minimum": 0,
@@ -491,14 +491,14 @@
                 },
                 "pft_min_len": {
                     "type": "number",
-                    "default": 20.0,
+                    "default": 20,
                     "description": "[PFT] Minimum length.",
                     "help_text": "[PFT] Minimum length.",
                     "minimum": 0
                 },
                 "pft_max_len": {
                     "type": "number",
-                    "default": 200.0,
+                    "default": 200,
                     "description": "[PFT] Maximum length .",
                     "help_text": "[PFT] Maximum length .",
                     "minimum": 0
@@ -512,14 +512,14 @@
                 },
                 "pft_back": {
                     "type": "number",
-                    "default": 2.0,
+                    "default": 2,
                     "description": "Length of the backtracking steps of the particle filter in mm.",
                     "minimum": 0,
                     "hidden": true
                 },
                 "pft_front": {
                     "type": "number",
-                    "default": 1.0,
+                    "default": 1,
                     "description": "Length of the forward tracking steps of the particle filter in mm.",
                     "minimum": 0,
                     "hidden": true
@@ -611,7 +611,7 @@
                 },
                 "local_theta": {
                     "type": "number",
-                    "default": 20.0,
+                    "default": 20,
                     "description": "[LOCAL] Maximum angle between 2 steps.",
                     "help_text": "[LOCAL] Maximum angle between 2 steps.",
                     "minimum": 0,
@@ -633,14 +633,14 @@
                 },
                 "local_min_len": {
                     "type": "number",
-                    "default": 20.0,
+                    "default": 20,
                     "description": "[LOCAL] Minimum length.",
                     "help_text": "[LOCAL] Minimum length.",
                     "minimum": 0
                 },
                 "local_max_len": {
                     "type": "number",
-                    "default": 200.0,
+                    "default": 200,
                     "description": "[LOCAL] Maximum length.",
                     "help_text": "[LOCAL] Maximum length.",
                     "minimum": 0
@@ -976,6 +976,17 @@
             "default": 4,
             "description": "Number of processes for registration task",
             "help_text": "Number of processes for registration task"
+        },
+        "run_sh_metrics": {
+            "type": "boolean",
+            "description": "Run the SH Metrics task.",
+            "help_text": "Run the SH Metrics task."
+        },
+        "processes_sh_metrics": {
+            "type": "integer",
+            "default": 1,
+            "description": "Number of processes launched for SH metrics computation.",
+            "help_text": "Number of processes launched for SH metrics computation."
         }
     }
 }
