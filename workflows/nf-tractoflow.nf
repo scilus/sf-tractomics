@@ -95,26 +95,31 @@ workflow NF_TRACTOFLOW {
     // Run RECONST/NODDI
     //
     if (params.run_noddi) {
+
+        // Prepare NODDI inputs. This channel will be combined/joined in the
+        // lines that follow with diffusivity priors w.r.t the following 3 scenarios:
         // Option 1: The user specifies the diffusivity priors to use (via params.para_diff and params.iso_diff).
         // Option 2: The user wants to compute the mean diffusivity priors across subjects. (Recommended)
         // Option 3: The user wants to compute diffusivity priors for each subject individually.
+
+        ch_noddi_input = TRACTOFLOW.out.dwi
+            .join(TRACTOFLOW.out.b0_mask)
 
         if ( (params.iso_diff != null && params.para_diff == null) ||
              (params.iso_diff == null && params.para_diff != null) ) {
             error "Please provide both iso_diff and para_diff parameters to use custom diffusivity priors."
         }
 
-        def use_custom_priors = (params.iso_diff != null && params.para_diff != null)
-        def have_common_priors = use_custom_priors || params.average_diff_priors
-
-        if (use_custom_priors) {
+        if (params.iso_diff != null && params.para_diff != null) {
             if (params.average_diff_priors) {
                 log.warn "Both custom diffusivity priors and average_diff_priors parameter were provided."
                     "The specified diffusivity priors (iso_diff: ${params.iso_diff}, "
                     "para_diff: ${params.para_diff}) will be used across subjects."
             }
-            ch_iso_diff = Channel.value(params.iso_diff) // val
-            ch_para_diff = Channel.value(params.para_diff) // val
+
+            ch_noddi_input = ch_noddi_input
+                .combine(Channel.value(params.para_diff))
+                .combine(Channel.value(params.iso_diff))
         }
         else {
             // Compute diffusivity priors for each subject.
@@ -124,6 +129,7 @@ workflow NF_TRACTOFLOW {
                     .join(TRACTOFLOW.out.dti_rd)
                     .join(TRACTOFLOW.out.dti_md)
             )
+            ch_versions = ch_versions.mix(RECONST_DIFFUSIVITYPRIORS.out.versions.first())
 
             // Then compute mean diffusivity priors across subjects.
             if (params.average_diff_priors) {
@@ -138,46 +144,17 @@ workflow NF_TRACTOFLOW {
                         .map{ _meta, path -> path }
                         .collect()
                 )
+                ch_versions = ch_versions.mix(RECONST_MEANDIFFUSIVITYPRIORS.out.versions.first())
 
-                ch_iso_diff = RECONST_MEANDIFFUSIVITYPRIORS.out.mean_iso_diff_val   // val
-                ch_para_diff = RECONST_MEANDIFFUSIVITYPRIORS.out.mean_para_diff_val // val
+                ch_noddi_input = ch_noddi_input
+                    .combine(RECONST_MEANDIFFUSIVITYPRIORS.out.mean_para_diff_val)
+                    .combine(RECONST_MEANDIFFUSIVITYPRIORS.out.mean_iso_diff_val)
             }
         }
 
-        if (have_common_priors) {
-            // All subjects will use the same priors, leading to the same kernels.
-            // Precompute them once here.
-
-            ch_noddi_kernels_input = TRACTOFLOW.out.dwi
-                .join(TRACTOFLOW.out.b0_mask)
-                .combine(ch_para_diff)
-                .combine(ch_iso_diff)
-                .map{ meta, dwi, bval, bvec, b0_mask, para_diff, iso_diff ->
-                    [meta, dwi, bval, bvec, b0_mask, [], para_diff, iso_diff]
-                }
-
-            NODDI_KERNELS( ch_noddi_kernels_input )
-            ch_versions = ch_versions.mix(NODDI_KERNELS.out.versions.first())
-
-            ch_noddi_input = TRACTOFLOW.out.dwi
-                .join(TRACTOFLOW.out.b0_mask)
-                .combine(NODDI_KERNELS.out.kernels)
-                .combine(ch_para_diff)
-                .combine(ch_iso_diff)
-        }
-        else {
-            ch_iso_diff = RECONST_DIFFUSIVITYPRIORS.out.iso_diff_val    // [[meta, val], [meta, val], ...]
-            ch_para_diff = RECONST_DIFFUSIVITYPRIORS.out.para_diff_val  // [[meta, val], [meta, val], ...]
-
-            // Each subject has its own diffusivity priors, leading to its own kernels.
-            // Supplying empty list for kernels so that they get computed inside RECONST_NODDI.
-            ch_noddi_input = TRACTOFLOW.out.dwi
-                .join(TRACTOFLOW.out.b0_mask)
-                .join(ch_para_diff)
-                .join(ch_iso_diff)
-                .map{ meta, dwi, bval, bvec, b0_mask, para_diff, iso_diff ->
-                     [meta, dwi, bval, bvec, b0_mask, [], para_diff, iso_diff] }
-        }
+        ch_noddi_input = ch_noddi_input
+            .map{ meta, dwi, bval, bvec, b0_mask, para_diff, iso_diff ->
+                [meta, dwi, bval, bvec, b0_mask, [], para_diff, iso_diff] }
 
         RECONST_NODDI( ch_noddi_input )
         ch_versions = ch_versions.mix(RECONST_NODDI.out.versions.first())
