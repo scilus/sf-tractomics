@@ -129,26 +129,31 @@ workflow NF_TRACTOFLOW {
                     .join(TRACTOFLOW.out.dti_rd)
                     .join(TRACTOFLOW.out.dti_md)
             )
-            ch_versions = ch_versions.mix(RECONST_DIFFUSIVITYPRIORS.out.versions.first())
+            ch_versions = ch_versions.mix(RECONST_DIFFUSIVITYPRIORS.out.versions)
 
             // Then compute mean diffusivity priors across subjects.
             if (params.average_diff_priors) {
                 RECONST_MEANDIFFUSIVITYPRIORS(
-                    RECONST_DIFFUSIVITYPRIORS.out.para_diff
+                    RECONST_DIFFUSIVITYPRIORS.out.para_diff_file
                         .map{ _meta, path -> path }
                         .collect(),
-                    RECONST_DIFFUSIVITYPRIORS.out.iso_diff
+                    RECONST_DIFFUSIVITYPRIORS.out.iso_diff_file
                         .map{ _meta, path -> path }
                         .collect(),
-                    RECONST_DIFFUSIVITYPRIORS.out.perp_diff
+                    RECONST_DIFFUSIVITYPRIORS.out.perp_diff_file
                         .map{ _meta, path -> path }
                         .collect()
                 )
-                ch_versions = ch_versions.mix(RECONST_MEANDIFFUSIVITYPRIORS.out.versions.first())
+                ch_versions = ch_versions.mix(RECONST_MEANDIFFUSIVITYPRIORS.out.versions)
 
                 ch_noddi_input = ch_noddi_input
-                    .combine(RECONST_MEANDIFFUSIVITYPRIORS.out.mean_para_diff_val)
-                    .combine(RECONST_MEANDIFFUSIVITYPRIORS.out.mean_iso_diff_val)
+                    .combine(RECONST_MEANDIFFUSIVITYPRIORS.out.mean_para_diff)
+                    .combine(RECONST_MEANDIFFUSIVITYPRIORS.out.mean_iso_diff)
+            }
+            else {
+                ch_noddi_input = ch_noddi_input
+                    .join(RECONST_DIFFUSIVITYPRIORS.out.mean_para_diff)
+                    .join(RECONST_DIFFUSIVITYPRIORS.out.mean_iso_diff)
             }
         }
 
@@ -157,7 +162,7 @@ workflow NF_TRACTOFLOW {
                 [meta, dwi, bval, bvec, b0_mask, [], para_diff, iso_diff] }
 
         RECONST_NODDI( ch_noddi_input )
-        ch_versions = ch_versions.mix(RECONST_NODDI.out.versions.first())
+        ch_versions = ch_versions.mix(RECONST_NODDI.out.versions)
     }
 
     //
