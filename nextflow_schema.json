@@ -976,6 +976,17 @@
             "default": 4,
             "description": "Number of processes for registration task",
             "help_text": "Number of processes for registration task"
+        },
+        "run_freewater_correction": {
+            "type": "boolean",
+            "description": "Run Freewater Elimination and compute Freewater corrected metrics.",
+            "help_text": "Run Freewater Elimination and compute Freewater corrected metrics."
+        },
+        "processes_freewater_correction": {
+            "type": "integer",
+            "default": 1,
+            "description": "Number of processes for freewater estimation task.",
+            "help_text": "Number of processes for freewater estimation task."
         }
     }
 }
