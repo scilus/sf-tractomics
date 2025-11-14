@@ -13,9 +13,7 @@ include { RECONST_SHSIGNAL       } from '../modules/nf-neuro/reconst/shsignal'
 include { RECONST_DIFFUSIVITYPRIORS } from '../modules/nf-neuro/reconst/diffusivitypriors/main'
 include { RECONST_MEANDIFFUSIVITYPRIORS } from '../modules/local/reconst/meandiffusivitypriors/main'
 include { RECONST_NODDI          } from '../modules/nf-neuro/reconst/noddi/main'
-include { RECONST_NODDI as NODDI_KERNELS } from '../modules/nf-neuro/reconst/noddi/main'
 include { RECONST_FREEWATER      } from '../modules/nf-neuro/reconst/freewater/main'
-include { RECONST_FREEWATER  as FREEWATER_KERNELS       } from '../modules/nf-neuro/reconst/freewater/main'
 include { RECONST_DTIMETRICS as FW_CORRECTED_DTIMETRICS } from '../modules/nf-neuro/reconst/dtimetrics/main'
 
 /*
@@ -122,9 +120,9 @@ workflow NF_TRACTOFLOW {
     }
 
     //
-    // Run RECONST/NODDI
+    // Run RECONST/NODDI & RECONST/FREEWATER
     //
-    if (params.run_noddi) {
+    if (params.run_noddi || params.run_freewater_correction) {
 
         // Prepare NODDI inputs. This channel will be combined/joined in the
         // lines that follow with diffusivity priors w.r.t the following 3 scenarios:
@@ -132,24 +130,40 @@ workflow NF_TRACTOFLOW {
         // Option 2: The user wants to compute the mean diffusivity priors across subjects. (Recommended)
         // Option 3: The user wants to compute diffusivity priors for each subject individually.
 
-        ch_noddi_input = TRACTOFLOW.out.dwi
-            .join(TRACTOFLOW.out.b0_mask)
 
-        if ( (params.iso_diff != null && params.para_diff == null) ||
-             (params.iso_diff == null && params.para_diff != null) ) {
-            error "Please provide both iso_diff and para_diff parameters to use custom diffusivity priors."
+        if (params.run_noddi &&
+            ((params.iso_diff != null && params.para_diff == null) ||
+             (params.iso_diff == null && params.para_diff != null) )) {
+            error "Please provide both iso_diff and para_diff parameters to use custom diffusivity priors for NODDI."
+        }
+        else if (params.run_freewater_correction
+            && (params.iso_diff != null || params.para_diff != null || params.perp_diff_min != null || params.perp_diff_max != null)
+            && (params.iso_diff == null || params.para_diff == null || params.perp_diff_min == null || params.perp_diff_max == null)) {
+            error "Please provide all iso_diff, para_diff, perp_diff_min and perp_diff_max parameters to use custom "
+                "diffusivity priors for Freewater Elimination. Otherwise, specify none and the priors will be "
+                "automatically computed."
         }
 
-        if (params.iso_diff != null && params.para_diff != null) {
+        ch_noddi_input = TRACTOFLOW.out.dwi
+            .join(TRACTOFLOW.out.b0_mask)
+        ch_freewater_input = TRACTOFLOW.out.dwi
+            .join(TRACTOFLOW.out.b0_mask)
+
+        if (params.iso_diff != null && params.para_diff != null
+            && params.perp_diff_min != null && params.perp_diff_max != null) {
             if (params.average_diff_priors) {
                 log.warn "Both custom diffusivity priors and average_diff_priors parameter were provided."
-                    "The specified diffusivity priors (iso_diff: ${params.iso_diff}, "
-                    "para_diff: ${params.para_diff}) will be used across subjects."
+                    "The specified diffusivity priors will be used across subjects."
             }
 
             ch_noddi_input = ch_noddi_input
                 .combine(Channel.value(params.para_diff))
                 .combine(Channel.value(params.iso_diff))
+            ch_freewater_input = ch_freewater_input
+                .combine(Channel.value(params.para_diff))
+                .combine(Channel.value(params.iso_diff))
+                .combine(Channel.value(params.perp_diff_min))
+                .combine(Channel.value(params.perp_diff_max))
         }
         else {
             // Compute diffusivity priors for each subject.
@@ -179,20 +193,42 @@ workflow NF_TRACTOFLOW {
                 ch_noddi_input = ch_noddi_input
                     .combine(RECONST_MEANDIFFUSIVITYPRIORS.out.mean_para_diff)
                     .combine(RECONST_MEANDIFFUSIVITYPRIORS.out.mean_iso_diff)
+                ch_freewater_input = ch_freewater_input
+                    .combine(RECONST_MEANDIFFUSIVITYPRIORS.out.mean_para_diff)
+                    .combine(RECONST_MEANDIFFUSIVITYPRIORS.out.mean_iso_diff)
+                    .combine(RECONST_MEANDIFFUSIVITYPRIORS.out.min_perp_diff)
+                    .combine(RECONST_MEANDIFFUSIVITYPRIORS.out.max_perp_diff)
             }
             else {
                 ch_noddi_input = ch_noddi_input
                     .join(RECONST_DIFFUSIVITYPRIORS.out.mean_para_diff)
                     .join(RECONST_DIFFUSIVITYPRIORS.out.mean_iso_diff)
+                ch_freewater_input = ch_freewater_input
+                    .join(RECONST_DIFFUSIVITYPRIORS.out.mean_para_diff)
+                    .join(RECONST_DIFFUSIVITYPRIORS.out.mean_iso_diff)
+                    .join(RECONST_DIFFUSIVITYPRIORS.out.min_perp_diff)
+                    .join(RECONST_DIFFUSIVITYPRIORS.out.max_perp_diff)
             }
         }
 
-        ch_noddi_input = ch_noddi_input
+        if (params.run_noddi) {
+            ch_noddi_input = ch_noddi_input
             .map{ meta, dwi, bval, bvec, b0_mask, para_diff, iso_diff ->
                 [meta, dwi, bval, bvec, b0_mask, [], para_diff, iso_diff] }
 
-        RECONST_NODDI( ch_noddi_input )
-        ch_versions = ch_versions.mix(RECONST_NODDI.out.versions)
+            RECONST_NODDI( ch_noddi_input )
+            ch_versions = ch_versions.mix(RECONST_NODDI.out.versions)
+        }
+
+        if (params.run_freewater_correction) {
+            ch_freewater_input = ch_freewater_input
+            .map{ meta, dwi, bval, bvec, b0_mask, para_diff, iso_diff, perp_diff_min, perp_diff_max ->
+                [meta, dwi, bval, bvec, b0_mask, [], para_diff, iso_diff, perp_diff_min, perp_diff_max] }
+
+            RECONST_FREEWATER( ch_freewater_input )
+            ch_versions = ch_versions.mix(RECONST_FREEWATER.out.versions)
+        }
+
     }
 
     //
