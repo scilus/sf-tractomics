@@ -92,33 +92,6 @@ workflow NF_TRACTOFLOW {
                 .map{ it + [[]] }
         )
 
-    // Free Water Elimination
-    if (params.run_freewater_correction) {
-        ch_freewater_input = TRACTOFLOW.out.dwi
-            .join(TRACTOFLOW.out.b0_mask)
-            .map {
-                meta, dwi, bval, bvec, b0_mask ->
-                    [meta, dwi, bval, bvec, b0_mask, []]
-            }
-
-        RECONST_FREEWATER( ch_freewater_input )
-        ch_versions = ch_versions.mix(RECONST_FREEWATER.out.versions.first())
-
-        // -- Need to reprocess RECONST_DTIMETRICS to get
-        //  FW corrected FA, MD, RD, AD, etc.
-        //  using the FW corrected DWI.
-        ch_fw_corrected_dti_metrics = RECONST_FREEWATER.out.dwi_fw_corrected
-            .join(TRACTOFLOW.out.dwi)
-            .join(TRACTOFLOW.out.b0_mask)
-            .map {
-                // Remove the original dwi from the join
-                meta, dwi_fw_corrected, _dwi_orig, bval, bvec, b0_mask ->
-                    [meta, dwi_fw_corrected, bval, bvec, b0_mask]
-            }
-
-        FW_CORRECTED_DTIMETRICS( ch_fw_corrected_dti_metrics )
-    }
-
     //
     // Run RECONST/NODDI & RECONST/FREEWATER
     //
@@ -227,6 +200,20 @@ workflow NF_TRACTOFLOW {
 
             RECONST_FREEWATER( ch_freewater_input )
             ch_versions = ch_versions.mix(RECONST_FREEWATER.out.versions)
+
+            // -- Need to reprocess RECONST_DTIMETRICS to get
+            //  FW corrected FA, MD, RD, AD, etc.
+            //  using the FW corrected DWI.
+            ch_fw_corrected_dti_metrics = RECONST_FREEWATER.out.dwi_fw_corrected
+                .join(TRACTOFLOW.out.dwi)
+                .join(TRACTOFLOW.out.b0_mask)
+                .map {
+                    // Remove the original dwi from the join
+                    meta, dwi_fw_corrected, _dwi_orig, bval, bvec, b0_mask ->
+                        [meta, dwi_fw_corrected, bval, bvec, b0_mask]
+                }
+
+            FW_CORRECTED_DTIMETRICS( ch_fw_corrected_dti_metrics )
         }
 
     }
