@@ -2,7 +2,7 @@ process RECONST_MEANDIFFUSIVITYPRIORS {
     tag "all"
     label 'process_single'
 
-    container "scilus/scilpy:2.2.0_cpu"
+    container "scilus/scilpy:2.2.1_cpu"
 
     input:
         path(para_diff_list)

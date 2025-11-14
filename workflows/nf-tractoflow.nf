@@ -11,7 +11,7 @@ include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_nf-t
 include { TRACTOFLOW             } from '../subworkflows/nf-neuro/tractoflow'
 include { RECONST_SHSIGNAL       } from '../modules/nf-neuro/reconst/shsignal'
 include { RECONST_DIFFUSIVITYPRIORS } from '../modules/nf-neuro/reconst/diffusivitypriors/main'
-include { RECONST_MEANDIFFUSIVITYPRIORS } from '../modules/local/reconst/meandiffusivitypriors/main'
+include { RECONST_MEANDIFFUSIVITYPRIORS } from '../modules/nf-neuro/reconst/meandiffusivitypriors/main'
 include { RECONST_NODDI          } from '../modules/nf-neuro/reconst/noddi/main'
 include { RECONST_FREEWATER      } from '../modules/nf-neuro/reconst/freewater/main'
 include { RECONST_DTIMETRICS as FW_CORRECTED_DTIMETRICS } from '../modules/nf-neuro/reconst/dtimetrics/main'

@@ -102,7 +102,7 @@
                     },
                     "reconst/diffusivitypriors": {
                         "branch": "main",
-                        "git_sha": "f9676160a7d9e71ad072c39f32bcc7e7f1621d7a",
+                        "git_sha": "373c0d3c51f1425e8adc1be0f844b8d4a766281b",
                         "installed_by": ["modules"]
                     },
                     "reconst/dtimetrics": {
@@ -124,6 +124,11 @@
                         "branch": "main",
                         "git_sha": "a51881f1c316e0e52b68fa66d7465c32339e2142",
                         "installed_by": ["tractoflow"]
+                    },
+                    "reconst/meandiffusivitypriors": {
+                        "branch": "main",
+                        "git_sha": "373c0d3c51f1425e8adc1be0f844b8d4a766281b",
+                        "installed_by": ["modules"]
                     },
                     "reconst/meanfrf": {
                         "branch": "main",
