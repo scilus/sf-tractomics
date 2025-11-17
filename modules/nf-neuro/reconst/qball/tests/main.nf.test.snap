@@ -1,0 +1,45 @@
+{
+    "reconst - qball_csa": {
+        "content": [
+            "test__gfa.nii.gz:md5:header,c9e720b9a8acfe45a617e6486ebb8de0,data,9aae9f383d12ea7a163997474ff6ece5",
+            "test__peaks.nii.gz",
+            "test__peak_indices.nii.gz",
+            "test__qball.nii.gz:md5:header,f279e7e8aedcf1d5a9b1fc181ee813cb,data,fb670dad2dd2cf1019b66f0b660334d3",
+            "test__nufo.nii.gz:md5:header,ccd78a751ac6eddb4cc7e037e1c82a41,data,7876c3df857741d222f366d9dcd18bb2",
+            "test__a_power.nii.gz:md5:header,c9e720b9a8acfe45a617e6486ebb8de0,data,283381fc7b99bc2b7f6ba87a95f5950a",
+            [
+                "versions.yml:md5,467924bf83804809033ee79becb0af51"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "25.04.7"
+        },
+        "timestamp": "2025-09-25T15:33:21.601263337"
+    },
+    "reconst - qball_gfa": {
+        "content": [
+            "test__gfa.nii.gz:md5:header,c9e720b9a8acfe45a617e6486ebb8de0,data,9aae9f383d12ea7a163997474ff6ece5",
+            [
+                "versions.yml:md5,467924bf83804809033ee79becb0af51"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "25.04.7"
+        },
+        "timestamp": "2025-09-25T15:30:55.372130125"
+    },
+    "reconst - stub-run qball": {
+        "content": [
+            [
+                "versions.yml:md5,467924bf83804809033ee79becb0af51"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "25.04.7"
+        },
+        "timestamp": "2025-09-22T02:24:26.378026962"
+    }
+}
