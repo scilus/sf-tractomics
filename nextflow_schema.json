@@ -902,11 +902,6 @@
                     "type": "boolean",
                     "description": "Use SynthMorph for registration instead of ANTs for BundleSeg. (Requires Freesurfer license)",
                     "help_text": "Use SynthMorph for registration instead of ANTs for BundleSeg. (Requires Freesurfer license)"
-                },
-                "run_easyreg": {
-                    "type": "boolean",
-                    "description": "EasyReg is not supported. This flag should always be set to 'false'.",
-                    "help_text": "EasyReg is not supported. This flag should always be set to 'false'."
                 }
             }
         }
