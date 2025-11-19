@@ -882,6 +882,28 @@
                     "default": true
                 }
             }
+        },
+        "bundleseg_options": {
+            "title": "BundleSeg options",
+            "type": "object",
+            "description": "Define the behaviour of the bundle_seg subworkflow.",
+            "default": "",
+            "help_text": "Define the bundle_seg subworkflow configuration parameters.",
+            "properties": {
+                "run_bundle_seg": {
+                    "type": "boolean"
+                },
+                "atlas_directory": {
+                    "type": "string",
+                    "description": "Path to the BundleSeg atlas directory.",
+                    "help_text": "Path to the BundleSeg atlas directory. If not set, the default bundle_seg atlas will automatically downloaded."
+                },
+                "run_synthmorph": {
+                    "type": "boolean",
+                    "description": "Use SynthMorph for registration instead of ANTs for BundleSeg. (Requires Freesurfer license)",
+                    "help_text": "Use SynthMorph for registration instead of ANTs for BundleSeg. (Requires Freesurfer license)"
+                }
+            }
         }
     },
     "allOf": [
@@ -914,6 +936,9 @@
         },
         {
             "$ref": "#/$defs/subworkflows_hidden_options"
+        },
+        {
+            "$ref": "#/$defs/bundleseg_options"
         }
     ],
     "properties": {
@@ -1006,6 +1031,12 @@
             "type": "string",
             "description": "Maximum perpendicular diffusivity value.",
             "help_text": "Maximum perpendicular diffusivity value. Specifying this will override automatically computed values."
+        },
+        "processes_bundle_seg": {
+            "type": "integer",
+            "default": 4,
+            "description": "Number of processes used for bundle segmentation.",
+            "help_text": "Number of processes used for bundle segmentation."
         },
         "run_qball": {
             "type": "boolean",

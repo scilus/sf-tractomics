@@ -11,6 +11,7 @@ include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_nf-t
 include { TRACTOFLOW             } from '../subworkflows/nf-neuro/tractoflow'
 include { RECONST_SHSIGNAL       } from '../modules/nf-neuro/reconst/shsignal'
 include { RECONST_FW_NODDI       } from '../subworkflows/nf-neuro/reconst_fw_noddi/main'
+include { BUNDLE_SEG             } from '../subworkflows/nf-neuro/bundle_seg/main' addParams(run_easyreg: false)
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -101,6 +102,26 @@ workflow NF_TRACTOFLOW {
                 .join(TRACTOFLOW.out.dti_md)
         )
         ch_versions = ch_versions.mix(RECONST_FW_NODDI.out.versions)
+    }
+
+    //
+    // Run BundleSeg
+    //
+    ch_bundle_seg = Channel.empty()
+    if (params.run_bundle_seg) {
+        ch_input_bundle_seg = TRACTOFLOW.out.pft_tractogram
+            .mix(TRACTOFLOW.out.local_tractogram)
+            .groupTuple()
+        BUNDLE_SEG(
+            TRACTOFLOW.out.dti_fa,
+            TRACTOFLOW.out.pft_tractogram
+                .mix(TRACTOFLOW.out.local_tractogram)
+                .groupTuple(),
+            Channel.empty()
+        )
+
+        ch_versions = ch_versions.mix(BUNDLE_SEG.out.versions)
+        ch_bundle_seg = BUNDLE_SEG.out.bundles
     }
 
     //

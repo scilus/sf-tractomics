@@ -50,6 +50,11 @@
                         "git_sha": "60e21b273653eec3b710b91562e714c74ef4d0c7",
                         "installed_by": ["preproc_t1"]
                     },
+                    "bundle/recognize": {
+                        "branch": "main",
+                        "git_sha": "70ec5c35fbe3d0615c87497b02f7f289b24e4819",
+                        "installed_by": ["bundle_seg"]
+                    },
                     "denoising/mppca": {
                         "branch": "main",
                         "git_sha": "1c7984a32135efc6547518cff5724312013bcd4f",
@@ -219,6 +224,11 @@
                         "git_sha": "c18142d4ce012e5e79a6e54817c0ace83755150d",
                         "installed_by": ["tractoflow"]
                     },
+                    "bundle_seg": {
+                        "branch": "main",
+                        "git_sha": "74181e9f66228d5e35e80d408086d676ce73b0ab",
+                        "installed_by": ["subworkflows"]
+                    },
                     "io_bids": {
                         "branch": "main",
                         "git_sha": "b7260db4681c80ff37964889c7a29223fc55d7de",
@@ -247,7 +257,7 @@
                     "registration": {
                         "branch": "main",
                         "git_sha": "74181e9f66228d5e35e80d408086d676ce73b0ab",
-                        "installed_by": ["tractoflow"]
+                        "installed_by": ["bundle_seg", "tractoflow"]
                     },
                     "topup_eddy": {
                         "branch": "main",
