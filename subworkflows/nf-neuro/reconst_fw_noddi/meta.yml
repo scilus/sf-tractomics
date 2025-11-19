@@ -1,0 +1,124 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "reconst_fw_noddi"
+description: |
+  Sub-workflow that runs both RECONST/NODDI and RECONST/FREEWATER modules by
+  handling the conditional execution of the diffusivity priors. Single-value
+  diffusivity priors can be specified as input to this subworkflow. If not
+  specified, the subworkflow will compute the priors automatically. They can
+  then be averaged using the average_diff_priors argument of this workflow.
+
+keywords:
+  - multi-shell
+  - freewater
+  - noddi
+  - diffusion
+components:
+  - reconst/noddi
+  - reconst/freewater
+  - reconst/diffusivitypriors
+  - reconst/meandiffusivitypriors
+  - reconst/dtimetrics
+input:
+  - dwi_bval_bvec:
+      type: file
+      description: |
+        The input channel containing the DWI, BVAL, and BVEC files.
+        Structure: [ val(meta), path(dwi), path(bval), path(bvec) ]
+      pattern: "*.{dwi,bval,bvec}"
+  - brain_mask:
+      type: file
+      description: |
+        The input channel containing the brain mask file (e.g. b0_mask).
+        Structure: [ val(meta), path(brain_mask) ]
+      pattern: "*.nii.gz"
+  - fa_ad_rd_md:
+      type: file
+      description: |
+        The input channel containing DTI metrics (FA, AD, RD, MD).
+        Structure: [ val(meta), path(fa), path(ad), path(rd), path(md) ]
+      pattern: "*.nii.gz"
+args:
+  - run_noddi:
+      type: boolean
+      default: false
+      description: |
+        Whether to run the NODDI reconstruction.
+  - run_freewater:
+      type: boolean
+      default: false
+      description: |
+        Whether to run the FreeWater correction.
+  - para_diff:
+      type: float
+      default: null
+      description: |
+        Custom parallel diffusivity prior to use for NODDI and FreeWater models.
+  - iso_diff:
+      type: float
+      default: null
+      description: |
+        Custom isotropic diffusivity prior to use for NODDI and FreeWater models.
+  - perp_diff_min:
+      type: float
+      default: null
+      description: |
+        Minimum perpendicular diffusivity prior to use for NODDI and FreeWater
+        models when computing diffusivity priors automatically.
+  - perp_diff_max:
+      type: float
+      default: null
+      description: |
+        Maximum perpendicular diffusivity prior to use for NODDI and FreeWater
+        models when computing diffusivity priors automatically.
+  - average_diff_priors:
+      type: boolean
+      default: false
+      description: |
+        Whether to average the diffusivity priors computed from the
+        RECONST/DIFFUSIVITYPRIORS module across all subjects. (Recommended)
+output:
+  - noddi_dir:
+      type: file
+      description: |
+        Nifti file main direction.
+        Structure: [ val(meta), path(dir) ]
+      pattern: "*__fit_dir.nii.gz"
+      optional: true
+  - noddi_fwf:
+      type: file
+      description: |
+        Nifti file for Free Water Fraction.
+        Structure: [ val(meta), path(fwf) ]
+      pattern: "*__fit_FWF.nii.gz"
+      optional: true
+  - noddi_ndi:
+      type: file
+      description: |
+        Nifti file for Neurite Density Index.
+        Structure: [ val(meta), path(ndi) ]
+      pattern: "*__fit_NDI.nii.gz"
+      optional: true
+  - noddi_ecvf:
+      type: file
+      description: |
+        Nifti file for Extra-Cellular Volume Fraction.
+        Structure: [ val(meta), path(ecvf) ]
+      pattern: "*__fit_ECVF.nii.gz"
+      optional: true
+  - noddi_odi:
+      type: file
+      description: |
+        Nifti file for Orientation Dispersion Index.
+        Structure: [ val(meta), path(odi) ]
+      pattern: "*__fit_ODI.nii.gz"
+      optional: true
+  - versions:
+      type: file
+      description: |
+        File containing software versions
+        Structure: [ path(versions.yml) ]
+      pattern: "versions.yml"
+authors:
+  - "@levje"
+maintainers:
+  - "@levje"

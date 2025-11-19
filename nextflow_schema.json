@@ -984,6 +984,54 @@
             "description": "Number of processes for registration task",
             "help_text": "Number of processes for registration task"
         },
+        "processes_noddi": {
+            "type": "integer",
+            "default": 1,
+            "description": "Number of processes for NODDI computation.",
+            "help_text": "Number of processes for NODDI computation."
+        },
+        "run_noddi": {
+            "type": "boolean",
+            "description": "Compute NODDI maps.",
+            "help_text": "Compute NODDI maps."
+        },
+        "run_freewater": {
+            "type": "boolean",
+            "description": "Run Freewater Elimination and compute Freewater corrected metrics.",
+            "help_text": "Run Freewater Elimination and compute Freewater corrected metrics."
+        },
+        "processes_freewater_correction": {
+            "type": "integer",
+            "default": 1,
+            "description": "Number of processes for freewater estimation task.",
+            "help_text": "Number of processes for freewater estimation task."
+        },
+        "average_diff_priors": {
+            "type": "boolean",
+            "default": true,
+            "description": "Average diffusivity priors across subjects.",
+            "help_text": "Average diffusivity priors across subjects."
+        },
+        "para_diff": {
+            "type": "string",
+            "description": "Average parallel diffusivity value.",
+            "help_text": "Average parallel diffusivity value. Specifying this will override automatically computed values."
+        },
+        "iso_diff": {
+            "type": "string",
+            "description": "Average isotropic diffusivity value.",
+            "help_text": "Average isotropic diffusivity value. Specifying this will override automatically computed values."
+        },
+        "perp_diff_min": {
+            "type": "string",
+            "description": "Minimum perpendicular diffusivity value.",
+            "help_text": "Minimum perpendicular diffusivity value. Specifying this will override automatically computed values."
+        },
+        "perp_diff_max": {
+            "type": "string",
+            "description": "Maximum perpendicular diffusivity value.",
+            "help_text": "Maximum perpendicular diffusivity value. Specifying this will override automatically computed values."
+        },
         "processes_bundle_seg": {
             "type": "integer",
             "default": 4,
