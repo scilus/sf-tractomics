@@ -79,14 +79,13 @@ workflow NF_TRACTOFLOW {
     )
     ch_versions = ch_versions.mix(TRACTOFLOW.out.versions)
 
-    if (params.merge_trks) {
-        //
-        // Run ENSEMBLE_TRK
-        //
+    if (params.trk_ensemble) {
         ch_input_ensemble_trk = TRACTOFLOW.out.local_tractogram
             .join(TRACTOFLOW.out.pft_tractogram)
-            .map { meta, trk1, trk2 ->
-                tuple( meta, [trk1, trk2], [] )
+            .map { tuple ->
+                def meta = tuple[0]
+                def tractograms = tuple[1..-1]
+                return [meta, tractograms, []]
             }
         ENSEMBLE_TRK(ch_input_ensemble_trk)
         ch_versions = ch_versions.mix(ENSEMBLE_TRK.out.versions)
