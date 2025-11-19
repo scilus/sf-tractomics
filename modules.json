@@ -185,6 +185,11 @@
                         "git_sha": "b21f41f92e1ee439300b7060fc0296b56c6511b9",
                         "installed_by": ["tractoflow"]
                     },
+                    "tractogram/math": {
+                        "branch": "main",
+                        "git_sha": "5435f43bcda7f9a32d101137af36a9272d54f58e",
+                        "installed_by": ["modules"]
+                    },
                     "utils/extractb0": {
                         "branch": "main",
                         "git_sha": "0245a01f7ab9bec0753e2235fba489e3353f1a33",

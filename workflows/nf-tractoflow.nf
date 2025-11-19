@@ -10,6 +10,7 @@ include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pi
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_nf-tractoflow_pipeline'
 include { TRACTOFLOW             } from '../subworkflows/nf-neuro/tractoflow'
 include { RECONST_SHSIGNAL       } from '../modules/nf-neuro/reconst/shsignal'
+include { TRACTOGRAM_MATH as ENSEMBLE_TRK } from '../modules/nf-neuro/tractogram/math/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -77,6 +78,19 @@ workflow NF_TRACTOFLOW {
             .filter{ it[1] }
     )
     ch_versions = ch_versions.mix(TRACTOFLOW.out.versions)
+
+    if (params.merge_trks) {
+        //
+        // Run ENSEMBLE_TRK
+        //
+        ch_input_ensemble_trk = TRACTOFLOW.out.local_tractogram
+            .join(TRACTOFLOW.out.pft_tractogram)
+            .map { meta, trk1, trk2 ->
+                tuple( meta, [trk1, trk2], [] )
+            }
+        ENSEMBLE_TRK(ch_input_ensemble_trk)
+        ch_versions = ch_versions.mix(ENSEMBLE_TRK.out.versions)
+    }
 
     //
     // Run RECONST/SH_METRICS
