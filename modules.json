@@ -125,6 +125,11 @@
                         "git_sha": "f9676160a7d9e71ad072c39f32bcc7e7f1621d7a",
                         "installed_by": ["tractoflow"]
                     },
+                    "reconst/qball": {
+                        "branch": "main",
+                        "git_sha": "5420aa212ac5ad3f255f50ca5b0d5995693f8c35",
+                        "installed_by": ["tractoflow"]
+                    },
                     "reconst/shsignal": {
                         "branch": "main",
                         "git_sha": "f9676160a7d9e71ad072c39f32bcc7e7f1621d7a",
@@ -236,7 +241,7 @@
                     },
                     "tractoflow": {
                         "branch": "main",
-                        "git_sha": "c4347d07187129da702138d380fa8b1b642cf2da",
+                        "git_sha": "8a665c7589ea8e5cdaa4d9f1a731449712f53957",
                         "installed_by": ["subworkflows"]
                     }
                 }
