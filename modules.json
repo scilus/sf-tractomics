@@ -103,12 +103,12 @@
                     "reconst/diffusivitypriors": {
                         "branch": "main",
                         "git_sha": "373c0d3c51f1425e8adc1be0f844b8d4a766281b",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules", "reconst_fw_noddi"]
                     },
                     "reconst/dtimetrics": {
                         "branch": "main",
                         "git_sha": "0fdd04fbe05e37bfe1273d23e1d49018297ea7de",
-                        "installed_by": ["tractoflow"]
+                        "installed_by": ["reconst_fw_noddi", "tractoflow"]
                     },
                     "reconst/fodf": {
                         "branch": "main",
@@ -117,8 +117,8 @@
                     },
                     "reconst/freewater": {
                         "branch": "main",
-                        "git_sha": "fd7d3fcca3b62e479dd59132734fba896d88858b",
-                        "installed_by": ["modules"]
+                        "git_sha": "1283fc6a2374cca5b3d6335109fc4cfc54571c42",
+                        "installed_by": ["modules", "reconst_fw_noddi"]
                     },
                     "reconst/frf": {
                         "branch": "main",
@@ -128,7 +128,7 @@
                     "reconst/meandiffusivitypriors": {
                         "branch": "main",
                         "git_sha": "373c0d3c51f1425e8adc1be0f844b8d4a766281b",
-                        "installed_by": ["modules"]
+                        "installed_by": ["modules", "reconst_fw_noddi"]
                     },
                     "reconst/meanfrf": {
                         "branch": "main",
@@ -137,8 +137,8 @@
                     },
                     "reconst/noddi": {
                         "branch": "main",
-                        "git_sha": "307dd13e3142dba17c32ab1e7d519eda10b33053",
-                        "installed_by": ["modules"]
+                        "git_sha": "1283fc6a2374cca5b3d6335109fc4cfc54571c42",
+                        "installed_by": ["modules", "reconst_fw_noddi"]
                     },
                     "reconst/shsignal": {
                         "branch": "main",
@@ -233,6 +233,11 @@
                         "branch": "main",
                         "git_sha": "8e0d67ab92fd874c365792bc197f01731a270afd",
                         "installed_by": ["tractoflow"]
+                    },
+                    "reconst_fw_noddi": {
+                        "branch": "main",
+                        "git_sha": "23921b7bf9919ccc3cff3e709b3fddff4a385af9",
+                        "installed_by": ["subworkflows"]
                     },
                     "registration": {
                         "branch": "main",
