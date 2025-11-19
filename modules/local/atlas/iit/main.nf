@@ -5,7 +5,7 @@ def file_exists_and_not_empty(file_path) {
     if (file_path instanceof List && file_path.size() == 0) {
         return false
     }
-    return file(file_path).exists() && file(file_path).size() > 0
+    return file_path.exists()
 }
 
 process ATLAS_IIT {
@@ -19,8 +19,8 @@ process ATLAS_IIT {
     path iit_bundles
 
     output:
-    path "iit_bundles/*.nii.gz"      , emit: bundles
-    path "*_b0.nii.gz"               , emit: b0
+    path "iit_bundles/*.nii.gz"      , emit: bundles, includeInputs: true
+    path "*_b0.nii.gz"               , emit: b0, includeInputs: true
     path "versions.yml"              , emit: versions
 
     when:
@@ -34,8 +34,6 @@ process ATLAS_IIT {
     #!/bin/bash
 
     mkdir -p "/tmp"
-    mkdir -p "${intermediate_dir}"
-    mkdir -p "${output_dir}"
 
     export HOME="/tmp"
 
@@ -43,10 +41,15 @@ process ATLAS_IIT {
     ${file_exists_and_not_empty(iit_b0) ? "cp ${iit_b0} IITmean_b0.nii.gz" : "wget https://www.nitrc.org/frs/download.php/11266/IITmean_b0.nii.gz -O IITmean_b0.nii.gz" }
 
     # If the iit_bundles is not null and not empty, copy it locally
+    echo "» Preparing IIT bundle masks... (input is ${iit_bundles})"
 
     if [ "${iit_bundles}" != "null" ] && [ -s "${iit_bundles}" ]; then
-        mv "${iit_bundles}" "${output_dir}/"
+        echo "» Using provided IIT bundle masks from ${iit_bundles} -> ${output_dir}/"
+        mv "${iit_bundles}" "${output_dir}"
     else
+        mkdir -p "${intermediate_dir}"
+        mkdir -p "${output_dir}"
+
         # Download the bundle density maps.
         wget https://www.nitrc.org/frs/download.php/11472/IIT_bundles.zip -O "IIT_bundles.zip"
 

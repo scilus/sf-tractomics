@@ -94,17 +94,12 @@ workflow NF_TRACTOFLOW {
         )
 
     if (params.run_atlas_based_tractometry) {
-        //
-        // IIT ATLAS
-        //
-
         // Extract bundle masks from IIT atlas
-        ch_iit_template_bundles = channel.fromPath( params.iit_atlas.bundle_masks_dir + "/*.nii.gz", checkIfExists: true ).collect()
-        ch_iit_template_thr = channel.fromPath( params.iit_atlas.bundle_masks_thresholds, checkIfExists: true )
-        ATLAS_IIT(Channel.of([]), Channel.of([]), Channel.of([]))
+        ch_iit_template_bundles = params.iit_atlas.bundle_masks_dir ? channel.fromPath( params.iit_atlas.bundle_masks_dir, checkIfExists: true ) : channel.of([])
+        ch_iit_template_b0 = params.iit_atlas.template_b0 ? channel.fromPath( params.iit_atlas.template_b0 ) : channel.of([])
+        ATLAS_IIT(ch_iit_template_b0, ch_iit_template_bundles)
 
         // Register IIT atlas to subject space
-        // ch_iit_template_b0 = channel.fromPath( params.iit_atlas.template_b0 )
         ch_input_register_iit = TRACTOFLOW.out.b0
             .combine(ATLAS_IIT.out.b0)
             .map{ meta, b0, template_b0 -> [meta, b0, template_b0, []] }
