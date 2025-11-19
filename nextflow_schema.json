@@ -1006,6 +1006,16 @@
             "type": "string",
             "description": "Maximum perpendicular diffusivity value.",
             "help_text": "Maximum perpendicular diffusivity value. Specifying this will override automatically computed values."
+        },
+        "run_qball": {
+            "type": "boolean",
+            "description": "Compute Q-Ball metrics.",
+            "help_text": "Compute Q-Ball metrics (gfa, nufo, odf, ...)."
+        },
+        "use_qball_for_tracking": {
+            "type": "boolean",
+            "description": "Use Q-Ball model for tractography instead of fODFs.",
+            "help_text": "Use Q-Ball model for tractography instead of fODFs."
         }
     }
 }
