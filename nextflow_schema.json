@@ -995,7 +995,7 @@
             "description": "Compute NODDI maps.",
             "help_text": "Compute NODDI maps."
         },
-        "run_freewater_correction": {
+        "run_freewater": {
             "type": "boolean",
             "description": "Run Freewater Elimination and compute Freewater corrected metrics.",
             "help_text": "Run Freewater Elimination and compute Freewater corrected metrics."
