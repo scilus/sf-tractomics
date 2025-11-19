@@ -1,5 +1,17 @@
 {
-    "topup_full": {
+    "topup - stub-run": {
+        "content": [
+            [
+                "versions.yml:md5,5653b888fdf11c1e12c64cad22afc4b6"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "25.04.7"
+        },
+        "timestamp": "2025-10-09T19:52:44.496547608"
+    },
+    "topup - AP DWI+sbref | PA DWI+sbref": {
         "content": [
             "test__corrected_b0s.nii.gz",
             "topup_results_fieldcoef.nii.gz",
@@ -26,28 +38,16 @@
             "test__b0_topup_mqc.gif",
             "test__rev_b0_topup_mqc.gif",
             [
-                "versions.yml:md5,94e2c9feaffa49fdd4fd59ac95fd251f"
+                "versions.yml:md5,9b421f17f5937c838d561f765bda4df5"
             ]
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.10.4"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-02-23T18:16:40.661701215"
+        "timestamp": "2025-10-09T19:52:08.727790622"
     },
-    "topup - stub-run": {
-        "content": [
-            [
-                "versions.yml:md5,94e2c9feaffa49fdd4fd59ac95fd251f"
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "24.10.4"
-        },
-        "timestamp": "2025-02-20T19:58:59.31028257"
-    },
-    "topup_light": {
+    "topup - AP DWI | PA sbref": {
         "content": [
             "test1__corrected_b0s.nii.gz",
             "topup_results_fieldcoef.nii.gz",
@@ -88,14 +88,14 @@
             "test1__b0_topup_mqc.gif",
             "test1__rev_b0_topup_mqc.gif",
             [
-                "versions.yml:md5,94e2c9feaffa49fdd4fd59ac95fd251f",
-                "versions.yml:md5,94e2c9feaffa49fdd4fd59ac95fd251f"
+                "versions.yml:md5,9b421f17f5937c838d561f765bda4df5",
+                "versions.yml:md5,9b421f17f5937c838d561f765bda4df5"
             ]
         ],
         "meta": {
             "nf-test": "0.9.0",
-            "nextflow": "24.10.4"
+            "nextflow": "25.04.7"
         },
-        "timestamp": "2025-02-23T18:17:42.609518864"
+        "timestamp": "2025-10-09T19:52:38.44642361"
     }
 }

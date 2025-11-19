@@ -1,28 +1,58 @@
 {
-    "name": "nfcore",
-    "image": "nfcore/gitpod:latest",
-    "remoteUser": "gitpod",
-    "runArgs": ["--privileged"],
+    "name": "nf-tractoflow",
+    "build": { "dockerfile": "Dockerfile", "context": ".." },
+    "forwardPorts": [3000],
     "features": {
-        "ghcr.io/devcontainers/features/docker-in-docker:2": {}
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {
+            "dockerDashComposeVersion": "none",
+            "installDockerComposeSwitch": false
+        }
     },
-    "containerEnv": {
-        "NFCORE_MODULES_GIT_REMOTE": "https://github.com/scilus/nf-neuro.git",
-        "NFCORE_MODULES_BRANCH": "main",
-        "NFCORE_SUBWORKFLOWS_GIT_REMOTE": "https://github.com/scilus/nf-neuro.git",
-        "NFCORE_SUBWORKFLOWS_BRANCH": "main"
+    "postCreateCommand": {
+        "identify": "if [ -z \"$CODESPACES\" ]; then echo \"Devcontainers Development\"; else echo \"Codespaces Development\";  fi",
+        "trust": "git config --global --add safe.directory /workspaces"
     },
+    "mounts": [
+        {
+            "target": "/tmp",
+            "type": "volume"
+        },
+        {
+            "target": "/root/.vscode-server",
+            "type": "volume"
+        },
+        {
+            "target": "/commandhistory",
+            "type": "volume",
+            "source": "nf-tractoflow-${devcontainerId}-bashhistory"
+        }
+    ],
     // Configure tool-specific properties.
     "customizations": {
         // Configure properties specific to VS Code.
         "vscode": {
             // Set *default* container specific settings.json values on container create.
             "settings": {
-                "python.defaultInterpreterPath": "/opt/conda/bin/python"
+                "python.defaultInterpreterPath": "/opt/conda/bin/python",
+                "terminal.integrated.defaultProfile.linux": "devcontainer-bash",
+                "terminal.integrated.profiles.linux": {
+                    "devcontainer-bash": {
+                        "path": "bash",
+                        "icon": "terminal-bash",
+                        "args": ["--init-file", "/root/.bash_profile"]
+                    }
+                }
             },
-
             // Add the IDs of extensions you want installed when the container is created.
-            "extensions": ["ms-python.python", "ms-python.vscode-pylance", "nf-core.nf-core-extensionpack"]
+            "extensions": [
+                "ms-python.python",
+                "ms-python.vscode-pylance",
+                "nf-core.nf-core-extensionpack", // nf-core recommended extensions
+                "nextflow.nextflow", // Nextflow VS Code extension
+                "codezombiech.gitignore", // Language support for .gitignore files
+                "cssho.vscode-svgviewer", // SVG viewer
+                "nf-neuro.nf-neuro-extensionpack"
+            ]
         }
     }
 }

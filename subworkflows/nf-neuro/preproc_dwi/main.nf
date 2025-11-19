@@ -3,13 +3,11 @@ include { DENOISING_MPPCA as DENOISE_REVDWI } from '../../../modules/nf-neuro/de
 include { PREPROC_GIBBS as PREPROC_GIBBS_DWI } from '../../../modules/nf-neuro/preproc/gibbs/main'
 include { PREPROC_GIBBS as PREPROC_GIBBS_REVDWI } from '../../../modules/nf-neuro/preproc/gibbs/main'
 include { BETCROP_FSLBETCROP } from '../../../modules/nf-neuro/betcrop/fslbetcrop/main'
-include { IMAGE_CROPVOLUME } from '../../../modules/nf-neuro/image/cropvolume/main'
 include { PREPROC_N4 as N4_DWI } from '../../../modules/nf-neuro/preproc/n4/main'
 include { PREPROC_NORMALIZE as NORMALIZE_DWI } from '../../../modules/nf-neuro/preproc/normalize/main'
 include { IMAGE_RESAMPLE as RESAMPLE_DWI } from '../../../modules/nf-neuro/image/resample/main'
 include { IMAGE_RESAMPLE as RESAMPLE_MASK } from '../../../modules/nf-neuro/image/resample/main'
 include { UTILS_EXTRACTB0 as EXTRACTB0_RESAMPLE } from '../../../modules/nf-neuro/utils/extractb0/main'
-include { UTILS_EXTRACTB0 as EXTRACTB0_TOPUP } from '../../../modules/nf-neuro/utils/extractb0/main'
 include { TOPUP_EDDY } from '../topup_eddy/main'
 
 
@@ -100,7 +98,7 @@ workflow PREPROC_DWI {
         } // No else, we just use the input DWI
 
         // ** Eddy Topup ** //
-        TOPUP_EDDY ( ch_dwi, ch_b0, ch_rev_dwi, ch_rev_b0, ch_config_topup )
+        TOPUP_EDDY ( ch_dwi, ch_b0, ch_rev_dwi, ch_rev_b0, ch_config_topup.ifEmpty( "b02b0.cnf" ) )
         ch_versions = ch_versions.mix(TOPUP_EDDY.out.versions.first())
         ch_multiqc_files = ch_multiqc_files.mix(TOPUP_EDDY.out.mqc)
 
@@ -112,19 +110,13 @@ workflow PREPROC_DWI {
         BETCROP_FSLBETCROP ( ch_betcrop_dwi )
         ch_versions = ch_versions.mix(BETCROP_FSLBETCROP.out.versions.first())
 
-        // ** Crop b0 ** //
-        ch_crop_b0 = TOPUP_EDDY.out.b0
-            .join(BETCROP_FSLBETCROP.out.bbox)
-
-        IMAGE_CROPVOLUME ( ch_crop_b0 )
-        ch_versions = ch_versions.mix(IMAGE_CROPVOLUME.out.versions.first())
-
         ch_dwi_preproc = BETCROP_FSLBETCROP.out.image
         ch_dwi_n4 = Channel.empty()
         if (params.preproc_dwi_run_N4) {
             // ** N4 DWI ** //
             ch_N4 = ch_dwi_preproc
-                .join(IMAGE_CROPVOLUME.out.image)
+                .join(TOPUP_EDDY.out.bval)
+                .join(TOPUP_EDDY.out.bvec)
                 .join(BETCROP_FSLBETCROP.out.mask)
 
             N4_DWI ( ch_N4 )
@@ -165,7 +157,7 @@ workflow PREPROC_DWI {
 
         // ** Resample mask ** //
         ch_resample_mask = BETCROP_FSLBETCROP.out.mask
-            .map{ it + [[]] }
+            .join(EXTRACTB0_RESAMPLE.out.b0)
 
         RESAMPLE_MASK ( ch_resample_mask )
         ch_versions = ch_versions.mix(RESAMPLE_MASK.out.versions.first())

@@ -3,7 +3,7 @@ process DENOISING_MPPCA {
     tag "$meta.id"
     label 'process_medium'
 
-    container "mrtrix3/mrtrix3:latest"
+    container "mrtrix3/mrtrix3:3.0.5"
 
     input:
     tuple val(meta), path(dwi), path(mask)
@@ -38,7 +38,6 @@ process DENOISING_MPPCA {
     """
 
     stub:
-    def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
 
     """
