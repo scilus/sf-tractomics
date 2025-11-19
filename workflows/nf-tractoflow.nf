@@ -100,7 +100,7 @@ workflow NF_TRACTOFLOW {
                 .join(TRACTOFLOW.out.dti_rd)
                 .join(TRACTOFLOW.out.dti_md)
         )
-        // ch_versions = ch_versions.mix(RECONST_FW_NODDI.out.versions)
+        ch_versions = ch_versions.mix(RECONST_FW_NODDI.out.versions)
     }
 
     //
