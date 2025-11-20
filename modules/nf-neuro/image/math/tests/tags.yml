@@ -1,0 +1,2 @@
+image/math:
+  - "modules/nf-neuro/image/math/**"

@@ -1,0 +1,63 @@
+{
+    "atlas_iit - download and process": {
+        "content": [
+            [
+                "IITmean_b0.nii.gz:md5,356a0b18edcecbf7b3c684f4717f5ee9"
+            ],
+            [
+                [
+                    "AC_mask.nii.gz:md5,274e5f39af58cf354cdd1d05f554fac3",
+                    "AF_L_mask.nii.gz:md5,9643d92b6f4cfd9f81ba5ff262f755cf",
+                    "AF_R_mask.nii.gz:md5,437771d97b55c811e004d1b77470f38d",
+                    "AST_L_mask.nii.gz:md5,77f19a30c2d571b88af3b8e1387b7114",
+                    "AST_R_mask.nii.gz:md5,dd553f367275fc118c1d07dcddd51c81",
+                    "CCMid_mask.nii.gz:md5,dfc1bd2a3620c68d54eb096c4186ed62",
+                    "CC_ForcepsMajor_mask.nii.gz:md5,677cb0f9c3d1d36c81506594e6385ee9",
+                    "CC_ForcepsMinor_mask.nii.gz:md5,12cf032601d7e53377b210efc9e325e7",
+                    "CC_mask.nii.gz:md5,a6bb6d4b8163beba5e7ac836fdd007a2",
+                    "CST_L_mask.nii.gz:md5,7872391f996a45ee45b174c03bc4c4d4",
+                    "CST_R_mask.nii.gz:md5,92e6343a7194cfef727b094bb7ca7424",
+                    "C_L_mask.nii.gz:md5,4ab2c49a9f100cf26575f90b4b479bcc",
+                    "C_R_mask.nii.gz:md5,a0ca0ae6a6cd1dfd08ff1d2e6335b4a1",
+                    "FPT_L_mask.nii.gz:md5,bd6f62381917621f80177241549409d1",
+                    "FPT_R_mask.nii.gz:md5,83de73f013be31676e10952ab2e18d04",
+                    "F_L_R_mask.nii.gz:md5,e15cd1b080f3b65f88d6412d8c3f199e",
+                    "ICP_L_mask.nii.gz:md5,747bcb43217d060cfdd712275d870fe2",
+                    "ICP_R_mask.nii.gz:md5,241c0c9c5936792746276705710816e8",
+                    "IFOF_L_mask.nii.gz:md5,4ca78d2be27dfb1d2e55766f3a2487d8",
+                    "IFOF_R_mask.nii.gz:md5,d4048d1e57e777f4bf144e838d849f64",
+                    "ILF_L_mask.nii.gz:md5,00502f4048fdf09a2a5ef77e51305945",
+                    "ILF_R_mask.nii.gz:md5,1a88cbfa3a7620222e8bc7fc02c767d3",
+                    "MCP_mask.nii.gz:md5,736886a05fdc3152709e7d13efdd3d88",
+                    "ML_L_mask.nii.gz:md5,d61cc297c5abe75f0c40e382726da8b8",
+                    "ML_R_mask.nii.gz:md5,d73660dcd21cbf475d7f86305bc4e485",
+                    "MdLF_L_mask.nii.gz:md5,101914cc18881ef2016f1cc6e2dd2b39",
+                    "MdLF_R_mask.nii.gz:md5,c4e0a73789364d142041469328c1cb7d",
+                    "OPT_L_mask.nii.gz:md5,fd4cf1baa0d58523821945842371c22a",
+                    "OPT_R_mask.nii.gz:md5,a525c418c958f1d10f592a7f03a9702a",
+                    "OR_L_mask.nii.gz:md5,504b5d2206041ee374bc312a424aab66",
+                    "OR_R_mask.nii.gz:md5,1532e721bf9478df7d9aeffd42023806",
+                    "PPT_L_mask.nii.gz:md5,732597e4eed49a169f9733a158ba048a",
+                    "PPT_R_mask.nii.gz:md5,0d185143c3b67932a51c75e7161793f2",
+                    "SCP_mask.nii.gz:md5,222de5a9102fac10abaaa56e8a5688a8",
+                    "SLF_L_mask.nii.gz:md5,a8cbc6b0f53b6d90748da543b01a93d2",
+                    "SLF_R_mask.nii.gz:md5,eba993f98898798a8508ec23332cba65",
+                    "STT_L_mask.nii.gz:md5,e4a53171dd7ee7729fce5c04a67e1d69",
+                    "STT_R_mask.nii.gz:md5,3a2ead1d959ae9a328fd6738d44e9b89",
+                    "UF_L_mask.nii.gz:md5,0464e812ea267f733ad563c7983ec6d3",
+                    "UF_R_mask.nii.gz:md5,e5fe063e3ffa906ed7ebdb2a1471f810",
+                    "VOF_L_mask.nii.gz:md5,29fd99ee035b60fd57bb6aad8526955d",
+                    "VOF_R_mask.nii.gz:md5,007309ed2df0e1193bed272da5c0e426"
+                ]
+            ],
+            [
+                "versions.yml:md5,d5821e63c88f709fe6c8111aeaa3529e"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.6"
+        },
+        "timestamp": "2025-11-20T14:07:03.843057081"
+    }
+}
