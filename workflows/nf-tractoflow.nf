@@ -9,11 +9,11 @@ include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pi
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_nf-tractoflow_pipeline'
 include { TRACTOFLOW             } from '../subworkflows/nf-neuro/tractoflow'
+include { ATLAS_IIT              } from '../subworkflows/nf-neuro/atlas_iit/main'
 include { RECONST_SHSIGNAL       } from '../modules/nf-neuro/reconst/shsignal'
 include { BUNDLE_SEG             } from '../subworkflows/nf-neuro/bundle_seg/main' addParams(run_easyreg: false)
 include { REGISTRATION_ANTS as REGISTER_ATLAS_BUNDLES } from '../modules/nf-neuro/registration/ants/main'
 include { REGISTRATION_ANTSAPPLYTRANSFORMS as TRANSFORM_ATLAS_BUNDLES } from '../modules/nf-neuro/registration/antsapplytransforms/main.nf'
-include { ATLAS_IIT              } from '../modules/local/atlas/iit/main'
 include { STATS_METRICSINROI     } from '../modules/nf-neuro/stats/metricsinroi/main'
 include { STATS_JSONTOCSV        } from '../modules/local/stats/jsontocsv/main'
 
@@ -94,10 +94,7 @@ workflow NF_TRACTOFLOW {
         )
 
     if (params.run_atlas_based_tractometry) {
-        // Extract bundle masks from IIT atlas
-        ch_iit_template_bundles = params.iit_atlas.bundle_masks_dir ? channel.fromPath( params.iit_atlas.bundle_masks_dir, checkIfExists: true ) : channel.of([])
-        ch_iit_template_b0 = params.iit_atlas.template_b0 ? channel.fromPath( params.iit_atlas.template_b0 ) : channel.of([])
-        ATLAS_IIT(ch_iit_template_b0, ch_iit_template_bundles)
+        ATLAS_IIT()
 
         // Register IIT atlas to subject space
         ch_input_register_iit = TRACTOFLOW.out.b0
@@ -108,7 +105,7 @@ workflow NF_TRACTOFLOW {
         // Apply the transformation to subject space to the bundles
         ch_iit_transform_bundles = TRACTOFLOW.out.b0
             .join(REGISTER_ATLAS_BUNDLES.out.forward_image_transform)
-            .combine(ATLAS_IIT.out.bundles.toList())
+            .combine(ATLAS_IIT.out.bundle_masks)
             .map {
                 meta, b0, transform, bundles ->
                     [meta, bundles, b0, transform]
