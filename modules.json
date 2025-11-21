@@ -236,7 +236,7 @@
                     },
                     "atlas_iit": {
                         "branch": "main",
-                        "git_sha": "67930f453c2fcf23906731640aea2a997f68002c",
+                        "git_sha": "8fd40f2e833585208d72ff43a5f92de8ee8cc57c",
                         "installed_by": ["subworkflows"]
                     },
                     "bundle_seg": {

@@ -110,8 +110,8 @@ workflow ATLAS_IIT {
 
     ch_versions = channel.empty()
 
-    def input_b0 = params.containsKey('atlas_iit') ? params.atlas_iit.b0 : null
-    def input_bundle_masks_dir = params.containsKey('atlas_iit') ? params.atlas_iit.bundle_masks_dir : null
+    def input_b0 = params.containsKey('atlas_iit_b0') ? params.atlas_iit_b0 : null
+    def input_bundle_masks_dir = params.containsKey('atlas_iit_bundle_masks_dir') ? params.atlas_iit_bundle_masks_dir : null
 
     // Fetch Mean B0
     if (input_b0) {

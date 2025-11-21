@@ -24,7 +24,7 @@ keywords:
 components:
   - image/math
 args:
-  atlas_iit.b0:
+  atlas_iit_b0:
     type: string
     description: |
       Path to a Mean B0 map of the IIT Human Brain Atlas.
@@ -32,7 +32,7 @@ args:
       Structure: path(img)
     mandatory: false
     default: null
-  atlas_iit.bundle_masks_dir:
+  atlas_iit_bundle_masks_dir:
     type: string
     description: |
       Path to a directory containing IIT bundle masks.
