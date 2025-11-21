@@ -1050,7 +1050,7 @@
         },
         "run_atlas_based_tractometry": {
             "type": "boolean",
-            "default": true,
+            "default": false,
             "description": "Run atlas-based tractometry using ROI masks obtained from IIT."
         },
         "atlas_iit_b0": {
