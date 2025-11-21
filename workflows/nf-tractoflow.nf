@@ -148,6 +148,10 @@ workflow NF_TRACTOFLOW {
         ch_collection_input = STATS_JSONTOCSV.out.stats_csv
             .map{ _meta, stats_csv -> stats_csv }
 
+        // Collect all ROI stats into a single file
+        // by appending each row of the CSV files,
+        // while keeping the header from the first
+        // file only and skipping it in the rest.
         ch_collection_input.collectFile(
             storeDir: "${params.outdir}/metrics/",
             name: "roi_stats.csv",
