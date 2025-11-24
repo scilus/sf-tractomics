@@ -33,8 +33,6 @@ process STATS_METRICSINROI {
     export OMP_NUM_THREADS=1
     export OPENBLAS_NUM_THREADS=1
 
-    prefix="${prefix}"
-
     if $use_label;
     then
         if [[ ! -f "$rois_lut" ]];
@@ -110,6 +108,7 @@ process STATS_METRICSINROI {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         scilpy: \$(uv pip -q -n list | grep scilpy | tr -s ' ' | cut -d' ' -f2)
+        jq: \$(jq --version |& sed '1!d ; s/jq-//')
     END_VERSIONS
     """
 
@@ -126,6 +125,7 @@ process STATS_METRICSINROI {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         scilpy: \$(uv pip -q -n list | grep scilpy | tr -s ' ' | cut -d' ' -f2)
+        jq: \$(jq --version |& sed '1!d ; s/jq-//')
     END_VERSIONS
     """
 }
