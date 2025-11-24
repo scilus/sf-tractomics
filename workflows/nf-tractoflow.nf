@@ -15,7 +15,7 @@ include { RECONST_FW_NODDI       } from '../subworkflows/nf-neuro/reconst_fw_nod
 include { BUNDLE_SEG             } from '../subworkflows/nf-neuro/bundle_seg/main' addParams(run_easyreg: false)
 include { REGISTRATION_ANTS as REGISTER_ATLAS_B0 } from '../modules/nf-neuro/registration/ants/main'
 include { REGISTRATION_ANTSAPPLYTRANSFORMS as TRANSFORM_ATLAS_BUNDLES } from '../modules/nf-neuro/registration/antsapplytransforms/main.nf'
-include { STATS_METRICSINROI     } from '../modules/nf-neuro/stats/metricsinroi/main'
+include { STATS_METRICSINROI     } from '../modules/local/stats/metricsinroi/main'
 include { STATS_JSONTOCSV        } from '../modules/local/stats/jsontocsv/main'
 
 /*
@@ -114,6 +114,16 @@ workflow NF_TRACTOFLOW {
         ch_bundle_seg = BUNDLE_SEG.out.bundles
     }
 
+    // Prepare volume ROI metric extraction
+    // Start by collecting DTI metrics
+    ch_input_metricsinroi = TRACTOFLOW.out.dti_fa
+        .join(TRACTOFLOW.out.dti_md)
+        .join(TRACTOFLOW.out.dti_rd)
+        .join(TRACTOFLOW.out.dti_ad)
+        .join(TRACTOFLOW.out.afd_total)
+        .join(TRACTOFLOW.out.afd_sum)
+        .join(TRACTOFLOW.out.afd_max)
+
     //
     // Run RECONST/NODDI & RECONST/FREEWATER
     //
@@ -127,6 +137,19 @@ workflow NF_TRACTOFLOW {
                 .join(TRACTOFLOW.out.dti_md)
         )
         ch_versions = ch_versions.mix(RECONST_FW_NODDI.out.versions)
+
+        // Add FW/NODDI metrics to the volume
+        // ROI extraction.
+        ch_input_metricsinroi = ch_input_metricsinroi
+            .join(RECONST_FW_NODDI.out.fw_fw)
+            .join(RECONST_FW_NODDI.out.fw_dti_fa)
+            .join(RECONST_FW_NODDI.out.fw_dti_md)
+            .join(RECONST_FW_NODDI.out.fw_dti_rd)
+            .join(RECONST_FW_NODDI.out.fw_dti_ad)
+            .join(RECONST_FW_NODDI.out.noddi_ndi)
+            .join(RECONST_FW_NODDI.out.noddi_fwf)
+            .join(RECONST_FW_NODDI.out.noddi_odi)
+            .join(RECONST_FW_NODDI.out.noddi_ecvf)
     }
 
     if (params.run_atlas_based_tractometry) {
@@ -150,25 +173,6 @@ workflow NF_TRACTOFLOW {
         TRANSFORM_ATLAS_BUNDLES(ch_iit_transform_bundles)
         ch_versions = ch_versions.mix(TRANSFORM_ATLAS_BUNDLES.out.versions)
 
-        // Prepare volume ROI metric extraction
-        // Start by collecting DTI metrics
-        ch_input_metricsinroi = TRACTOFLOW.out.dti_fa
-            .join(TRACTOFLOW.out.dti_md)
-            .join(TRACTOFLOW.out.dti_rd)
-            .join(TRACTOFLOW.out.dti_ad)
-            .join(RECONST_FW_NODDI.out.fw_fw)
-            .join(RECONST_FW_NODDI.out.fw_dti_fa)
-            .join(RECONST_FW_NODDI.out.fw_dti_md)
-            .join(RECONST_FW_NODDI.out.fw_dti_rd)
-            .join(RECONST_FW_NODDI.out.fw_dti_ad)
-            .join(RECONST_FW_NODDI.out.noddi_ndi)
-            .join(RECONST_FW_NODDI.out.noddi_fwf)
-            .join(RECONST_FW_NODDI.out.noddi_odi)
-            .join(RECONST_FW_NODDI.out.noddi_ecvf)
-            .join(TRACTOFLOW.out.afd_total)
-            .join(TRACTOFLOW.out.afd_sum)
-            .join(TRACTOFLOW.out.afd_max)
-
         //
         // EXTRACT ROI VOLUME STATISTICS
         //
@@ -187,12 +191,10 @@ workflow NF_TRACTOFLOW {
 
         STATS_METRICSINROI(ch_input_metricsinroi)
 
-        STATS_JSONTOCSV(STATS_METRICSINROI.out.mqc)
-
         //
         // COLLECT/GROUP ROI STATS
         //
-        ch_collection_input = STATS_JSONTOCSV.out.stats_csv
+        ch_collection_input = STATS_METRICSINROI.out.stats_csv
             .map{ _meta, stats_csv -> stats_csv }
 
         // Collect all ROI stats into a single file
