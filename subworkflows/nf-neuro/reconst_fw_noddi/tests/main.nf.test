@@ -1,0 +1,489 @@
+nextflow_workflow {
+    name "Test Subworkflow RECONST_FW_NODDI"
+    script "../main.nf"
+    workflow "RECONST_FW_NODDI"
+
+    tag "subworkflows"
+    tag "subworkflows_nfneuro"
+    tag "subworkflows/reconst_fw_noddi"
+
+    tag "load_test_data"
+    tag "reconst/noddi"
+    tag "reconst/freewater"
+    tag "reconst/diffusivitypriors"
+    tag "reconst/meandiffusivitypriors"
+    tag "reconst/dtimetrics"
+
+    tag "stub"
+    options "-stub-run"
+
+    setup {
+        run("LOAD_TEST_DATA", alias: "LOAD_DATA") {
+            script "../../load_test_data/main.nf"
+            process {
+                """
+                input[0] = Channel.from( [ "processing.zip", "commit_amico.zip" ] )
+                input[1] = "test.load-test-data"
+                """
+            }
+        }
+    }
+
+    test("reconst_fw_noddi - noddi") {
+        when {
+            config "./noddi.config"
+
+            workflow {
+                """
+                ch_split_test_data = LOAD_DATA.out.test_data_directory
+                    .branch{
+                        processing: it.simpleName == "processing"
+                        commit_amico: it.simpleName == "commit_amico"
+                    }
+
+                input[0] = ch_split_test_data.processing
+                    .map{ test_data_directory -> [
+                    [ id:'test', single_end:false ], // meta map
+                    file("\${test_data_directory}/dwi.nii.gz"),
+                    file("\${test_data_directory}/dwi.bval"),
+                    file("\${test_data_directory}/dwi.bvec")
+                    ]}
+                input[1] = ch_split_test_data.commit_amico
+                    .map{ test_data_directory -> [
+                    [ id:'test', single_end:false ], // meta map
+                    file("\${test_data_directory}/mask.nii.gz")
+                    ]}
+                input[2] = ch_split_test_data.processing
+                    .map{ test_data_directory -> [
+                        [ id:'test', single_end:false ], // meta map
+                        file("\${test_data_directory}/fa.nii.gz"),
+                        file("\${test_data_directory}/ad.nii.gz"),
+                        file("\${test_data_directory}/rd.nii.gz"),
+                        file("\${test_data_directory}/md.nii.gz")
+                    ]}
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out
+                        .findAll{ channel -> !channel.key.isInteger() && channel.value  }
+                        .collectEntries{ channel ->
+                            [(channel.key): ["versions"].contains(channel.key)
+                                ? channel.value
+                                : channel.value.collect{ subject ->
+                                    [ subject[0] ] + subject[1..-1].collect{ entry -> entry ? file(entry).name : "" }
+                            } ]
+                        }
+                ).match() },
+                { assert workflow.out
+                    .findAll{ !it.key.isInteger() }
+                    .every{ channel ->
+                        channel.value.every{ subject -> subject instanceof ArrayList
+                            ? subject.every()
+                            : subject } } }
+            )
+        }
+    }
+
+    test("reconst_fw_noddi - freewater") {
+        when {
+            config "./fw.config"
+
+            workflow {
+                """
+                ch_split_test_data = LOAD_DATA.out.test_data_directory
+                    .branch{
+                        processing: it.simpleName == "processing"
+                        commit_amico: it.simpleName == "commit_amico"
+                    }
+
+                input[0] = ch_split_test_data.processing
+                    .map{ test_data_directory -> [
+                    [ id:'test', single_end:false ], // meta map
+                    file("\${test_data_directory}/dwi.nii.gz"),
+                    file("\${test_data_directory}/dwi.bval"),
+                    file("\${test_data_directory}/dwi.bvec")
+                    ]}
+                input[1] = ch_split_test_data.commit_amico
+                    .map{ test_data_directory -> [
+                    [ id:'test', single_end:false ], // meta map
+                    file("\${test_data_directory}/mask.nii.gz")
+                    ]}
+                input[2] = ch_split_test_data.processing
+                    .map{ test_data_directory -> [
+                        [ id:'test', single_end:false ], // meta map
+                        file("\${test_data_directory}/fa.nii.gz"),
+                        file("\${test_data_directory}/ad.nii.gz"),
+                        file("\${test_data_directory}/rd.nii.gz"),
+                        file("\${test_data_directory}/md.nii.gz")
+                    ]}
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out
+                        .findAll{ channel -> !channel.key.isInteger() && channel.value  }
+                        .collectEntries{ channel ->
+                            [(channel.key): ["versions"].contains(channel.key)
+                                ? channel.value
+                                : channel.value.collect{ subject ->
+                                    [ subject[0] ] + subject[1..-1].collect{ entry -> entry ? file(entry).name : "" }
+                            } ]
+                        }
+                ).match() },
+                { assert workflow.out
+                    .findAll{ !it.key.isInteger() }
+                    .every{ channel ->
+                        channel.value.every{ subject -> subject instanceof ArrayList
+                            ? subject.every()
+                            : subject } } }
+            )
+        }
+    }
+
+    test("reconst_fw_noddi - noddi & freewater") {
+        when {
+            config "./noddi_fw.config"
+
+            workflow {
+                """
+                ch_split_test_data = LOAD_DATA.out.test_data_directory
+                    .branch{
+                        processing: it.simpleName == "processing"
+                        commit_amico: it.simpleName == "commit_amico"
+                    }
+
+                input[0] = ch_split_test_data.processing
+                    .map{ test_data_directory -> [
+                    [ id:'test', single_end:false ], // meta map
+                    file("\${test_data_directory}/dwi.nii.gz"),
+                    file("\${test_data_directory}/dwi.bval"),
+                    file("\${test_data_directory}/dwi.bvec")
+                    ]}
+                input[1] = ch_split_test_data.commit_amico
+                    .map{ test_data_directory -> [
+                    [ id:'test', single_end:false ], // meta map
+                    file("\${test_data_directory}/mask.nii.gz")
+                    ]}
+                input[2] = ch_split_test_data.processing
+                    .map{ test_data_directory -> [
+                        [ id:'test', single_end:false ], // meta map
+                        file("\${test_data_directory}/fa.nii.gz"),
+                        file("\${test_data_directory}/ad.nii.gz"),
+                        file("\${test_data_directory}/rd.nii.gz"),
+                        file("\${test_data_directory}/md.nii.gz")
+                    ]}
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out
+                        .findAll{ channel -> !channel.key.isInteger() && channel.value  }
+                        .collectEntries{ channel ->
+                            [(channel.key): ["versions"].contains(channel.key)
+                                ? channel.value
+                                : channel.value.collect{ subject ->
+                                    [ subject[0] ] + subject[1..-1].collect{ entry -> entry ? file(entry).name : "" }
+                            } ]
+                        }
+                ).match() },
+                { assert workflow.out
+                    .findAll{ !it.key.isInteger() }
+                    .every{ channel ->
+                        channel.value.every{ subject -> subject instanceof ArrayList
+                            ? subject.every()
+                            : subject } } }
+            )
+        }
+    }
+
+    test("reconst_fw_noddi - noddi & freewater - average priors") {
+        when {
+            config "./noddi_fw_avg_priors.config"
+
+            workflow {
+                """
+                ch_split_test_data = LOAD_DATA.out.test_data_directory
+                    .branch{
+                        processing: it.simpleName == "processing"
+                        commit_amico: it.simpleName == "commit_amico"
+                    }
+
+                input[0] = ch_split_test_data.processing
+                    .map{ test_data_directory -> [
+                    [ id:'test', single_end:false ], // meta map
+                    file("\${test_data_directory}/dwi.nii.gz"),
+                    file("\${test_data_directory}/dwi.bval"),
+                    file("\${test_data_directory}/dwi.bvec")
+                    ]}
+                input[1] = ch_split_test_data.commit_amico
+                    .map{ test_data_directory -> [
+                    [ id:'test', single_end:false ], // meta map
+                    file("\${test_data_directory}/mask.nii.gz")
+                    ]}
+                input[2] = ch_split_test_data.processing
+                    .map{ test_data_directory -> [
+                        [ id:'test', single_end:false ], // meta map
+                        file("\${test_data_directory}/fa.nii.gz"),
+                        file("\${test_data_directory}/ad.nii.gz"),
+                        file("\${test_data_directory}/rd.nii.gz"),
+                        file("\${test_data_directory}/md.nii.gz")
+                    ]}
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out
+                        .findAll{ channel -> !channel.key.isInteger() && channel.value  }
+                        .collectEntries{ channel ->
+                            [(channel.key): ["versions"].contains(channel.key)
+                                ? channel.value
+                                : channel.value.collect{ subject ->
+                                    [ subject[0] ] + subject[1..-1].collect{ entry -> entry ? file(entry).name : "" }
+                            } ]
+                        }
+                ).match() },
+                { assert workflow.out
+                    .findAll{ !it.key.isInteger() }
+                    .every{ channel ->
+                        channel.value.every{ subject -> subject instanceof ArrayList
+                            ? subject.every()
+                            : subject } } }
+            )
+        }
+    }
+
+    test("reconst_fw_noddi - noddi & freewater - custom priors") {
+        when {
+            config "./noddi_fw_custom_priors.config"
+            workflow {
+                """
+                ch_split_test_data = LOAD_DATA.out.test_data_directory
+                    .branch{
+                        processing: it.simpleName == "processing"
+                        commit_amico: it.simpleName == "commit_amico"
+                    }
+
+                input[0] = ch_split_test_data.processing
+                    .map{ test_data_directory -> [
+                    [ id:'test', single_end:false ], // meta map
+                    file("\${test_data_directory}/dwi.nii.gz"),
+                    file("\${test_data_directory}/dwi.bval"),
+                    file("\${test_data_directory}/dwi.bvec")
+                    ]}
+                input[1] = ch_split_test_data.commit_amico
+                    .map{ test_data_directory -> [
+                    [ id:'test', single_end:false ], // meta map
+                    file("\${test_data_directory}/mask.nii.gz")
+                    ]}
+                input[2] = ch_split_test_data.processing
+                    .map{ test_data_directory -> [
+                        [ id:'test', single_end:false ], // meta map
+                        file("\${test_data_directory}/fa.nii.gz"),
+                        file("\${test_data_directory}/ad.nii.gz"),
+                        file("\${test_data_directory}/rd.nii.gz"),
+                        file("\${test_data_directory}/md.nii.gz")
+                    ]}
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out
+                        .findAll{ channel -> !channel.key.isInteger() && channel.value  }
+                        .collectEntries{ channel ->
+                            [(channel.key): ["versions"].contains(channel.key)
+                                ? channel.value
+                                : channel.value.collect{ subject ->
+                                    [ subject[0] ] + subject[1..-1].collect{ entry -> entry ? file(entry).name : "" }
+                            } ]
+                        }
+                ).match() },
+                { assert workflow.out
+                    .findAll{ !it.key.isInteger() }
+                    .every{ channel ->
+                        channel.value.every{ subject -> subject instanceof ArrayList
+                            ? subject.every()
+                            : subject } } }
+            )
+        }
+    }
+
+    test("reconst_fw_noddi - noddi - custom priors") {
+        when {
+            config "./noddi_custom_priors.config"
+            workflow {
+                """
+                ch_split_test_data = LOAD_DATA.out.test_data_directory
+                    .branch{
+                        processing: it.simpleName == "processing"
+                        commit_amico: it.simpleName == "commit_amico"
+                    }
+
+                input[0] = ch_split_test_data.processing
+                    .map{ test_data_directory -> [
+                    [ id:'test', single_end:false ], // meta map
+                    file("\${test_data_directory}/dwi.nii.gz"),
+                    file("\${test_data_directory}/dwi.bval"),
+                    file("\${test_data_directory}/dwi.bvec")
+                    ]}
+                input[1] = ch_split_test_data.commit_amico
+                    .map{ test_data_directory -> [
+                    [ id:'test', single_end:false ], // meta map
+                    file("\${test_data_directory}/mask.nii.gz")
+                    ]}
+                input[2] = ch_split_test_data.processing
+                    .map{ test_data_directory -> [
+                        [ id:'test', single_end:false ], // meta map
+                        file("\${test_data_directory}/fa.nii.gz"),
+                        file("\${test_data_directory}/ad.nii.gz"),
+                        file("\${test_data_directory}/rd.nii.gz"),
+                        file("\${test_data_directory}/md.nii.gz")
+                    ]}
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out
+                        .findAll{ channel -> !channel.key.isInteger() && channel.value  }
+                        .collectEntries{ channel ->
+                            [(channel.key): ["versions"].contains(channel.key)
+                                ? channel.value
+                                : channel.value.collect{ subject ->
+                                    [ subject[0] ] + subject[1..-1].collect{ entry -> entry ? file(entry).name : "" }
+                            } ]
+                        }
+                ).match() },
+                { assert workflow.out
+                    .findAll{ !it.key.isInteger() }
+                    .every{ channel ->
+                        channel.value.every{ subject -> subject instanceof ArrayList
+                            ? subject.every()
+                            : subject } } }
+            )
+        }
+    }
+
+    test("reconst_fw_noddi - freewater - custom priors") {
+        when {
+            config "./fw_custom_priors.config"
+            workflow {
+                """
+                ch_split_test_data = LOAD_DATA.out.test_data_directory
+                    .branch{
+                        processing: it.simpleName == "processing"
+                        commit_amico: it.simpleName == "commit_amico"
+                    }
+
+                input[0] = ch_split_test_data.processing
+                    .map{ test_data_directory -> [
+                    [ id:'test', single_end:false ], // meta map
+                    file("\${test_data_directory}/dwi.nii.gz"),
+                    file("\${test_data_directory}/dwi.bval"),
+                    file("\${test_data_directory}/dwi.bvec")
+                    ]}
+                input[1] = ch_split_test_data.commit_amico
+                    .map{ test_data_directory -> [
+                    [ id:'test', single_end:false ], // meta map
+                    file("\${test_data_directory}/mask.nii.gz")
+                    ]}
+                input[2] = ch_split_test_data.processing
+                    .map{ test_data_directory -> [
+                        [ id:'test', single_end:false ], // meta map
+                        file("\${test_data_directory}/fa.nii.gz"),
+                        file("\${test_data_directory}/ad.nii.gz"),
+                        file("\${test_data_directory}/rd.nii.gz"),
+                        file("\${test_data_directory}/md.nii.gz")
+                    ]}
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out
+                        .findAll{ channel -> !channel.key.isInteger() && channel.value  }
+                        .collectEntries{ channel ->
+                            [(channel.key): ["versions"].contains(channel.key)
+                                ? channel.value
+                                : channel.value.collect{ subject ->
+                                    [ subject[0] ] + subject[1..-1].collect{ entry -> entry ? file(entry).name : "" }
+                            } ]
+                        }
+                ).match() },
+                { assert workflow.out
+                    .findAll{ !it.key.isInteger() }
+                    .every{ channel ->
+                        channel.value.every{ subject -> subject instanceof ArrayList
+                            ? subject.every()
+                            : subject } } }
+            )
+        }
+    }
+
+    test("reconst_fw_noddi - no noddi & no freewater") {
+        when {
+            config "./expect_error.config"
+
+            workflow {
+                """
+                ch_split_test_data = LOAD_DATA.out.test_data_directory
+                    .branch{
+                        processing: it.simpleName == "processing"
+                        commit_amico: it.simpleName == "commit_amico"
+                    }
+
+                input[0] = ch_split_test_data.processing
+                    .map{ test_data_directory -> [
+                    [ id:'test', single_end:false ], // meta map
+                    file("\${test_data_directory}/dwi.nii.gz"),
+                    file("\${test_data_directory}/dwi.bval"),
+                    file("\${test_data_directory}/dwi.bvec")
+                    ]}
+                input[1] = ch_split_test_data.commit_amico
+                    .map{ test_data_directory -> [
+                    [ id:'test', single_end:false ], // meta map
+                    file("\${test_data_directory}/mask.nii.gz")
+                    ]}
+                input[2] = ch_split_test_data.processing
+                    .map{ test_data_directory -> [
+                        [ id:'test', single_end:false ], // meta map
+                        file("\${test_data_directory}/fa.nii.gz"),
+                        file("\${test_data_directory}/ad.nii.gz"),
+                        file("\${test_data_directory}/rd.nii.gz"),
+                        file("\${test_data_directory}/md.nii.gz")
+                    ]}
+                """
+            }
+        }
+
+        then {
+            assert(workflow.failed)
+        }
+    }
+}

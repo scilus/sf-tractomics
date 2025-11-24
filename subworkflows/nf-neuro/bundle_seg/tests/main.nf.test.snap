@@ -1,0 +1,48 @@
+{
+    "rbx - download atlas - synthmorph registration": {
+        "content": [
+            {
+                "bundles": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_AF_L_cleaned.trk"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,43c929afa23d3d0382a449b9ba99d7fb",
+                    "versions.yml:md5,afaf6c2953accc507d8777303eea8718"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
+        },
+        "timestamp": "2025-10-28T15:47:10.799145752"
+    },
+    "rbx - download atlas - ants registration": {
+        "content": [
+            {
+                "bundles": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_AF_L_cleaned.trk"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,9a3df973fb36ebec9763f10ff59ad875",
+                    "versions.yml:md5,afaf6c2953accc507d8777303eea8718"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.8"
+        },
+        "timestamp": "2025-10-24T15:13:08.130425506"
+    }
+}

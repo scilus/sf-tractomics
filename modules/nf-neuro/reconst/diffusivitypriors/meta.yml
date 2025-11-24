@@ -1,0 +1,224 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: reconst_diffusivitypriors
+description: |
+  Compute the axial (para_diff), mean (iso_diff) and radial (perp_diff)
+  diffusivity priors per subject. It is common to use this module followed
+  by the 'reconst_meandiffusivityprior' module to compute the mean
+  diffusivity prior across subjects.
+keywords:
+  - diffusivity
+  - axial
+  - isotropic
+  - radial
+tools:
+  - scilpy:
+      description: The Sherbrooke Connectivity Imaging Lab (SCIL) Python dMRI
+        processing toolbox.
+      homepage: https://github.com/scilus/scilpy.git
+      identifier: ""
+args:
+  - fa_min_single_fiber:
+      type: float
+      description: |
+        Minimal threshold of FA (voxels under that threshold are considered
+        in the ventricles).
+      default: None
+  - fa_max_ventricles:
+      type: float
+      description: |
+        Maximal threshold of FA (voxels under that threshold are considered
+        in the ventricles).
+      default: None
+  - md_min_ventricles:
+      type: float
+      description: |
+        Minimal threshold of MD in mm2/s (voxels above that threshold are
+        considered for the ventricles).
+      default: None
+  - roi_radius:
+      type: integer
+      description: |
+        Radius of the region used to estimate the priors. The roi will be a
+        cube spanning from ROI_CENTER in each direction.
+      default: None
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'test', single_end:false ]`
+    - fa:
+        type: file
+        description: Nifti DTI FA volume.
+        pattern: "*.{nii,nii.gz}"
+        ontologies:
+          - edam: http://edamontology.org/format_4001 # NIFTI format
+    - ad:
+        type: file
+        description: Nifti DTI AD volume.
+        pattern: "*.{nii,nii.gz}"
+        ontologies:
+          - edam: http://edamontology.org/format_4001 # NIFTI format
+    - rd:
+        type: file
+        description: Nifti DTI RD volume.
+        pattern: "*.{nii,nii.gz}"
+        ontologies:
+          - edam: http://edamontology.org/format_4001 # NIFTI format
+    - md:
+        type: file
+        description: Nifti DTI MD volume.
+        pattern: "*.{nii,nii.gz}"
+        ontologies:
+          - edam: http://edamontology.org/format_4001 # NIFTI format
+output:
+  para_diff_file:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'test', single_end:false ]`
+      - "*_para_diff.txt":
+          type: file
+          description: Text file for parallel diffusivity value.
+          pattern: "*_para_diff.txt"
+          ontologies: []
+  iso_diff_file:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'test', single_end:false ]`
+      - "*_iso_diff.txt":
+          type: file
+          description: Text file for isotropic diffusivity value.
+          pattern: "*_iso_diff.txt"
+          ontologies: []
+  perp_diff_file:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'test', single_end:false ]`
+      - "*_perp_diff.txt":
+          type: file
+          description: Text file for perpendicular diffusivity value.
+          pattern: "*_perp_diff.txt"
+          ontologies: []
+  mean_para_diff:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'test', single_end:false ]`
+      - mean_para_diff:
+          type: string
+          description: String containing the average parallel diffusivity value.
+  std_para_diff:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'test', single_end:false ]`
+      - std_para_diff:
+          type: string
+          description: String containing the standard deviation of the parallel diffusivity value.
+  min_para_diff:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'test', single_end:false ]`
+      - min_para_diff:
+          type: string
+          description: String containing the minimum parallel diffusivity value.
+  max_para_diff:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'test', single_end:false ]`
+      - max_para_diff:
+          type: string
+          description: String containing the maximum parallel diffusivity value.
+  mean_iso_diff:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'test', single_end:false ]`
+      - mean_iso_diff:
+          type: string
+          description: String containing the average isotropic diffusivity value.
+  std_iso_diff:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'test', single_end:false ]`
+      - std_iso_diff:
+          type: string
+          description: String containing the standard deviation of the isotropic diffusivity value.
+  min_iso_diff:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'test', single_end:false ]`
+      - min_iso_diff:
+          type: string
+          description: String containing the minimum isotropic diffusivity value.
+  max_iso_diff:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'test', single_end:false ]`
+      - max_iso_diff:
+          type: string
+          description: String containing the maximum isotropic diffusivity value.
+  mean_perp_diff:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'test', single_end:false ]`
+      - mean_perp_diff:
+          type: string
+          description: String containing the average perpendicular diffusivity value.
+  std_perp_diff:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'test', single_end:false ]`
+      - std_perp_diff:
+          type: string
+          description: String containing the standard deviation of the perpendicular diffusivity value.
+  min_perp_diff:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'test', single_end:false ]`
+      - min_perp_diff:
+          type: string
+          description: String containing the minimum perpendicular diffusivity value.
+  max_perp_diff:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'test', single_end:false ]`
+      - max_perp_diff:
+          type: string
+          description: String containing the maximum perpendicular diffusivity value.
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: versions.yml
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+authors:
+  - "@Manonedde"

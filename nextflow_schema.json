@@ -882,6 +882,28 @@
                     "default": true
                 }
             }
+        },
+        "bundleseg_options": {
+            "title": "BundleSeg options",
+            "type": "object",
+            "description": "Define the behaviour of the bundle_seg subworkflow.",
+            "default": "",
+            "help_text": "Define the bundle_seg subworkflow configuration parameters.",
+            "properties": {
+                "run_bundle_seg": {
+                    "type": "boolean"
+                },
+                "atlas_directory": {
+                    "type": "string",
+                    "description": "Path to the BundleSeg atlas directory.",
+                    "help_text": "Path to the BundleSeg atlas directory. If not set, the default bundle_seg atlas will automatically downloaded."
+                },
+                "run_synthmorph": {
+                    "type": "boolean",
+                    "description": "Use SynthMorph for registration instead of ANTs for BundleSeg. (Requires Freesurfer license)",
+                    "help_text": "Use SynthMorph for registration instead of ANTs for BundleSeg. (Requires Freesurfer license)"
+                }
+            }
         }
     },
     "allOf": [
@@ -913,25 +935,10 @@
             "$ref": "#/$defs/generic_options"
         },
         {
-            "$ref": "#/$defs/dwi_preprocessing_options"
-        },
-        {
-            "$ref": "#/$defs/t1_preprocessing_options"
-        },
-        {
-            "$ref": "#/$defs/resampling_options"
-        },
-        {
-            "$ref": "#/$defs/dwi_processing_options"
-        },
-        {
-            "$ref": "#/$defs/particle_filtering_tractography_options"
-        },
-        {
-            "$ref": "#/$defs/local_tractography_options"
-        },
-        {
             "$ref": "#/$defs/subworkflows_hidden_options"
+        },
+        {
+            "$ref": "#/$defs/bundleseg_options"
         }
     ],
     "properties": {
@@ -976,6 +983,60 @@
             "default": 4,
             "description": "Number of processes for registration task",
             "help_text": "Number of processes for registration task"
+        },
+        "processes_noddi": {
+            "type": "integer",
+            "default": 1,
+            "description": "Number of processes for NODDI computation.",
+            "help_text": "Number of processes for NODDI computation."
+        },
+        "run_noddi": {
+            "type": "boolean",
+            "description": "Compute NODDI maps.",
+            "help_text": "Compute NODDI maps."
+        },
+        "run_freewater": {
+            "type": "boolean",
+            "description": "Run Freewater Elimination and compute Freewater corrected metrics.",
+            "help_text": "Run Freewater Elimination and compute Freewater corrected metrics."
+        },
+        "processes_freewater_correction": {
+            "type": "integer",
+            "default": 1,
+            "description": "Number of processes for freewater estimation task.",
+            "help_text": "Number of processes for freewater estimation task."
+        },
+        "average_diff_priors": {
+            "type": "boolean",
+            "default": true,
+            "description": "Average diffusivity priors across subjects.",
+            "help_text": "Average diffusivity priors across subjects."
+        },
+        "para_diff": {
+            "type": "string",
+            "description": "Average parallel diffusivity value.",
+            "help_text": "Average parallel diffusivity value. Specifying this will override automatically computed values."
+        },
+        "iso_diff": {
+            "type": "string",
+            "description": "Average isotropic diffusivity value.",
+            "help_text": "Average isotropic diffusivity value. Specifying this will override automatically computed values."
+        },
+        "perp_diff_min": {
+            "type": "string",
+            "description": "Minimum perpendicular diffusivity value.",
+            "help_text": "Minimum perpendicular diffusivity value. Specifying this will override automatically computed values."
+        },
+        "perp_diff_max": {
+            "type": "string",
+            "description": "Maximum perpendicular diffusivity value.",
+            "help_text": "Maximum perpendicular diffusivity value. Specifying this will override automatically computed values."
+        },
+        "processes_bundle_seg": {
+            "type": "integer",
+            "default": 4,
+            "description": "Number of processes used for bundle segmentation.",
+            "help_text": "Number of processes used for bundle segmentation."
         },
         "run_qball": {
             "type": "boolean",
