@@ -11,4 +11,3 @@ node_modules/
 venv/
 .venv/
 *.nosync/
-assets/templates/iit/
