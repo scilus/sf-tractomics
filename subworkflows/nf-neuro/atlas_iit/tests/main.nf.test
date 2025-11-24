@@ -1,0 +1,26 @@
+nextflow_workflow {
+
+    name "Test Subworkflow ATLAS_IIT"
+    script "../main.nf"
+    workflow "ATLAS_IIT"
+
+    config "../nextflow.config"
+
+    tag "subworkflows"
+    tag "subworkflows_nfneuro"
+    tag "subworkflows/atlas_iit"
+
+    tag "image/math"
+
+    test("atlas_iit - download and process") {
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out.b0,
+                    workflow.out.bundle_masks,
+                    workflow.out.versions).match() }
+            )
+        }
+    }
+}

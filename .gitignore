@@ -10,3 +10,4 @@ null/
 node_modules/
 venv/
 .venv/
+*.nosync/

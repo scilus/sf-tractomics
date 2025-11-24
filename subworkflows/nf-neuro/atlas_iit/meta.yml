@@ -1,0 +1,69 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "atlas_iit"
+description: |
+  This subworkflow fetches and processes the IIT Human Brain Atlas including the mean B0 image and bundle masks.
+  The authors of the IIT WM atlas only provide track density images (TDI) for the bundle masks.
+  Therefore, in this subworkflow, we apply a lower threshold to the TDI images to create binary bundle masks.
+  The threshold values are based on recommendations from the IIT authors. For more information
+  about the atlas and the recommended thresholds, please refer to
+  [this link](https://www.nitrc.org/frs/download.php/12417/IIT_Atlas_v.5.0_MANUAL.pdf)
+
+  The user can also provide their own Mean B0 map and/or bundle masks directory, using the parameters
+  `params.atlas_iit.b0` and `params.atlas_iit.bundle_masks_dir`, respectively.
+  If provided, the subworkflow will use these inputs instead of downloading and processing them,
+  which is particularily useful for processing on HPC.
+
+  The Mean B0 maps as well as the bundle density maps used are in 182x218x182 matrix size.
+  The Atlas is in the MNI152NLin6Asym template space (1mm resolution).
+keywords:
+  - atlas
+  - iit
+  - neuroimaging
+  - bundles
+  - template
+components:
+  - image/math
+args:
+  atlas_iit_b0:
+    type: string
+    description: |
+      Path to a Mean B0 map of the IIT Human Brain Atlas.
+      If provided, this input will be used instead of downloading the Mean B0 map.
+      Structure: path(img)
+    mandatory: false
+    default: null
+  atlas_iit_bundle_masks_dir:
+    type: string
+    description: |
+      Path to a directory containing IIT bundle masks.
+      If provided, these inputs will be used instead of downloading and processing the bundle masks.
+      Structure: path(dir)
+    mandatory: false
+    default: null
+output:
+  - bundle_masks:
+      type: file
+      description: |
+        List of IIT binary bundle masks.
+        Structure: [ path(img), path(img), ... ]
+      pattern: "*.nii.gz"
+      ontologies:
+        - edam: http://edamontology.org/format_4001 # NIFTI format
+  - b0:
+      type: file
+      description: |
+        Mean B0 map of the IIT Human Brain Atlas.
+        Structure: [ path(img) ]
+      pattern: "*_b0.nii.gz"
+      ontologies:
+        - edam: http://edamontology.org/format_4001 # NIFTI format
+  - versions:
+      type: file
+      description: |
+        File containing software versions
+        Structure: [ path(versions.yml) ]
+      pattern: "versions.yml"
+authors:
+  - "@levje"
+maintainers:
+  - "@levje"

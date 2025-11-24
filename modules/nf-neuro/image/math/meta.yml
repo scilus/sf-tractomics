@@ -1,0 +1,201 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "image_math"
+description: |
+  Perform various mathematical operations on one or several NIFTI images.
+  The number of images required as input depends on the operation chosen.
+  Some operations require only one image input, while some may require two
+  or more. Several operations require a VALUE to be defined within the args.
+
+  Note: This script is loading all images in memory, will often crash after a few
+  hundred images.
+
+  Here are the available operations and their abbreviated descriptions:
+  ---
+  Unary operations (IMG -> IMG):
+    - absolute_value: All negative values will become positive.
+    - ceil: Ceil all decimal values to the next integer.
+    - convert: Perform no operation, but simply change the data type (specified by ext.data_type).
+    - invert: Operation on binary image to interchange 0s and 1s in a binary mask.
+    - log_10: Apply a log (base 10) to all non zeros values of an image.
+    - log_e: Apply a natural log to all non zeros values of an image.
+    - lower_threshold_otsu: All values below or equal to the Otsu threshold will be set to zero and others to one. (Otsu's method is an algorithm to perform automatic image thresholding of the background.)
+    - normalize_sum: Normalize the image so the sum of all values is one.
+    - normalize_max: Normalize the image so the maximum value is one.
+    - round: Round all decimal values to the closest integer.
+    - upper_threshold_otsu: All values below the Otsu threshold will be set to one and others to zero. Equivalent to lower_threshold_otsu followed by an inversion.
+  ---
+  Image and value operations (IMG, VALUE -> IMG):
+    - blur: Apply a gaussian blur to a single image. VALUE is sigma, the standard deviation of the Gaussian kernel.
+    - closing: Binary morphological operation, dilation followed by an erosion.
+    - dilation: Binary morphological operation to spatially extend the values of an image to their neighbors. VALUE is in voxels: an integer > 0.
+    - erosion: Binary morphological operation to spatially shrink the volume contained in a binary image. VALUE is in voxels: an integer > 0.
+    - lower_clip: All values below the threshold will be set to threshold.
+    - lower_threshold: All values below the threshold will be set to zero and above to one.
+    - lower_threshold_eq: All values below or equal to the threshold will be set to zero and above to one.
+    - opening: Binary morphological operation, erosion followed by a dilation.
+    - upper_threshold: All values below the threshold will be set to one and above to zero. Equivalent to lower_threshold followed by an inversion.
+    - upper_threshold_eq: All values below or equal the threshold will be set to one and above to zero. Equivalent to lower_threshold_eq followed by an inversion.
+    - upper_clip: All values above the threshold will be set to threshold.
+  ---
+  Pair of images operations (IMG1, IMG2 -> IMG):
+    - difference: Operation on binary image to keep voxels from the first file that are not in the second file (non-zeros).
+    - division: Divide first image by the second (danger of underflow and overflow). Ignore zeros values, excluded from the operation.
+    - subtraction: Subtract first image by the second (IMG_1 - IMG_2).
+  ---
+  Multiple image operations (IMG1, IMG2, ... IMGN -> IMG):
+    - addition: Add multiple images together.
+    - concatenate: Concatenate a list of 3D and 4D images into a single 4D image.
+    - correlation: Computes the correlation of the 3x3x3 neighborhood of each voxel, for all pair of input images. The final image is the average correlation (through all pairs).
+    - intersection: Operation on binary image to keep the voxels, that are non-zero, are present in all files.
+    - mean: Compute the mean of images. If a single 4D image is provided, average along the last dimension.
+    - multiplication: Multiply multiple images together (danger of underflow and overflow)
+    - std: Compute the standard deviation average of multiple images. If a single 4D image is provided, compute the STD along the last dimension.
+    - union: Operation on binary image to keep voxels, that are non-zero, in at least one file.
+keywords:
+  - absolute
+  - addition
+  - arithmetic
+  - blur
+  - ceil
+  - clip
+  - closing
+  - concatenate
+  - convert
+  - correlation
+  - difference
+  - dilation
+  - erosion
+  - floor
+  - image
+  - image-processing
+  - intersection
+  - invert
+  - log
+  - math
+  - mean
+  - multiplication
+  - normalize
+  - normalize-max
+  - normalize-sum
+  - opening
+  - operations
+  - round
+  - std
+  - subtraction
+  - threshold
+  - union
+
+tools:
+  - scilpy:
+      description: The Sherbrooke Connectivity Imaging Lab (SCIL) Python dMRI processing toolbox.
+      homepage: https://github.com/scilus/scilpy.git
+      identifier: ""
+
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'sample1', single_end:false ]`
+    - images:
+        type: file
+        description: List of nifti image file involved in the mathematical operation.
+        pattern: "*.{nii,nii.gz}"
+        mandatory: true
+    - value:
+        type: float
+        description: |
+          Value to use for the mathematical operation. This value
+          will be used if ext.value is not provided.
+          (e.g., threshold below 0.5, clip over 10, etc.).
+        mandatory: false
+args:
+  - operation:
+      type: string
+      description: |
+        The mathematical operation to perform on the image(s). The inputs
+        required depend on the operation chosen. Some operations require only
+        one image input, while some may require two or more images and some may
+        require an image and a numeric value.
+      choices:
+        - absolute_value
+        - addition
+        - blur
+        - ceil
+        - closing
+        - concatenate
+        - convert
+        - correlation
+        - difference
+        - dilation
+        - division
+        - erosion
+        - floor
+        - intersection
+        - invert
+        - log_10
+        - log_e
+        - lower_clip
+        - lower_threshold
+        - lower_threshold_eq
+        - lower_threshold_otsu
+        - mean
+        - multiplication
+        - normalize_sum
+        - normalize_max
+        - opening
+        - round
+        - std
+        - subtraction
+        - union
+        - upper_clip
+        - upper_threshold
+        - upper_threshold_eq
+        - upper_threshold_ots
+  - suffix:
+      type: string
+      description: Suffix for the output image file.
+      default: "output"
+  - value:
+      type: float
+      description: |
+        Value to use for the mathematical operation. This value
+        will override any value provided in the input meta map.
+        (e.g., threshold below 0.5, clip over 10, etc.).
+  - data_type:
+      type: string
+      description: |
+        Data type for the output image. Use the following format:
+        uint8, int16, int32, int64, float16, float32 or float64.
+      default: "float32"
+  - exclude_background:
+      type: boolean
+      description: Whether to exclude the background from the operation.
+      default: false
+
+output:
+  image:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1', single_end:false ]`
+      - "*.nii.gz":
+          type: file
+          description: |
+            Resulting nifti image file after the operation.
+            e.g. `[ path(img) ]`
+          pattern: "*.{nii,nii.gz}"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: versions.yml
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+
+authors:
+  - "@scilus"
+maintainers:
+  - "@scilus"

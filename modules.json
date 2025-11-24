@@ -70,6 +70,11 @@
                         "git_sha": "44a8807e115f15d720ff952229c7d7540952b587",
                         "installed_by": ["preproc_t1"]
                     },
+                    "image/math": {
+                        "branch": "main",
+                        "git_sha": "46bb6a2f5a795575c5ca3d838f57ce1cb4b430de",
+                        "installed_by": ["atlas_iit"]
+                    },
                     "image/resample": {
                         "branch": "main",
                         "git_sha": "a3fbaa40d649f221b099322105936afe09115c0c",
@@ -200,6 +205,11 @@
                         "git_sha": "60e21b273653eec3b710b91562e714c74ef4d0c7",
                         "installed_by": ["anatomical_segmentation"]
                     },
+                    "stats/metricsinroi": {
+                        "branch": "main",
+                        "git_sha": "ad8b27f6d1a5962aaedf8101fa2af5fbe34ceb8f",
+                        "installed_by": ["modules"]
+                    },
                     "tracking/localtracking": {
                         "branch": "main",
                         "git_sha": "b21f41f92e1ee439300b7060fc0296b56c6511b9",
@@ -223,6 +233,11 @@
                         "branch": "main",
                         "git_sha": "c18142d4ce012e5e79a6e54817c0ace83755150d",
                         "installed_by": ["tractoflow"]
+                    },
+                    "atlas_iit": {
+                        "branch": "main",
+                        "git_sha": "ad8b27f6d1a5962aaedf8101fa2af5fbe34ceb8f",
+                        "installed_by": ["subworkflows"]
                     },
                     "bundle_seg": {
                         "branch": "main",

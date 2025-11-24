@@ -1,0 +1,186 @@
+nextflow_process {
+    name "Test Process IMAGE_MATH"
+    script "../main.nf"
+    process "IMAGE_MATH"
+
+    tag "modules"
+    tag "modules_nfneuro"
+    tag "image"
+    tag "image/math"
+
+    tag "subworkflows"
+    tag "subworkflows/load_test_data"
+
+    setup {
+        run("LOAD_TEST_DATA", alias: "LOAD_DATA") {
+            script "../../../../../subworkflows/nf-neuro/load_test_data/main.nf"
+            process {
+                """
+                input[0] = Channel.from( [ "processing.zip" ] )
+                input[1] = "test.load-test-data"
+                """
+            }
+        }
+    }
+
+    // Operation with only a single image with no value
+    test("image - normalize_max") {
+        config "./normalize_max.config"
+
+        when {
+            process {
+                """
+                input[0] = LOAD_DATA.out.test_data_directory.map{
+                    test_data_directory -> [
+                        [ id:'test', single_end:false ],
+                        file("\${test_data_directory}/fa.nii.gz")
+                    ]
+                }
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.image,
+                    process.out.versions).match() }
+            )
+        }
+    }
+
+    // Operation with only a single image with a value as ext.value
+    test("image - lower_threshold - arg value") {
+        config "./lower_threshold.config"
+
+        when {
+            process {
+                """
+                input[0] = LOAD_DATA.out.test_data_directory.map{
+                    test_data_directory -> [
+                        [ id:'test', single_end:false ],
+                        file("\${test_data_directory}/fa.nii.gz")
+                    ]
+                }
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.image,
+                    process.out.versions).match() }
+            )
+        }
+    }
+
+    // Operation with only a single image with a value as input
+    test("image - lower_threshold - input value") {
+        config "./lower_threshold_no_value.config"
+
+        when {
+            process {
+                """
+                input[0] = LOAD_DATA.out.test_data_directory.map{
+                    test_data_directory -> [
+                        [ id:'test', single_end:false ],
+                        file("\${test_data_directory}/fa.nii.gz"),
+                        0.002
+                    ]
+                }
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.image,
+                    process.out.versions).match() }
+            )
+        }
+    }
+
+    // Operation with precisely two images with no value
+    test("image - subtraction") {
+        config "./subtraction.config"
+
+        when {
+            process {
+                """
+                input[0] = LOAD_DATA.out.test_data_directory.map{
+                    test_data_directory -> [
+                        [ id:'test', single_end:false ],
+                        [file("\${test_data_directory}/b0_mean.nii.gz"),
+                        file("\${test_data_directory}/bias_field_b0.nii.gz")]
+                    ]
+                }
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.image,
+                    process.out.versions).match() }
+            )
+        }
+    }
+
+    // Operation with several images with no value
+    test("image - addition") {
+        config "./addition.config"
+
+        when {
+            process {
+                """
+                input[0] = LOAD_DATA.out.test_data_directory.map{
+                    test_data_directory -> [
+                        [ id:'test', single_end:false ],
+                        [file("\${test_data_directory}/fa.nii.gz"),
+                        file("\${test_data_directory}/md.nii.gz"),
+                        file("\${test_data_directory}/rd.nii.gz"),
+                        file("\${test_data_directory}/ad.nii.gz")]
+                    ]
+                }
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    process.out.image,
+                    process.out.versions).match() }
+            )
+        }
+    }
+
+    test("image - stub") {
+        options "-stub-run"
+        config "./lower_threshold.config"
+
+        when {
+            process {
+                """
+                input[0] = LOAD_DATA.out.test_data_directory.map{
+                    test_data_directory -> [
+                        [ id:'test', single_end:false ],
+                        file("\${test_data_directory}/t1_brain_probability_map.nii.gz")
+                    ]
+                }
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.versions).match() }
+            )
+        }
+    }
+}
+
+
