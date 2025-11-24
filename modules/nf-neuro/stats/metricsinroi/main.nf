@@ -42,13 +42,13 @@ process STATS_METRICSINROI {
 
         scil_volume_stats_in_labels $rois $rois_lut \
             --metrics $metrics \
-            --sort_keys >| ${prefix}_${suffix}.json
+            --sort_keys > ${prefix}_${suffix}.json
     else
         scil_volume_stats_in_ROI $rois \
             --metrics $metrics \
             --sort_keys \
             --keep_unique_roi_name \
-            $bin $normalize_weights >| ${prefix}_${suffix}.json
+            $bin $normalize_weights > ${prefix}_${suffix}.json
     fi
 
     # Remove all substrings from the keys as specified
