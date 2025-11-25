@@ -1,0 +1,63 @@
+{
+    "tractogram - resample - centroids": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_IFGWM_uni_c_10_resampled.trk:md5,5a4c819b4aa7ea048a4b89973ede812c"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,2ae2adf670d0bb7b1305cb119e1b86d2"
+                ],
+                "tractograms": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_IFGWM_uni_c_10_resampled.trk:md5,5a4c819b4aa7ea048a4b89973ede812c"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,2ae2adf670d0bb7b1305cb119e1b86d2"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "25.04.7"
+        },
+        "timestamp": "2025-09-23T00:32:56.997650605"
+    },
+    "tractogram - resample - tractogram": {
+        "content": [
+            [
+                "versions.yml:md5,2ae2adf670d0bb7b1305cb119e1b86d2"
+            ],
+            "test_IFGWM_color_resampled.trk",
+            "test_IFGWM_resampled.trk"
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "25.04.7"
+        },
+        "timestamp": "2025-09-23T00:49:12.243663019"
+    },
+    "tractogram - resample - stub-run": {
+        "content": [
+            [
+                "versions.yml:md5,2ae2adf670d0bb7b1305cb119e1b86d2"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "25.04.7"
+        },
+        "timestamp": "2025-09-23T00:33:10.587137954"
+    }
+}

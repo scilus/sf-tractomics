@@ -16,7 +16,7 @@ include { BUNDLE_SEG             } from '../subworkflows/nf-neuro/bundle_seg/mai
 include { REGISTRATION_ANTS as REGISTER_ATLAS_B0 } from '../modules/nf-neuro/registration/ants/main'
 include { REGISTRATION_ANTSAPPLYTRANSFORMS as TRANSFORM_ATLAS_BUNDLES } from '../modules/nf-neuro/registration/antsapplytransforms/main.nf'
 include { STATS_METRICSINROI     } from '../modules/nf-neuro/stats/metricsinroi/main'
-
+include { TRACTOMETRY } from '../subworkflows/nf-neuro/tractometry/main'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
@@ -206,6 +206,18 @@ workflow NF_TRACTOFLOW {
             skip: 1,
             keepHeader: true
         )
+    }
+
+    if ( params.run_tractometry ) {
+        ch_for_tractometry = ch_bundle_seg
+            .join(ch_input_metricsinroi)
+            .join(TRACTOFLOW.out.fodf)
+            .map {
+                meta, bundles, metrics, fodf ->
+                    [meta, bundles, channel.empty(), metrics, channel.empty(), fodf]
+            }
+        TRACTOMETRY(ch_for_tractometry)
+        ch_versions = ch_versions.mix(TRACTOMETRY.out.versions)
     }
 
     //
