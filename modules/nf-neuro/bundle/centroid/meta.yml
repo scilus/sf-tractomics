@@ -1,0 +1,55 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: bundle_centroid
+description: |
+  Compute bundles' centroids or resample existing centroids.
+keywords:
+  - Bundles
+  - Centroids
+  - Streamlines
+tools:
+  - scilpy:
+      description: The Sherbrooke Connectivity Imaging Lab (SCIL) Python dMRI processing
+        toolbox.
+      homepage: https://github.com/scilus/scilpy.git
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'sample1', single_end:false ]`
+    - bundles:
+        type: file
+        description: List of bundles to compute centroids for.
+        pattern: "*.trk"
+        mandatory: true
+        ontologies: []
+args:
+  - nb_points:
+      type: int
+      description: |
+        Number of points to resample the centroids to.
+      default: 5
+output:
+  centroids:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1', single_end:false ]`
+      - "*_centroid_*.trk":
+          type: file
+          description: Computed centroids.
+          pattern: "*_centroid_*.trk"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: versions.yml
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+authors:
+  - "@gagnonanthony"
+maintainers:
+  - "@gagnonanthony"
