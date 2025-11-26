@@ -201,8 +201,8 @@ workflow NF_TRACTOFLOW {
         // while keeping the header from the first
         // file only and skipping it in the rest.
         ch_collection_input.collectFile(
-            storeDir: "${params.outdir}/metrics/",
-            name: "roi_stats.tsv",
+            storeDir: "${params.outdir}/stats/",
+            name: "aggregated_atlas-iit_desc-roi_stats.tsv",
             skip: 1,
             keepHeader: true
         )
