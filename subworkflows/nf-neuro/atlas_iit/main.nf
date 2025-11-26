@@ -119,10 +119,13 @@ workflow ATLAS_IIT {
     }
     else {
         new File("${workflow.workDir}/atlas_iit/").mkdirs()
-        fetch_iit_atlas_b0(
-            "https://www.nitrc.org/frs/download.php/11266/IITmean_b0.nii.gz",
-            "${workflow.workDir}/atlas_iit/"
-        )
+
+        if (!new File("${workflow.workDir}/atlas_iit/IITmean_b0.nii.gz").exists()) {
+            fetch_iit_atlas_b0(
+                "https://www.nitrc.org/frs/download.php/11266/IITmean_b0.nii.gz",
+                "${workflow.workDir}/atlas_iit/"
+            )
+        }
         ch_b0 = channel.fromPath("${workflow.workDir}/atlas_iit/IITmean_b0.nii.gz", checkIfExists: true)
     }
 
