@@ -1,0 +1,65 @@
+{
+    "bundle - compute centroids - from bundle": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test__bundle_0_centroid_12.trk:md5,96a387f8ecead333654d9883cc23a4f9",
+                            "test__bundle_1_centroid_12.trk:md5,515f5133992f5da233764147c318fb6d",
+                            "test__bundle_2_centroid_12.trk:md5,22afdbd80dbc7c7d48ad93693af0edcb",
+                            "test__bundle_3_centroid_12.trk:md5,e348b3a077872adce3019d1bfe12d4b6",
+                            "test__bundle_4_centroid_12.trk:md5,82fde1019c344b1f9363931f10944bfa",
+                            "test__bundle_5_centroid_12.trk:md5,28e285adf9595e3c8e6ba431849498c3",
+                            "test__bundle_6_centroid_12.trk:md5,3ff83682dbd73a9efa1d54b67020969e"
+                        ]
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,f973b5915a569c3c5d7a27c2680f11ba"
+                ],
+                "centroids": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test__bundle_0_centroid_12.trk:md5,96a387f8ecead333654d9883cc23a4f9",
+                            "test__bundle_1_centroid_12.trk:md5,515f5133992f5da233764147c318fb6d",
+                            "test__bundle_2_centroid_12.trk:md5,22afdbd80dbc7c7d48ad93693af0edcb",
+                            "test__bundle_3_centroid_12.trk:md5,e348b3a077872adce3019d1bfe12d4b6",
+                            "test__bundle_4_centroid_12.trk:md5,82fde1019c344b1f9363931f10944bfa",
+                            "test__bundle_5_centroid_12.trk:md5,28e285adf9595e3c8e6ba431849498c3",
+                            "test__bundle_6_centroid_12.trk:md5,3ff83682dbd73a9efa1d54b67020969e"
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,f973b5915a569c3c5d7a27c2680f11ba"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "25.04.7"
+        },
+        "timestamp": "2025-09-17T17:36:58.2171355"
+    },
+    "bundle - compute centroids - stub-run": {
+        "content": [
+            [
+                "versions.yml:md5,f973b5915a569c3c5d7a27c2680f11ba"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "25.04.7"
+        },
+        "timestamp": "2025-09-17T17:37:18.476808522"
+    }
+}

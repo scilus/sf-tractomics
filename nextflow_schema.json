@@ -175,7 +175,7 @@
                     "default": "eddy_cpu",
                     "description": "Command to use to run Eddy.",
                     "help_text": "Command to use to run Eddy.",
-                    "enum": ["eddy_cpu", "eddy_cuda10.2"]
+                    "enum": ["eddy_cpu", "eddy_cuda10.2", "eddy"]
                 },
                 "bet_topup_before_eddy_f": {
                     "type": "number",
@@ -904,6 +904,25 @@
                     "help_text": "Use SynthMorph for registration instead of ANTs for BundleSeg. (Requires Freesurfer license)"
                 }
             }
+        },
+        "tractometry_options": {
+            "title": "Tractometry options",
+            "type": "object",
+            "description": "Define the behaviour of the tractometry subworkflow.",
+            "default": "",
+            "help_text": "Define the tractometry subworkflow configuration parameters.",
+            "properties": {
+                "run_tractometry": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "nb_points": {
+                    "type": "integer",
+                    "default": 10,
+                    "description": "Number of points for tractometry.",
+                    "help_text": "Number of points for tractometry."
+                }
+            }
         }
     },
     "allOf": [
@@ -939,6 +958,9 @@
         },
         {
             "$ref": "#/$defs/bundleseg_options"
+        },
+        {
+            "$ref": "#/$defs/tractometry_options"
         }
     ],
     "properties": {

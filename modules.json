@@ -50,10 +50,35 @@
                         "git_sha": "60e21b273653eec3b710b91562e714c74ef4d0c7",
                         "installed_by": ["preproc_t1"]
                     },
+                    "bundle/centroid": {
+                        "branch": "main",
+                        "git_sha": "f9ca7936903f1f231dba1cdc7223b758c7748bfc",
+                        "installed_by": ["tractometry"]
+                    },
+                    "bundle/fixelafd": {
+                        "branch": "main",
+                        "git_sha": "f9ca7936903f1f231dba1cdc7223b758c7748bfc",
+                        "installed_by": ["tractometry"]
+                    },
+                    "bundle/labelmap": {
+                        "branch": "main",
+                        "git_sha": "4be831dfd161675151ede8cff851c58929a98a55",
+                        "installed_by": ["tractometry"]
+                    },
                     "bundle/recognize": {
                         "branch": "main",
                         "git_sha": "70ec5c35fbe3d0615c87497b02f7f289b24e4819",
                         "installed_by": ["bundle_seg"]
+                    },
+                    "bundle/stats": {
+                        "branch": "main",
+                        "git_sha": "ca7cce5c0c85479bf02b5c9c5d338fa9f3310c81",
+                        "installed_by": ["tractometry"]
+                    },
+                    "bundle/uniformize": {
+                        "branch": "main",
+                        "git_sha": "1f0d9c4423eef56edd81ffa571206f32e3b2d11a",
+                        "installed_by": ["tractometry"]
                     },
                     "denoising/mppca": {
                         "branch": "main",
@@ -220,6 +245,16 @@
                         "git_sha": "b21f41f92e1ee439300b7060fc0296b56c6511b9",
                         "installed_by": ["tractoflow"]
                     },
+                    "tractogram/removeinvalid": {
+                        "branch": "main",
+                        "git_sha": "d719b9b13ccad7709e749b0f113e906a9d0757d3",
+                        "installed_by": ["tractometry"]
+                    },
+                    "tractogram/resample": {
+                        "branch": "main",
+                        "git_sha": "5435f43bcda7f9a32d101137af36a9272d54f58e",
+                        "installed_by": ["tractometry"]
+                    },
                     "utils/extractb0": {
                         "branch": "main",
                         "git_sha": "0245a01f7ab9bec0753e2235fba489e3353f1a33",
@@ -282,6 +317,11 @@
                     "tractoflow": {
                         "branch": "main",
                         "git_sha": "8a665c7589ea8e5cdaa4d9f1a731449712f53957",
+                        "installed_by": ["subworkflows"]
+                    },
+                    "tractometry": {
+                        "branch": "main",
+                        "git_sha": "6c00b5d7dd8d0af65bc01c0733517d98faf54269",
                         "installed_by": ["subworkflows"]
                     }
                 }

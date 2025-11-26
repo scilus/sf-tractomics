@@ -1,0 +1,69 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: tractogram_removeinvalid
+description: |
+  Remove invalid streamlines from a single or multiple tractograms/bundles.
+keywords:
+  - Invalid
+  - Tractograms
+  - Streamlines
+tools:
+  - scilpy:
+      description: The Sherbrooke Connectivity Imaging Lab (SCIL) Python dMRI processing
+        toolbox.
+      homepage: https://github.com/scilus/scilpy.git
+      identifier: ""
+args:
+  - cut_invalid:
+      type: boolean
+      description: Cut invalid streamlines rather than removing them. Keep the longest segment only.
+      default: false
+  - remove_single_point:
+      type: boolean
+      description: Consider single point streamlines as invalid.
+      default: false
+  - remove_overlapping_points:
+      type: boolean
+      description: Consider streamlines with overlapping points as invalid.
+      default: false
+  - threshold:
+      type: float
+      description: Maximum distance between two points to be considered overlapping.
+      default: 0.001 mm
+  - no_empty:
+      type: boolean
+      description: Do not save empty tractogram.
+      default: false
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'sample1', single_end:false ]`
+    - tractogram:
+        type: file
+        description: Tractogram or list of tractograms from which to remove invalid streamlines.
+        pattern: "*.{trk,tck}"
+        ontologies: []
+output:
+  tractograms:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'sample1', single_end:false ]`
+      - "*.{trk,tck}":
+          type: file
+          description: Tractogram without invalid streamlines
+          pattern: "*.{trk,tck}"
+          ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: versions.yml
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+authors:
+  - "@gagnonanthony"
+maintainers:
+  - "@gagnonanthony"
