@@ -35,7 +35,7 @@ workflow IO_BIDS {
                 def sid = "sub-" + item.subject
 
                 // ** Collecting the session's ID if present ** //
-                def ses = item.session ? "_ses-" + item.session : ""
+                def ses = item.session ? "ses-" + item.session : ""
 
                 // ** Collecting the run's ID if present ** //
                 def run = item.run ? "run-" + item.run : ""

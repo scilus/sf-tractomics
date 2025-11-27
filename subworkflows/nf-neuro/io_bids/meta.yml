@@ -3,7 +3,9 @@ description: |
   Subworkflow loading files from a BIDS directory. It is used in conjunction
   with the IO_READBIDS module which uses the scilpy CLI script to parse the
   BIDS directory and fetch the metadata.
+
   ------------- Current supported files/metadata -------------
+
   Files:
     - T1w
     - White matter parcellation from FreeSurfer.
@@ -15,6 +17,7 @@ description: |
     - B-values for the rev_dwi (rev_bval)
     - B-vectors for the rev_dwi (rev_bvec)
     - Reverse b0 image (rev_b0)
+
   Metadata (within the meta):
     - Subject ID (id)
     - Session ID (ses)
@@ -46,12 +49,13 @@ input:
       description: |
         Path to the FreeSurfer directory.
         Structure: [ path(fs_folder) ]
+      mandatory: false
   - bidsignore:
       type: file
       description: |
         Path to the .bidsignore file.
         Structure: [ path(bidsignore) ]
-
+      mandatory: false
 output:
   - ch_t1:
       type: file
@@ -65,12 +69,14 @@ output:
         Channel containing all FreeSurfer white matter parcellation files.
         Structure: [ val(meta), path(wmparc) ]
       pattern: "*.mgz"
+      mandatory: false
   - ch_aparc_aseg:
       type: file
       description: |
         Channel containing all FreeSurfer grey matter parcellation files.
         Structure: [ val(meta), path(aparc_aseg) ]
       pattern: "*.mgz"
+      mandatory: false
   - ch_dwi_bval_bvec:
       type: file
       description: |
@@ -83,12 +89,14 @@ output:
         Channel containing all reverse encoded diffusion weighted images, b-values and b-vectors.
         Structure: [ val(meta), path(rev_dwi), path(rev_bval), path(rev_bvec) ]
       pattern: "*.{nii.gz,bval,bvec}"
+      mandatory: false
   - ch_rev_b0:
       type: file
       description: |
         Channel containing all reverse b0 images.
         Structure: [ val(meta), path(rev_b0) ]
       pattern: "*.nii.gz"
+      mandatory: false
   - versions:
       type: file
       description: |
