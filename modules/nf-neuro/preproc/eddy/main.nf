@@ -2,25 +2,28 @@ process PREPROC_EDDY {
     tag "$meta.id"
     label 'process_high'
 
-    container "scilus/scilus:2.2.0"
+    container "scilus/scilus:2.2.1"
 
     input:
         tuple val(meta), path(dwi), path(bval), path(bvec), path(rev_dwi), path(rev_bval), path(rev_bvec), path(corrected_b0s), path(topup_fieldcoef), path(topup_movpart)
 
     output:
-        tuple val(meta), path("*__dwi_corrected.nii.gz")    , emit: dwi_corrected
-        tuple val(meta), path("*__dwi_eddy_corrected.bval") , emit: bval_corrected
-        tuple val(meta), path("*__dwi_eddy_corrected.bvec") , emit: bvec_corrected
-        tuple val(meta), path("*__b0_bet_mask.nii.gz")      , emit: b0_mask
-        tuple val(meta), path("*__dwi_eddy_mqc.gif")        , emit: dwi_eddy_mqc, optional:true
-        tuple val(meta), path("*__rev_dwi_eddy_mqc.gif")    , emit: rev_dwi_eddy_mqc, optional:true
-        path "versions.yml"                                 , emit: versions
+        tuple val(meta), path("*__dwi_corrected.nii.gz")                , emit: dwi_corrected
+        tuple val(meta), path("*__dwi_eddy_corrected.bval")             , emit: bval_corrected
+        tuple val(meta), path("*__dwi_eddy_corrected.bvec")             , emit: bvec_corrected
+        tuple val(meta), path("*__b0_bet_mask.nii.gz")                  , emit: b0_mask
+        tuple val(meta), path("*__dwi_eddy_mqc.gif")                    , emit: dwi_eddy_mqc, optional:true
+        tuple val(meta), path("*__rev_dwi_eddy_mqc.gif")                , emit: rev_dwi_eddy_mqc, optional:true
+        tuple val(meta), path("*__dwi_eddy_restricted_movement_rms.txt"), emit: eddy_fd_mqc, optional:true
+        path "versions.yml"                                             , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def values = meta.values() as List
+    prefix = values.size() > 1 ? "${meta.id}_${values[1]}" : meta.id
     def slice_drop_flag = task.ext.slice_drop_correction ? "--slice_drop_correction " : ""
     def bet_topup_before_eddy_f = task.ext.bet_topup_before_eddy_f ?: ""
     def prefix_topup = task.ext.prefix_topup ? task.ext.prefix_topup : ""
@@ -104,6 +107,9 @@ process PREPROC_EDDY {
         scil_gradients_validate_correct_eddy dwi_eddy_corrected.eddy_rotated_bvecs \${bval} \${number_rev_dwi} ${prefix}__dwi_eddy_corrected.bvec ${prefix}__dwi_eddy_corrected.bval
     fi
 
+    # Rename framewise displacement file to include subject id
+    mv dwi_eddy_corrected.eddy_restricted_movement_rms ${prefix}__dwi_eddy_restricted_movement_rms.txt
+
     if $run_qc;
     then
         extract_dim=\$(mrinfo ${dwi} -size)
@@ -175,6 +181,8 @@ process PREPROC_EDDY {
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def values = meta.values() as List
+    prefix = values.size() > 1 ? "${meta.id}_${values[1]}" : meta.id
 
     """
     set +e
@@ -203,6 +211,7 @@ process PREPROC_EDDY {
     touch ${prefix}__dwi_eddy_corrected.bval
     touch ${prefix}__dwi_eddy_corrected.bvec
     touch ${prefix}__b0_bet_mask.nii.gz
+    touch ${prefix}__dwi_eddy_restricted_movement_rms.txt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

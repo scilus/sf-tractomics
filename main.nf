@@ -52,8 +52,8 @@ workflow SCILUS_NF_TRACTOFLOW {
         rev_b0,
         lesion
     )
-    emit:
-    multiqc_report = NF_TRACTOFLOW.out.multiqc_report // channel: /path/to/multiqc_report.html
+    //emit:
+    //multiqc_report = NF_TRACTOFLOW.out.multiqc_report // channel: /path/to/multiqc_report.html
 }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -96,8 +96,8 @@ workflow {
         params.email_on_fail,
         params.plaintext_email,
         params.outdir,
-        params.monochrome_logs,
-        SCILUS_NF_TRACTOFLOW.out.multiqc_report
+        params.monochrome_logs
+//        SCILUS_NF_TRACTOFLOW.out.multiqc_report
     )
 }
 

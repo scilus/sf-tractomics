@@ -32,7 +32,7 @@ nextflow_process {
                 """
                 input[0] = LOAD_DATA.out.test_data_directory
                     .map{ test_data_directory -> [
-                    [ id:'test', single_end:false ], // meta map
+                    [ id:'test', ses:'ses-01' ], // meta map
                     file("\${test_data_directory}/sub-01_dir-AP_dwi.nii.gz", checkIfExists: true),
                     file("\${test_data_directory}/sub-01_dir-AP_dwi.bval", checkIfExists: true),
                     file("\${test_data_directory}/sub-01_dir-AP_dwi.bvec", checkIfExists: true),
@@ -57,6 +57,7 @@ nextflow_process {
                     process.out.b0_mask,
                     file(process.out.dwi_eddy_mqc.get(0).get(1)).name,
                     file(process.out.rev_dwi_eddy_mqc.get(0).get(1)).name,
+                    file(process.out.eddy_fd_mqc.get(0).get(1)).name,
                     process.out.versions
                 ).match() }
             )
@@ -69,7 +70,7 @@ nextflow_process {
                 """
                 input[0] = LOAD_DATA.out.test_data_directory
                     .map{ test_data_directory -> [
-                    [ id:'test', single_end:false ], // meta map
+                    [ id:'test' ], // meta map
                     file("\${test_data_directory}/sub-01_dir-AP_dwi.nii.gz", checkIfExists: true),
                     file("\${test_data_directory}/sub-01_dir-AP_dwi.bval", checkIfExists: true),
                     file("\${test_data_directory}/sub-01_dir-AP_dwi.bvec", checkIfExists: true),
@@ -91,6 +92,7 @@ nextflow_process {
                     file(process.out.bvec_corrected.get(0).get(1)).name,
                     process.out.b0_mask,
                     file(process.out.dwi_eddy_mqc.get(0).get(1)).name,
+                    file(process.out.eddy_fd_mqc.get(0).get(1)).name,
                     process.out.versions
                 ).match() }
             )

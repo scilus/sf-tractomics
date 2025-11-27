@@ -58,7 +58,7 @@
                         "id": "test",
                         "single_end": false
                     },
-                    "test__length_stats.json:md5,c343e1e2d731a5b900f7deafba3a274f"
+                    "test__length_stats.json:md5,a7abc925eac27f908503faf414a82330"
                 ]
             ],
             [
@@ -134,9 +134,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
+            "nextflow": "25.04.4"
         },
-        "timestamp": "2025-11-24T04:43:33.444278372"
+        "timestamp": "2025-11-27T10:54:25.623378673"
     },
     "bundle - stats": {
         "content": [
@@ -147,7 +147,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test__length_stats.json:md5,c343e1e2d731a5b900f7deafba3a274f"
+                        "test__length_stats.json:md5,a7abc925eac27f908503faf414a82330"
                     ]
                 ],
                 "1": [
@@ -291,7 +291,7 @@
                             "id": "test",
                             "single_end": false
                         },
-                        "test__length_stats.json:md5,c343e1e2d731a5b900f7deafba3a274f"
+                        "test__length_stats.json:md5,a7abc925eac27f908503faf414a82330"
                     ]
                 ],
                 "lesion_map": [
@@ -361,9 +361,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
+            "nextflow": "25.04.4"
         },
-        "timestamp": "2025-11-24T16:25:11.920536402"
+        "timestamp": "2025-11-27T10:45:16.334357877"
     },
     "bundle - stats - light": {
         "content": [

@@ -82,6 +82,7 @@ workflow TOPUP_EDDY {
             ch_versions = ch_versions.mix(PREPROC_EDDY.out.versions.first())
             ch_multiqc_files = ch_multiqc_files.mix(PREPROC_EDDY.out.dwi_eddy_mqc)
             ch_multiqc_files = ch_multiqc_files.mix(PREPROC_EDDY.out.rev_dwi_eddy_mqc)
+            ch_multiqc_files = ch_multiqc_files.mix(PREPROC_EDDY.out.eddy_fd_mqc)
 
             ch_dwi_extract_b0 = PREPROC_EDDY.out.dwi_corrected
                 .join(PREPROC_EDDY.out.bval_corrected)

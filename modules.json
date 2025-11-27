@@ -57,7 +57,7 @@
                     },
                     "bundle/fixelafd": {
                         "branch": "main",
-                        "git_sha": "f9ca7936903f1f231dba1cdc7223b758c7748bfc",
+                        "git_sha": "4dd98f1039585b08d4443e207ef26130c82d8d01",
                         "installed_by": ["tractometry"]
                     },
                     "bundle/labelmap": {
@@ -72,12 +72,12 @@
                     },
                     "bundle/stats": {
                         "branch": "main",
-                        "git_sha": "ca7cce5c0c85479bf02b5c9c5d338fa9f3310c81",
+                        "git_sha": "0059a7c5c9277288f069d6c908c016d50cc0bd0c",
                         "installed_by": ["tractometry"]
                     },
                     "bundle/uniformize": {
                         "branch": "main",
-                        "git_sha": "1f0d9c4423eef56edd81ffa571206f32e3b2d11a",
+                        "git_sha": "4dd98f1039585b08d4443e207ef26130c82d8d01",
                         "installed_by": ["tractometry"]
                     },
                     "denoising/mppca": {
@@ -112,7 +112,7 @@
                     },
                     "preproc/eddy": {
                         "branch": "main",
-                        "git_sha": "0fdd04fbe05e37bfe1273d23e1d49018297ea7de",
+                        "git_sha": "475ca43937134848fb422aeafc74663b05f61345",
                         "installed_by": ["topup_eddy"]
                     },
                     "preproc/gibbs": {
@@ -134,6 +134,11 @@
                         "branch": "main",
                         "git_sha": "0fdd04fbe05e37bfe1273d23e1d49018297ea7de",
                         "installed_by": ["topup_eddy"]
+                    },
+                    "qc/multiqc": {
+                        "branch": "main",
+                        "git_sha": "1fff553d147ef5f2752c92f49e1ee50d43159ab7",
+                        "installed_by": ["modules"]
                     },
                     "reconst/diffusivitypriors": {
                         "branch": "main",
@@ -281,7 +286,7 @@
                     },
                     "io_bids": {
                         "branch": "main",
-                        "git_sha": "b7260db4681c80ff37964889c7a29223fc55d7de",
+                        "git_sha": "36bc65f79020da54f8670d650e1e704ebdb06a26",
                         "installed_by": ["subworkflows"]
                     },
                     "load_test_data": {
@@ -311,7 +316,7 @@
                     },
                     "topup_eddy": {
                         "branch": "main",
-                        "git_sha": "74181e9f66228d5e35e80d408086d676ce73b0ab",
+                        "git_sha": "cf3c47a430239aab4371da03399ebf99499a85bf",
                         "installed_by": ["preproc_dwi"]
                     },
                     "tractoflow": {
@@ -321,7 +326,7 @@
                     },
                     "tractometry": {
                         "branch": "main",
-                        "git_sha": "6c00b5d7dd8d0af65bc01c0733517d98faf54269",
+                        "git_sha": "cf3c47a430239aab4371da03399ebf99499a85bf",
                         "installed_by": ["subworkflows"]
                     }
                 }

@@ -79,6 +79,13 @@
                     "fa_icon": "fas fa-folder-open",
                     "help_text": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure."
                 },
+                "clean_output": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "The results will be saved in BIDS.",
+                    "fa_icon": "fas fa-folder-open",
+                    "help_text": "Check BIDS derivatives."
+                },
                 "email": {
                     "type": "string",
                     "description": "Email address for completion summary.",

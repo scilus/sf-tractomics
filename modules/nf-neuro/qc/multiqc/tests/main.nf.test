@@ -1,0 +1,113 @@
+// nf-core modules test qc/multiqc
+nextflow_process {
+
+    name "Test Process QC_MULTIQC"
+    script "../main.nf"
+    process "QC_MULTIQC"
+
+    tag "modules"
+    tag "modules_nfneuro"
+    tag "qc"
+    tag "qc/multiqc"
+
+    tag "subworkflows"
+    tag "subworkflows/load_test_data"
+
+    setup {
+            run("LOAD_TEST_DATA", alias: "LOAD_DATA") {
+                script "../../../../../subworkflows/nf-neuro/load_test_data/main.nf"
+                process {
+                    """
+                    input[0] = Channel.from( [ "multiqc.zip" ] )
+                    input[1] = "test.load-test-data"
+                    """
+                }
+            }
+        }
+
+    test("multiqc-neuroimaging - global report") {
+        when {
+            process {
+                """
+                input[0] = [
+                    [ id:'test', single_end:false ], // meta map
+                    []
+                ]
+                input[1] = LOAD_DATA.out.test_data_directory
+                    .map{ test_data_directory ->
+                        file("\${test_data_directory}/*", checkIfExists: true)
+                }
+                input[2] = []
+                input[3] = []
+                input[4] = []
+                input[5] = []
+                input[6] = []
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                { assert process.out.report[0] ==~ ".*html" },
+                { assert process.out.data[0] ==~ ".*data" },
+                { assert snapshot(process.out.versions).match() }
+            )
+        }
+    }
+
+    test("multiqc-neuroimaging - single-subject report") {
+        config "./nextflow_single-subject.config"
+        when {
+            process {
+                """
+                input[0] = LOAD_DATA.out.test_data_directory
+                    .map{ test_data_directory -> [
+                    [ id:'test', single_end:false ], // meta map
+                    file("\${test_data_directory}/*rms.txt", checkIfExists: true)
+                ]}
+                input[1] = []
+                input[2] = []
+                input[3] = []
+                input[4] = []
+                input[5] = []
+                input[6] = []
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                { assert process.out.report[0] ==~ ".*html" },
+                { assert process.out.data[0] ==~ ".*data" },
+                { assert snapshot(process.out.versions).match() }
+            )
+        }
+    }
+
+    test("multiqc-neuroimaging - stub") {
+        options "-stub-run"
+        when {
+            process {
+                """
+                input[0] = LOAD_DATA.out.test_data_directory
+                    .map{ test_data_directory -> [
+                    [ id:'test', single_end:false ], // meta map
+                    file("\${test_data_directory}/*rms.txt", checkIfExists: true)
+                ]}
+                input[1] = []
+                input[2] = []
+                input[3] = []
+                input[4] = []
+                input[5] = []
+                input[6] = []
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out.versions).match() }
+            )
+        }
+    }
+}

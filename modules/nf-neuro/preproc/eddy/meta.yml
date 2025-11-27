@@ -198,6 +198,19 @@ output:
             for the rev_dwi. Made for use in MultiQC report.
           pattern: "*_rev_dwi_eddy_mqc.gif"
           ontologies: []
+  eddy_fd_mqc:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'test', single_end:false ]`
+      - "*__dwi_eddy_restricted_movement_rms.txt":
+          type: file
+          description: |
+            Text file containing framewise displacement (restricted movement)
+            information from eddy. Made for use in MultiQC report.
+          pattern: "*__dwi_eddy_restricted_movement_rms.txt"
+          ontologies: []
   versions:
     - versions.yml:
         type: file

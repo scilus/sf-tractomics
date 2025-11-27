@@ -3,12 +3,14 @@ description: |
   Subworkflow performing distorsions correction/eddy correction/motion correction.
   If a reverse B0 or a reverse DWI is provided it will run topup and then eddy,
   otherwise only eddy will run.
+
   ---------  Steps  --------------------
-  PREPROC_TOPUP (topup, FSL)
+
+  1. PREPROC_TOPUP (topup, FSL)
     Prepare data and apply FSL topup
-  PREPROC_EDDY (eddy, FSL)
+  2. PREPROC_EDDY (eddy, FSL)
     Apply Eddy (and Topup if already run)
-  UTILS_EXTRACTb0 (scilpy, scilus)
+  3. UTILS_EXTRACTb0 (scilpy, scilus)
     Extract a b0 volume from a DWI image.
 keywords:
   - preprocessing
@@ -23,96 +25,78 @@ components:
   - utils/extractb0
   - betcrop/fslbetcrop
 input:
-  - meta:
-      type: map
+  - ch_dwi:
+      type: file
       description: |
-        Groovy Map containing sample information
-        e.g. `[ id:'test', single_end:false ]`
-
-  - dwi:
+        The input channel containing the DWI file, B-values and B-vectors in FSL format files.
+        Structure: [ val(meta), path(dwi), path(bval), path(bvec) ]
+      pattern: "*{.nii,.nii.gz,.bval,.bvec}"
+  - ch_b0:
       type: file
-      description: DWI Nifti image
-      pattern: "*.{nii,nii.gz}"
-
-  - bval:
+      description: |
+        The input channel containing the b0 reference for the DWI.
+        Structure: [ val(meta), path(b0) ]
+      pattern: "*{.nii,.nii.gz}"
+      mandatory: false
+  - ch_rev_dwi:
       type: file
-      description: B-values in FSL format [DWI].
-      pattern: "*.bval"
-
-  - bvec:
+      description: |
+        The input channel containing the reverse DWI file, B-values and B-vectors in FSL format files.
+        Structure: [ val(meta), path(rev_dwi), path(bval), path(bvec) ]
+      pattern: "*{.nii,.nii.gz,.bval,.bvec}"
+      mandatory: false
+  - ch_rev_b0:
       type: file
-      description: B-vectors in FSL format [DWI].
-      pattern: "*.bvec"
-
-  - b0:
-      type: file
-      description: b0 [DWI]. Optional
-      pattern: "*.{nii,nii.gz}"
-
-  - rev_dwi:
-      type: file
-      description: DWI Nifti image [rev-DWI]. Optional
-      pattern: "*.{nii,nii.gz}"
-
-  - rev_bval:
-      type: file
-      description: B-values in FSL format [rev-DWI]. Optional
-      pattern: "*.bval"
-
-  - rev_bvec:
-      type: file
-      description: B-vectors in FSL format [rev-DWI]. Optional
-      pattern: "*.bvec"
-
-  - rev_b0:
-      type: file
-      description: Reversed b0 [rev-DWI]. Optional
-      pattern: "*.{nii,nii.gz}"
-
+      description: |
+        The input channel containing the reverse b0 file.
+        Structure: [ val(meta), path(rev_b0) ]
+      pattern: "*{.nii,.nii.gz}"
+      mandatory: false
   - config_topup:
       type: file
-      description: topup config file. Optional. See https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/topup/TopupUsersGuide#Configuration_files
-      pattern: "*cnf"
-
-output:
-  - meta:
-      type: map
       description: |
-        Groovy Map containing sample information
-        e.g. `[ id:'test', single_end:false ]`
-
-  - dwi_corrected:
+        Topup config file. Optional. See https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/topup/TopupUsersGuide#Configuration_files
+        Structure: [ path(config_topup) ]
+      pattern: "*cnf"
+      mandatory: false
+output:
+  - dwi:
       type: file
-      description: Nifti volume - DWI corrected
+      description: |
+        Nifti volume - DWI corrected
+        Structure: [ val(meta), path(dwi) ]
       pattern: "*__dwi_corrected.nii.gz"
-
-  - bval_corrected:
+  - bval:
       type: file
-      description: B-values corrected in FSL format
+      description: |
+        B-values corrected in FSL format
+        Structure: [ val(meta), path(bval) ]
       pattern: "*__bval_eddy"
-
-  - bvec_corrected:
+  - bvec:
       type: file
-      description: B-vectors corrected in FSL format
+      description: |
+        B-vectors corrected in FSL format
+        Structure: [ val(meta), path(bvec) ]
       pattern: "*__dwi_eddy_corrected.bvec"
-
   - b0:
       type: file
-      description: Nifti volume - b0 corrected
+      description: |
+        Nifti volume - b0 corrected
+        Structure: [ val(meta), path(b0) ]
       pattern: "*__b0_mask.nii.gz"
-
   - b0_mask:
       type: file
-      description: Nifti volume - Mask for b0 corrected
+      description: |
+        Nifti volume - Mask for b0 corrected
+        Structure: [ val(meta), path(b0_mask) ]
       pattern: "*__b0_bet_mask.nii.gz"
-
   - mqc:
       type: file
       description: |
         Channel containing the quality control images for MultiQC.
-        Structure: [ val(meta), path(mqc) ]
+        Structure: [ path(mqc), ... ]
       pattern: "*_mqc.{gif,png}"
-
+      mandatory: false
   - versions:
       type: file
       description: File containing software versions

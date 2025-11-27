@@ -6,7 +6,7 @@
                     [
                         {
                             "id": "sub-01",
-                            "session": "_ses-001",
+                            "session": "ses-001",
                             "run": "",
                             "dwi_tr": 0.062,
                             "dwi_phase": "",
@@ -18,7 +18,7 @@
                     [
                         {
                             "id": "sub-01",
-                            "session": "_ses-001",
+                            "session": "ses-001",
                             "run": "",
                             "dwi_tr": 0.062,
                             "dwi_phase": "",
@@ -33,7 +33,7 @@
                     [
                         {
                             "id": "sub-01",
-                            "session": "_ses-001",
+                            "session": "ses-001",
                             "run": "",
                             "dwi_tr": 0.062,
                             "dwi_phase": "",
@@ -46,7 +46,7 @@
                     [
                         {
                             "id": "sub-01",
-                            "session": "_ses-001",
+                            "session": "ses-001",
                             "run": "",
                             "dwi_tr": 0.062,
                             "dwi_phase": "",
@@ -58,7 +58,7 @@
                     [
                         {
                             "id": "sub-01",
-                            "session": "_ses-001",
+                            "session": "ses-001",
                             "run": "",
                             "dwi_tr": 0.062,
                             "dwi_phase": "",
@@ -71,7 +71,7 @@
                     [
                         {
                             "id": "sub-01",
-                            "session": "_ses-001",
+                            "session": "ses-001",
                             "run": "",
                             "dwi_tr": 0.062,
                             "dwi_phase": "",
@@ -86,9 +86,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.6"
+            "nextflow": "25.04.4"
         },
-        "timestamp": "2025-11-10T22:18:28.528269"
+        "timestamp": "2025-11-26T15:18:15.612100441"
     },
     "Read BIDS directory - without .bidsignore": {
         "content": [
@@ -97,7 +97,7 @@
                     [
                         {
                             "id": "sub-01",
-                            "session": "_ses-001",
+                            "session": "ses-001",
                             "run": "",
                             "dwi_tr": 0.062,
                             "dwi_phase": "",
@@ -109,7 +109,7 @@
                     [
                         {
                             "id": "sub-01",
-                            "session": "_ses-001",
+                            "session": "ses-001",
                             "run": "",
                             "dwi_tr": 0.062,
                             "dwi_phase": "",
@@ -124,7 +124,7 @@
                     [
                         {
                             "id": "sub-01",
-                            "session": "_ses-001",
+                            "session": "ses-001",
                             "run": "",
                             "dwi_tr": 0.062,
                             "dwi_phase": "",
@@ -137,7 +137,7 @@
                     [
                         {
                             "id": "sub-01",
-                            "session": "_ses-001",
+                            "session": "ses-001",
                             "run": "",
                             "dwi_tr": 0.062,
                             "dwi_phase": "",
@@ -149,7 +149,7 @@
                     [
                         {
                             "id": "sub-01",
-                            "session": "_ses-001",
+                            "session": "ses-001",
                             "run": "",
                             "dwi_tr": 0.062,
                             "dwi_phase": "",
@@ -162,7 +162,7 @@
                     [
                         {
                             "id": "sub-01",
-                            "session": "_ses-001",
+                            "session": "ses-001",
                             "run": "",
                             "dwi_tr": 0.062,
                             "dwi_phase": "",
@@ -177,8 +177,8 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.6"
+            "nextflow": "25.04.4"
         },
-        "timestamp": "2025-11-10T22:18:19.855872"
+        "timestamp": "2025-11-26T15:17:55.821363424"
     }
 }

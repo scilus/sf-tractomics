@@ -1,0 +1,127 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/modules/meta-schema.json
+name: "qc_multiqc"
+description: |
+  Aggregate results from a neuroimaging pipeline using MultiQC into a single HTML report.
+keywords:
+  - QC
+  - neuroimaging
+  - report
+tools:
+  - multiqc:
+      description: |
+        MultiQC searches a given directory for analysis logs and compiles a HTML report.
+        It's a general use tool, perfect for summarising the output from numerous bioinformatics tools.
+      homepage: https://multiqc.info/
+      documentation: https://multiqc.info/docs/
+      licence: ["GPL-3.0-or-later"]
+      identifier: biotools:multiqc
+  - neuroimaging:
+      description: |
+        Neuroimaging is a python MultiQC plugin containing various tools for generating QC reports for neuroimaging data.
+      homepage: https://github.com/nf-neuro/MultiQC_neuroimaging
+      licence: ["MIT"]
+      identifier: ""
+
+args:
+  - single_subject:
+      type: boolean
+      default: false
+      description: |
+        If true, generates a subject-specific MultiQC report. If false, generates a global report.
+        This will change which module are run within MultiQC.
+      mandatory: false
+
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. `[ id:'sample1' ]`
+    - qc_images:
+        type: file
+        description: Subject-specific files that will be used in the MultiQC
+          report.
+        pattern: "*.{nii.gz,trk}"
+        ontologies:
+          - edam: http://edamontology.org/format_4001 # NIFTI format
+  - multiqc_files:
+      type: file
+      description: |
+        Global files that contain information on multiple subjects. Will be used in the global
+        MultiQC report.
+      pattern: "*.{tsv,csv,txt}"
+      ontologies:
+        - edam: http://edamontology.org/format_3475 # TSV
+        - edam: http://edamontology.org/format_3752 # CSV
+  - multiqc_config:
+      type: file
+      description: Optional config yml for MultiQC
+      pattern: "*.{yml,yaml}"
+      ontologies:
+        - edam: http://edamontology.org/format_3750 # YAML
+  - extra_multiqc_config:
+      type: file
+      description: Second optional config yml for MultiQC. Will override common
+        sections in multiqc_config.
+      pattern: "*.{yml,yaml}"
+      ontologies:
+        - edam: http://edamontology.org/format_3750 # YAML
+  - multiqc_logo:
+      type: file
+      description: Optional logo file for MultiQC
+      pattern: "*.{png}"
+      ontologies: []
+  - replace_names:
+      type: file
+      description: |
+        Optional two-column sample renaming file. First column a set of
+        patterns, second column a set of corresponding replacements. Passed via
+        MultiQC's `--replace-names` option.
+      pattern: "*.{tsv}"
+      ontologies:
+        - edam: http://edamontology.org/format_3475 # TSV
+  - sample_names:
+      type: file
+      description: |
+        Optional TSV file with headers, passed to the MultiQC --sample_names
+        argument.
+      pattern: "*.{tsv}"
+      ontologies:
+        - edam: http://edamontology.org/format_3475 # TSV
+
+output:
+  meta:
+    - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information, kept for linting purposes.
+          e.g. `[ id:'sample1' ]`
+  report:
+    - "*.html":
+        type: file
+        description: MultiQC report file
+        pattern: ".html"
+        ontologies: []
+  data:
+    - "*_data":
+        type: directory
+        description: MultiQC data dir
+        pattern: "multiqc_data"
+  plots:
+    - "*_plots":
+        type: file
+        description: Plots created by MultiQC
+        pattern: "*_data"
+        ontologies: []
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: "versions.yml"
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+
+authors:
+  - "@gagnonanthony"
+maintainers:
+  - "@gagnonanthony"

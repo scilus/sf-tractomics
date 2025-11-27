@@ -53,20 +53,26 @@
                         {
                             "id": "test"
                         },
+                        "test__dwi_eddy_restricted_movement_rms.txt"
+                    ],
+                    [
+                        {
+                            "id": "test"
+                        },
                         "test__rev_dwi_eddy_mqc.gif"
                     ]
                 ],
                 "versions": [
                     "versions.yml:md5,81cfd1ed44fe6baf7c62ce30bdb4c143",
-                    "versions.yml:md5,ea2ab11e04c3353e065862217a342651"
+                    "versions.yml:md5,f6ebf4487f9581dfb1095405f32fdde6"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "25.04.7"
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.8"
         },
-        "timestamp": "2025-09-24T13:07:58.922695156"
+        "timestamp": "2025-11-20T17:43:42.785937"
     },
     "topup_eddy - ONLY Eddy - AP DWI | PA sbref": {
         "content": [
@@ -122,20 +128,26 @@
                         {
                             "id": "test"
                         },
+                        "test__dwi_eddy_restricted_movement_rms.txt"
+                    ],
+                    [
+                        {
+                            "id": "test"
+                        },
                         "test__rev_dwi_eddy_mqc.gif"
                     ]
                 ],
                 "versions": [
                     "versions.yml:md5,81cfd1ed44fe6baf7c62ce30bdb4c143",
-                    "versions.yml:md5,ea2ab11e04c3353e065862217a342651"
+                    "versions.yml:md5,f6ebf4487f9581dfb1095405f32fdde6"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "25.04.7"
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.8"
         },
-        "timestamp": "2025-09-24T13:07:33.621522283"
+        "timestamp": "2025-11-20T17:42:40.509401"
     },
     "topup_eddy - AP DWI+sbref | PA DWI+sbref": {
         "content": [
@@ -191,19 +203,25 @@
                         {
                             "id": "test"
                         },
+                        "test__dwi_eddy_restricted_movement_rms.txt"
+                    ],
+                    [
+                        {
+                            "id": "test"
+                        },
                         "test__rev_dwi_eddy_mqc.gif"
                     ]
                 ],
                 "versions": [
                     "versions.yml:md5,81cfd1ed44fe6baf7c62ce30bdb4c143",
-                    "versions.yml:md5,ea2ab11e04c3353e065862217a342651"
+                    "versions.yml:md5,f6ebf4487f9581dfb1095405f32fdde6"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "25.04.7"
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.8"
         },
-        "timestamp": "2025-09-24T13:08:23.941067656"
+        "timestamp": "2025-11-20T17:44:57.388694"
     }
 }

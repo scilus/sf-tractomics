@@ -21,6 +21,8 @@ process BUNDLE_FIXELAFD {
     for bundle in $bundles;
         do\
         bname=\$(basename \${bundle} .trk)
+        bname=\${bname/${prefix}__/}
+        bname=\${bname/__cleaned/}
         scil_bundle_mean_fixel_afd \$bundle $fodf ${prefix}__\${bname}_afd_metric.nii.gz
     done
 

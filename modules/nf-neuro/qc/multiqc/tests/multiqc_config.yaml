@@ -1,0 +1,42 @@
+---
+# MultiQC example configuration for MultiQC_neuroimaging
+
+# Streamline Count module configuration default thresholds
+streamline_count:
+  iqr_multiplier: 3 # Default: samples outside Q1 - 3*IQR to Q3 + 3*IQR are marked as fail
+
+# Framewise Displacement module configuration default thresholds
+framewise_displacement:
+  warn_threshold: 0.8 # Default: samples with max FD < 0.8mm get "pass" status
+  fail_threshold: 2.0 # Default: samples with max FD >= 2.0mm get "fail" status
+
+# Coverage module configuration default thresholds
+coverage:
+  warn_threshold: 0.9 # Default: samples with dice < 0.9 get "warn" status
+  fail_threshold: 0.8 # Default: samples with dice < 0.8 get "fail" status
+
+# Cortical module configuration
+# Thresholds for outlier percentage (lower is better)
+cortical:
+  warn_threshold: 20 # Warn if outlier % > 20%
+  fail_threshold: 10 # Pass if outlier % <= 10%
+
+# Subcortical module configuration
+# Thresholds for outlier percentage (lower is better)
+subcortical:
+  warn_threshold: 20 # Warn if outlier % > 20%
+  fail_threshold: 10 # Pass if outlier % <= 10%
+
+# Tractometry module configuration
+tractometry:
+  warn_threshold: 90 # Warn if bundle percentage < 90%
+  fail_threshold: 80 # Fail if bundle percentage < 80%
+
+# Order that modules should appear in the report
+module_order:
+  - framewise_displacement
+  - coverage
+  - streamline_count
+  - tractometry
+  - cortical
+  - subcortical
