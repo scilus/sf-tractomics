@@ -57,7 +57,7 @@
                     },
                     "bundle/fixelafd": {
                         "branch": "main",
-                        "git_sha": "f9ca7936903f1f231dba1cdc7223b758c7748bfc",
+                        "git_sha": "4dd98f1039585b08d4443e207ef26130c82d8d01",
                         "installed_by": ["tractometry"]
                     },
                     "bundle/labelmap": {
@@ -72,12 +72,12 @@
                     },
                     "bundle/stats": {
                         "branch": "main",
-                        "git_sha": "ca7cce5c0c85479bf02b5c9c5d338fa9f3310c81",
+                        "git_sha": "0059a7c5c9277288f069d6c908c016d50cc0bd0c",
                         "installed_by": ["tractometry"]
                     },
                     "bundle/uniformize": {
                         "branch": "main",
-                        "git_sha": "1f0d9c4423eef56edd81ffa571206f32e3b2d11a",
+                        "git_sha": "4dd98f1039585b08d4443e207ef26130c82d8d01",
                         "installed_by": ["tractometry"]
                     },
                     "denoising/mppca": {
@@ -326,7 +326,7 @@
                     },
                     "tractometry": {
                         "branch": "main",
-                        "git_sha": "6c00b5d7dd8d0af65bc01c0733517d98faf54269",
+                        "git_sha": "cf3c47a430239aab4371da03399ebf99499a85bf",
                         "installed_by": ["subworkflows"]
                     }
                 }

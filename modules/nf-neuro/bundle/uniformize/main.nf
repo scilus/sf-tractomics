@@ -29,6 +29,7 @@ process BUNDLE_UNIFORMIZE {
     for index in \${!bundles[@]};
         do \
         bname=\$(basename \${bundles[index]} .trk)
+        bname=\${bname/${prefix}__/}
         if [[ -f "$centroids" ]]; then
             option="--centroid \${centroids[index]}"
         else

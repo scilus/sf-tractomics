@@ -1,6 +1,6 @@
 name: "tractometry"
-description:
-  "This workflow processes tractograms and associated data to clean, resample, and extract meaningful statistics.
+description: |
+  This workflow processes tractograms and associated data to clean, resample, and extract meaningful statistics.
   It requires three mandatory inputs and two optional : a set of tractogram bundles, centroids used for resampling or identification,
   various diffusion metrics associated with the tractography, a lesion probability mask (optional) and fixel-based FODF data (optional).
   The workflow performs key preprocessing and analysis steps such as invalid streamline removal, resampling,
@@ -39,7 +39,7 @@ description:
 
   Output
   The final outputs include various statistics relevant to tractometry analysis,
-  which can be used for further exploration or reporting."
+  which can be used for further exploration or reporting.
 
 keywords:
   - Tractometry
