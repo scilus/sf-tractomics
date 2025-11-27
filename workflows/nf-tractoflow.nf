@@ -283,6 +283,8 @@ workflow NF_TRACTOFLOW {
     //
     // MODULE: MultiQC
     //
+    ch_multiqc_files = Channel.empty() // To store versions, methods description, etc.
+
     ch_multiqc_config_subject = Channel.fromPath(
         "$projectDir/assets/multiqc_config.yml", checkIfExists: true)
     ch_multiqc_config_global = Channel.fromPath(
@@ -337,6 +339,7 @@ workflow NF_TRACTOFLOW {
         }
         .map{ it[1] }
     ch_global_multiqc_files = ch_global_multiqc_files.mix(ch_fd_files.flatten())
+    ch_global_multiqc_files = ch_global_multiqc_files.mix(ch_multiqc_files)
 
     // Global multiqc
     MULTIQC_GLOBAL (
@@ -350,7 +353,7 @@ workflow NF_TRACTOFLOW {
     )
 
     emit:
-//    multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
+    multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
     versions       = ch_versions                 // channel: [ path(versions.yml) ]
 
 }
