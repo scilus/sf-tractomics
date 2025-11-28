@@ -144,7 +144,7 @@ output:
             .gif file containing quality control image for the registration process.
             Made for use in MultiQC report.
           pattern: "*_registration_antsapplytransforms_mqc.gif"
-          optional: true
+          mandatory: false
           ontologies: []
   versions:
     - versions.yml:

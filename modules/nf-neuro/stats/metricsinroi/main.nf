@@ -8,9 +8,10 @@ process STATS_METRICSINROI {
     tuple val(meta), path(metrics), path(rois), path(rois_lut)  /* optional, input = [] */
 
     output:
-    tuple val(meta), path("*_stats.json")       , emit: stats_json
-    tuple val(meta), path("*_stats.{csv,tsv}")  , emit: stats_tab
-    path "versions.yml"                         , emit: versions
+    tuple val(meta), path("*.json")                   , emit: stats_json
+    tuple val(meta), path("*_desc-mean_*.{csv,tsv}")  , emit: stats_mean
+    tuple val(meta), path("*_desc-std_*.{csv,tsv}")   , emit: stats_std
+    path "versions.yml"                               , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -75,34 +76,48 @@ process STATS_METRICSINROI {
         mv ${prefix}_${suffix}_tmp.json ${prefix}_${suffix}.json
     done
 
-    # Get all bundles names from the JSON
-    bundles=\$(jq -r "keys[]" ${prefix}_${suffix}.json)
+    # Get all ROIs names from the JSON
+    rois=\$(jq -r "keys[]" ${prefix}_${suffix}.json)
 
-    # All bundles have the same metrics. To get the metrics names from
-    # the JSON, we can just fetch them from the first bundle.
-    first_bundle=\$(printf '%s\\n' \$bundles | head -n 1)
+    # All ROIs have the same metrics. To get the metrics names from
+    # the JSON, we can just fetch them from the first ROI.
+    first_roi=\$(printf '%s\\n' \$rois | head -n 1)
 
-    # Extract the metrics names from this first bundle
-    metrics=\$(FIRST_BUNDLE="\$first_bundle" jq -r ".\\"\$first_bundle\\" | keys[]" ${prefix}_${suffix}.json)
+    # Extract the metrics names from this first roi
+    metrics=\$(FIRST_ROI="\$first_roi" jq -r ".\\"\$first_roi\\" | keys[]" ${prefix}_${suffix}.json)
 
-    # Create the CSV/TSV header
-    # (SID, bundle, metric, mean, std)
-    echo "sid${sep}bundle${sep}metric${sep}mean${sep}std" > ${prefix}_${suffix}.${output_format}
+    # Create the CSV/TSV headers
+    # (sample, roi, metric1, metric2, ..., metricN)
+    header_mean="sample${sep}roi"
+    header_std="sample${sep}roi"
+    for metric in \$metrics; do
+        header_mean="\${header_mean}${sep}\${metric}"
+        header_std="\${header_std}${sep}\${metric}"
+    done
+    echo "\$header_mean" > ${prefix}_desc-mean_${suffix}.${output_format}
+    echo "\$header_std" > ${prefix}_desc-std_${suffix}.${output_format}
 
-    for bundle in \$bundles;
+    for roi in \$rois;
     do
+        # Initialize lines with sample and roi
+        line_mean="${prefix}${sep}\${roi}"
+        line_std="${prefix}${sep}\${roi}"
+
         for metric in \$metrics;
         do
-            # Fetch the "mean" and "std" values from each bundle/metric
+            # Fetch the "mean" and "std" values from each roi/metric
             # pair from the JSON
-            mean=\$(jq -r --arg BUNDLE "\$bundle" --arg METRIC "\$metric" '.[\$BUNDLE].[\$METRIC].mean' ${prefix}_${suffix}.json)
-            std=\$(jq -r --arg BUNDLE "\$bundle" --arg METRIC "\$metric" '.[\$BUNDLE].[\$METRIC].std' ${prefix}_${suffix}.json)
+            val_mean=\$(jq -r --arg ROI "\$roi" --arg METRIC "\$metric" '.[\$ROI].[\$METRIC].mean' ${prefix}_${suffix}.json)
+            val_std=\$(jq -r --arg ROI "\$roi" --arg METRIC "\$metric" '.[\$ROI].[\$METRIC].std' ${prefix}_${suffix}.json)
 
-            # Build the following line and append it to the CSV/TSV file
-            # (SID, bundle, metric, mean, std)
-            line="${prefix}${sep}\${bundle}${sep}\${metric}${sep}\${mean}${sep}\${std}"
-            echo \$line >> ${prefix}_${suffix}.${output_format}
+            # Append values to the lines
+            line_mean="\${line_mean}${sep}\${val_mean}"
+            line_std="\${line_std}${sep}\${val_std}"
         done
+
+        # Append the completed lines to the files
+        echo "\$line_mean" >> ${prefix}_desc-mean_${suffix}.${output_format}
+        echo "\$line_std" >> ${prefix}_desc-std_${suffix}.${output_format}
     done
 
     cat <<-END_VERSIONS > versions.yml
@@ -115,12 +130,15 @@ process STATS_METRICSINROI {
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
     def suffix = task.ext.first_suffix ? "${task.ext.first_suffix}_stats" : "stats"
+    def output_format = task.ext.output_format ?: 'tsv'  // 'csv' or 'tsv'
+    assert output_format in ['csv', 'tsv'] : "output_format must be either 'csv' or 'tsv'"
     """
     scil_volume_stats_in_ROI -h
     scil_volume_stats_in_labels -h
 
     touch ${prefix}_${suffix}.json
-    touch ${prefix}_${suffix}.csv
+    touch ${prefix}_desc-mean_${suffix}.${output_format}
+    touch ${prefix}_desc-std_${suffix}.${output_format}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

@@ -39,7 +39,26 @@
         },
         "timestamp": "2025-09-30T13:25:40.996984"
     },
-    "preproc_t1_synthbet": {
+    "preproc_t1_skip_all": {
+        "content": [
+            {
+                "t1_final": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "T1w.nii.gz"
+                    ]
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.0",
+            "nextflow": "25.04.4"
+        },
+        "timestamp": "2025-06-27T12:18:38.832987377"
+    },
+    "preproc_t1_synthstrip": {
         "content": [
             {
                 "crop_box": [
@@ -107,8 +126,8 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,318cabe934be45528a25f52083d9c90d",
                     "versions.yml:md5,7aad91b5043d2dc8e8fc69ffbbe6f657",
+                    "versions.yml:md5,7b12b08cbd571fb269061dbae81584bc",
                     "versions.yml:md5,9d7a3e397fd20bc0d4b8b46d62060806",
                     "versions.yml:md5,b539f60cb48d0e92cd7dcf2f403d3ea9",
                     "versions.yml:md5,edd3c88d7ff0ed68c873953116ed3cb0",
@@ -117,29 +136,10 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.2",
-            "nextflow": "25.04.7"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.0"
         },
-        "timestamp": "2025-09-30T13:25:08.270363"
-    },
-    "preproc_t1_skip_all": {
-        "content": [
-            {
-                "t1_final": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "T1w.nii.gz"
-                    ]
-                ]
-            }
-        ],
-        "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "25.04.4"
-        },
-        "timestamp": "2025-06-27T12:18:38.832987377"
+        "timestamp": "2025-11-28T03:11:55.594616377"
     },
     "preproc_t1_antsbet": {
         "content": [

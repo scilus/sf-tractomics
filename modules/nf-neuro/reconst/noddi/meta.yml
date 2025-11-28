@@ -55,11 +55,11 @@ input:
     - para_diff:
         type: float
         description: Parallel diffusivity value (diff prior).
-        optional: true
+        mandatory: false
     - iso_diff:
         type: float
         description: Isotropic diffusivity value (diff prior).
-        optional: true
+        mandatory: false
 
 output:
   dir:

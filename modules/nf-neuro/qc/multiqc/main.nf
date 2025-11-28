@@ -4,7 +4,9 @@ process QC_MULTIQC {
 
     conda "${moduleDir}/environment.yml"
     container "gagnonanthony/multiqc-neuroimaging:latest"
-    containerOptions '--entrypoint "" -u $(id -u):$(id -g)'
+    containerOptions {
+        (workflow.containerEngine == 'docker') ? '--entrypoint "" --user $(id -u):$(id -g)' : ''
+    }
 
     input:
     tuple val(meta), path(qc_images)

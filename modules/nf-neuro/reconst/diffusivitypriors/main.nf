@@ -73,6 +73,20 @@ process RECONST_DIFFUSIVITYPRIORS {
     touch ${prefix}_iso_diff.txt
     touch ${prefix}_perp_diff.txt
 
+    # Set output environment variables
+    mean_para_diff=0.5
+    std_para_diff=0.5
+    min_para_diff=0.5
+    max_para_diff=0.5
+    mean_iso_diff=0.5
+    std_iso_diff=0.5
+    min_iso_diff=0.5
+    max_iso_diff=0.5
+    mean_perp_diff=0.5
+    std_perp_diff=0.5
+    min_perp_diff=0.5
+    max_perp_diff=0.5
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         scilpy: \$(uv pip -q -n list | grep scilpy | tr -s ' ' | cut -d' ' -f2)

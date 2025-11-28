@@ -36,6 +36,12 @@ args:
         If set to true, will remove participants with missing files
         from the final BIDS layout.
       default: false
+  - relative_paths:
+      type: boolean
+      description: |
+        If set to true, will convert absolute paths to relative paths
+        in the output BIDS structure JSON file.
+      default: false
 output:
   bidsstructure:
     - bids_struct.json:

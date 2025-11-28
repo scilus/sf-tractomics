@@ -47,7 +47,8 @@ process RECONST_MEANDIFFUSIVITYPRIORS {
     average_files ${para_diff_list} > mean_para_diff.txt
     average_files ${iso_diff_list} > mean_iso_diff.txt
 
-    if [[ -e ${perp_diff_list} ]]
+    perp_array=(${perp_diff_list})
+    if [[ -e "\${perp_array[0]}" ]]
     then
         average_files ${perp_diff_list} > mean_perp_diff.txt
     fi

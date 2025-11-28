@@ -56,19 +56,19 @@ input:
     - para_diff:
         type: float
         description: Parallel diffusivity value (diff prior).
-        optional: true
+        mandatory: false
     - iso_diff:
         type: float
         description: Isotropic diffusivity value (diff prior).
-        optional: true
+        mandatory: false
     - perp_diff_min:
         type: float
         description: Minimum perpendicular diffusivity value (diff prior).
-        optional: true
+        mandatory: false
     - perp_diff_max:
         type: float
         description: Maximum perpendicular diffusivity value (diff prior).
-        optional: true
+        mandatory: false
 output:
   dwi_fw_corrected:
     - - meta:

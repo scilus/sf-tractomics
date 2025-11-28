@@ -21,6 +21,7 @@ process IO_READBIDS {
     bids_ignore = bids_ignore ? "--bids_ignore $bids_ignore" : ''
     def readout = task.ext.readout ? "--readout " + task.ext.readout : "--readout 0.062"
     def clean_flag = task.ext.clean_bids ? "--clean " : ''
+    def relative = task.ext.relative_paths as Boolean
 
     """
     scil_bids_validate $bids_folder bids_struct.json\
@@ -30,15 +31,17 @@ process IO_READBIDS {
         $bids_ignore \
         -v -f
 
-    cat bids_struct.json
-    # Relativize paths in the output JSON
-    cat <<< \$(jq 'map(map_values(
-        if type == "string" then
-            if contains("/") then
-                scan("^.*/($bids_folder/.*)") | first
-            else . end
-        else . end ))' bids_struct.json) >| bids_struct.json
+    if [[ $relative == true ]]; then
+        # Relativize paths in the output JSON
+        cat <<< \$(jq 'map(map_values(
+            if type == "string" then
+                if contains("/") then
+                    scan("^.*/($bids_folder/.*)") | first
+                else . end
+            else . end ))' bids_struct.json) >| bids_struct.json
+    fi
 
+    cat bids_struct.json
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         scilpy: \$(uv pip -q -n list | grep scilpy | tr -s ' ' | cut -d' ' -f2)

@@ -84,6 +84,12 @@
                         {
                             "id": "test"
                         },
+                        "test__dwi_eddy_restricted_movement_rms.txt"
+                    ],
+                    [
+                        {
+                            "id": "test"
+                        },
                         "test__rev_dwi_eddy_mqc.gif"
                     ]
                 ],
@@ -103,10 +109,10 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "25.04.7"
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.8"
         },
-        "timestamp": "2025-10-22T13:37:30.777526726"
+        "timestamp": "2025-11-20T19:39:56.365702"
     },
     "preproc_dwi - AP DWI | PA sbref": {
         "content": [
@@ -193,6 +199,12 @@
                         {
                             "id": "test"
                         },
+                        "test__dwi_eddy_restricted_movement_rms.txt"
+                    ],
+                    [
+                        {
+                            "id": "test"
+                        },
                         "test__rev_dwi_eddy_mqc.gif"
                     ]
                 ],
@@ -210,10 +222,10 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "25.04.7"
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.8"
         },
-        "timestamp": "2025-10-22T13:36:26.773422667"
+        "timestamp": "2025-11-20T19:34:44.064385"
     },
     "preproc_dwi - AP DWI | PA DWI": {
         "content": [
@@ -300,6 +312,12 @@
                         {
                             "id": "test"
                         },
+                        "test__dwi_eddy_restricted_movement_rms.txt"
+                    ],
+                    [
+                        {
+                            "id": "test"
+                        },
                         "test__rev_dwi_eddy_mqc.gif"
                     ]
                 ],
@@ -319,9 +337,9 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "25.04.7"
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.8"
         },
-        "timestamp": "2025-10-22T13:36:58.836905415"
+        "timestamp": "2025-11-20T19:37:21.564788"
     }
 }

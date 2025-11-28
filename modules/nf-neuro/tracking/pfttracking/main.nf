@@ -34,6 +34,7 @@ process TRACKING_PFTTRACKING {
     def pft_seeding_type = task.ext.pft_seeding ? "--"  + task.ext.pft_seeding : "--npv"
     def pft_nbr_seeds = task.ext.pft_nbr_seeds ?: 5
     def pft_step = task.ext.pft_step ? "--step "  + task.ext.pft_step : ""
+    def pft_step_pct = task.ext.pft_step_pct ? task.ext.pft_step_pct : ""
     def pft_theta = task.ext.pft_theta ? "--theta "  + task.ext.pft_theta : ""
     def pft_sfthres = task.ext.pft_sfthres ? "--sfthres "  + task.ext.pft_sfthres : ""
     def pft_sfthres_init = task.ext.pft_sfthres_init ? "--sfthres_init "  + task.ext.pft_sfthres_init : ""
@@ -45,6 +46,10 @@ process TRACKING_PFTTRACKING {
     def basis = task.ext.basis ? "--sh_basis "  + task.ext.basis : ""
 
     def run_qc = task.ext.run_qc ? task.ext.run_qc : false
+
+    if (pft_step && pft_step_pct) {
+        log.warn "Both pft_step and pft_step_pct are set for ${meta.id}. pft_step will take priority and pft_step_pct will be ignored."
+    }
 
     """
     export ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=1
@@ -73,6 +78,12 @@ process TRACKING_PFTTRACKING {
             ${prefix}__pft_seeding_mask.nii.gz --data_type uint8 -f
     fi
 
+    pft_step="$pft_step"
+    if [[ -z "$pft_step" ]] && [[ -n "$pft_step_pct" ]]; then
+        pixdim=\$(scil_header_print_info $wm --keys pixdim | tr -d '[]' | awk '{for(i=2;i<=4;i++) if(\$i>0 && (\$i<min || min=="")) min=\$i} END {print min}')
+        pft_step=\$(awk -v pixdim="\$pixdim" -v pct="$pft_step_pct" 'BEGIN {printf "--step %.6f", pixdim * pct / 100}')
+    fi
+
     scil_tracking_pft $fodf ${prefix}__pft_seeding_mask.nii.gz \
         ${prefix}__map_include.nii.gz ${prefix}__map_exclude.nii.gz \
         ${prefix}__pft_tracking.trk \
@@ -93,7 +104,7 @@ process TRACKING_PFTTRACKING {
     "random_seed": $task.ext.pft_random_seed,
     "is_compress": "${task.ext.pft_compress_streamlines}",
     "compress_value": $task.ext.pft_compress_value,
-    "step": $task.ext.pft_step,
+    "step": \${pft_step/--step /},
     "theta": $task.ext.pft_theta,
     "sfthres": $task.ext.pft_sfthres,
     "sfthres_init": $task.ext.pft_sfthres_init,

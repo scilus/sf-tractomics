@@ -36,17 +36,20 @@ input:
         parcellations into masks.
         Structure: [ val(meta), path(aparc_aseg), path(wm_parc) ]
       pattern: "*.mgz"
+      mandatory: false
   - ch_lesion:
       type: file
       description: |
         The input channel containing a lesion mask file to correct the white matter mask. The lesion mask must be a binary mask.
         Structure: [ val(meta), path(lesion) ]
       pattern: "*{nii.nii.gz}"
+      mandatory: false
   - ch_fs_license:
       type: file
       description: |
         The input channel containing the FreeSurfer license.To get one, go to https://surfer.nmr.mgh.harvard.edu/registration.html. Optional. If you have already set your license as prescribed by Freesurfer (copied to a .license file in your $FREESURFER_HOME), this is not required.
         Structure: [ val(meta). path(fs_license) ]
+      mandatory: false
 output:
   - wm_mask:
       type: file
@@ -75,48 +78,56 @@ output:
         Channel containing WM probability maps.
         Structure: [ val(meta), path(wm_map) ]
       pattern: "*.{nii,nii.gz}"
+      mandatory: false
   - gm_map:
       type: file
       description: |
         Channel containing GM probability maps.
         Structure: [ val(meta), path(gm_map) ]
       pattern: "*.{nii,nii.gz}"
+      mandatory: false
   - csf_map:
       type: file
       description: |
         Channel containing CSF probability maps.
         Structure: [ val(meta), path(csf_map) ]
       pattern: "*.{nii,nii.gz}"
+      mandatory: false
   - seg:
       type: file
       description: |
         Channel containing the optional nifti segmentation volume from synthseg.
         Structure: [ val(meta), path(seg) ]
       pattern: "*.{nii,nii.gz}"
+      mandatory: false
   - aparc_aseg:
       type: file
       description: |
         Channel containing the optional nifti cortical parcellation and segmentation volume from synthseg.
         Structure: [ val(meta), path(aparc_aseg) ]
       pattern: "*.{nii,nii.gz}"
+      mandatory: false
   - resample:
       type: file
       description: |
         Channel containing the optional resampled images at 1mm.
         Structure: [ val(meta), path(resample) ]
       pattern: "*.{nii.nii.gz}"
+      mandatory: false
   - volume:
       type: file
       description: |
         Channel containing the optional Output CSV file with volumes for all structures and subjects.
         Structure: [ val(meta), path(volume) ]
       pattern: "*.csv"
+      mandatory: false
   - qc_score:
       type: file
       description: |
         Channel containing the optional output CSV file with qc scores for all subjects.
         Structure: [ val(meta), path(qc_score) ]
       pattern: "*.csv"
+      mandatory: false
   - versions:
       type: file
       description: |

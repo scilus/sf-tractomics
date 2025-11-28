@@ -93,23 +93,37 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. `[ id:'test', single_end:false ]`
-      - "*_stats.json":
+      - "*.json":
           type: file
           description: JSON file containing mean/std per pair of roi/metrics or label/metrics
-          pattern: "*_stats.json"
+          pattern: "*.json"
           ontologies:
             - edam: http://edamontology.org/format_3464 # JSON
-  stats_tab:
+  stats_mean:
     - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. `[ id:'test', single_end:false ]`
-      - "*_stats.{csv,tsv}":
+      - "*_desc-mean_*.{csv,tsv}":
           type: file
-          description: Tabular file containing rows of (sid, bundle, metric, mean, std). Can be
+          description: Tabular file containing rows of (sample, roi, mean_metric1, mean_metric2, ...). Can be
             either TSV or CSV depending on the output_format argument.
-          pattern: "*_stats.{csv,tsv}"
+          pattern: "*_desc-mean_*.{csv,tsv}"
+          ontologies:
+            - edam: http://edamontology.org/format_3752 # CSV
+            - edam: http://edamontology.org/format_3475 # TSV
+  stats_std:
+    - - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. `[ id:'test', single_end:false ]`
+      - "*_desc-std_*.{csv,tsv}":
+          type: file
+          description: Tabular file containing rows of (sample, roi, std_metric1, std_metric2, ...). Can be
+            either TSV or CSV depending on the output_format argument.
+          pattern: "*_desc-std_*.{csv,tsv}"
           ontologies:
             - edam: http://edamontology.org/format_3752 # CSV
             - edam: http://edamontology.org/format_3475 # TSV

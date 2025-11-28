@@ -9,6 +9,7 @@ include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pi
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_nf-tractoflow_pipeline'
 include { TRACTOFLOW             } from '../subworkflows/nf-neuro/tractoflow'
+include { TRACTOGRAM_MATH as ENSEMBLE_TRACKING } from '../modules/nf-neuro/tractogram/math/main'
 include { ATLAS_IIT              } from '../subworkflows/nf-neuro/atlas_iit/main'
 include { RECONST_SHSIGNAL       } from '../modules/nf-neuro/reconst/shsignal'
 include { RECONST_FW_NODDI       } from '../subworkflows/nf-neuro/reconst_fw_noddi/main'
@@ -85,13 +86,28 @@ workflow NF_TRACTOFLOW {
     ch_versions = ch_versions.mix(TRACTOFLOW.out.versions)
 
     //
+    // Ensemble tracking
+    //
+    if (params.run_local_tracking && params.run_pft_tracking) {
+        ch_tractogram_math_input = TRACTOFLOW.out.pft_tractogram
+            .mix(TRACTOFLOW.out.local_tractogram)
+        TRACTOGRAM_MATH(ch_tractogram_math_input)
+        ch_input_tracking_qc = TRACTOGRAM_MATH.out.tractogram
+    }
+    else {
+        ch_input_tracking_qc = TRACTOFLOW.out.pft_tractogram
+            .mix(TRACTOFLOW.out.local_tractogram)
+    }
+
+    //
     // Run RECONST/SH_METRICS
     //
-    if (params.sh_fitting)
+    if (params.sh_fitting) {
         RECONST_SHSIGNAL(
             TRACTOFLOW.out.dwi
                 .map{ it + [[]] }
         )
+    }
 
     //
     // Run BundleSeg

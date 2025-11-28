@@ -3,11 +3,11 @@ include { DENOISING_NLMEANS } from '../../../modules/nf-neuro/denoising/nlmeans/
 include { PREPROC_N4 } from '../../../modules/nf-neuro/preproc/n4/main'
 include { IMAGE_RESAMPLE } from '../../../modules/nf-neuro/image/resample/main'
 include { BETCROP_ANTSBET } from '../../../modules/nf-neuro/betcrop/antsbet/main'
-include { BETCROP_SYNTHBET} from '../../../modules/nf-neuro/betcrop/synthbet/main'
+include { BETCROP_SYNTHSTRIP} from '../../../modules/nf-neuro/betcrop/synthstrip/main'
 include { IMAGE_CROPVOLUME as IMAGE_CROPVOLUME_T1 } from '../../../modules/nf-neuro/image/cropvolume/main'
 include { IMAGE_CROPVOLUME as IMAGE_CROPVOLUME_MASK } from '../../../modules/nf-neuro/image/cropvolume/main'
 
-params.preproc_t1_run_synthbet = false
+params.preproc_t1_run_synthstrip = false
 
 workflow PREPROC_T1 {
 
@@ -67,19 +67,19 @@ workflow PREPROC_T1 {
             ch_image = IMAGE_RESAMPLE.out.image
         }
 
-        if ( params.preproc_t1_run_synthbet ) {
+        if ( params.preproc_t1_run_synthstrip ) {
             ch_bet = ch_image
                 .join(ch_weights, remainder: true)
                 .map{ meta, image, weights -> [meta, image, weights ?: []] }
 
-            BETCROP_SYNTHBET ( ch_bet )
-            ch_versions = ch_versions.mix(BETCROP_SYNTHBET.out.versions.first())
+            BETCROP_SYNTHSTRIP ( ch_bet )
+            ch_versions = ch_versions.mix(BETCROP_SYNTHSTRIP.out.versions.first())
 
             // ** Setting BET output ** //
-            image_bet = BETCROP_SYNTHBET.out.bet_image
-            ch_image = BETCROP_SYNTHBET.out.bet_image
-            mask_bet = BETCROP_SYNTHBET.out.brain_mask
-            ch_mask = BETCROP_SYNTHBET.out.brain_mask
+            image_bet = BETCROP_SYNTHSTRIP.out.bet_image
+            ch_image = BETCROP_SYNTHSTRIP.out.bet_image
+            mask_bet = BETCROP_SYNTHSTRIP.out.brain_mask
+            ch_mask = BETCROP_SYNTHSTRIP.out.brain_mask
         }
         else if ( params.preproc_t1_run_ants_bet ) {
             // ** ANTSBET ** //

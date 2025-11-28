@@ -287,6 +287,12 @@
                         {
                             "id": "test"
                         },
+                        "test__dwi_eddy_restricted_movement_rms.txt"
+                    ],
+                    [
+                        {
+                            "id": "test"
+                        },
                         "test__residual_residuals_stats.png"
                     ],
                     [
@@ -430,9 +436,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.6"
+            "nextflow": "25.04.8"
         },
-        "timestamp": "2025-11-13T10:24:59.447824126"
+        "timestamp": "2025-11-20T19:54:21.148312"
     },
     "tractoflow - no rev": {
         "content": [
@@ -768,6 +774,12 @@
                         {
                             "id": "test"
                         },
+                        "test__dwi_eddy_restricted_movement_rms.txt"
+                    ],
+                    [
+                        {
+                            "id": "test"
+                        },
                         "test__local_tracking_mqc.png"
                     ],
                     [
@@ -924,8 +936,8 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.6"
+            "nextflow": "25.04.8"
         },
-        "timestamp": "2025-11-13T10:34:14.97675753"
+        "timestamp": "2025-11-20T19:48:40.515358"
     }
 }

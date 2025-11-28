@@ -3,31 +3,33 @@ description: |
   This subworkflow implements the TractoFlow [1] pipeline. It can process raw diffusion and T1 weighted image to reduce
   acquisition biases, align anatomical and diffusion space, compute DTI and fODF metrics and generate whole brain
   tractograms.
-  ----------  Configuration  ----------
-  - nextflow.config : contains an example configuration for the subworkflow.
-        └── modules.config : contains the bindings to the modules parameters and some defaults making it Tractoflow.
 
-    i.e: nextflow.config import modules.config
+  ----------  Configuration  ----------
+
+  - nextflow.config : contains an example configuration for the subworkflow. Imports modules.config.
+  - modules.config : contains the bindings to the modules parameters and some defaults making it Tractoflow.
+
   --------------  Steps  --------------
-  PREPROCESS DWI (preproc_dwi, nf-neuro)
+
+  1. PREPROCESS DWI (preproc_dwi, nf-neuro)
     Preprocess the DWI image including brain extraction, MP-PCA denoising, eddy current and motion correction, N4 bias
     correction, normalization and resampling.
-  PREPROCESS T1 (preproc_t1, nf-neuro)
+  2. PREPROCESS T1 (preproc_t1, nf-neuro)
     Preprocess the T1 image including brain extraction, NL-Means denoising, bias field correction and resampling.
-  T1 REGISTRATION (anatomical_registration, nf-neuro)
+  3. T1 REGISTRATION (anatomical_registration, nf-neuro)
     Register the T1 image to the DWI image, using the b0 and the FA map as target for the diffusion space.
-  SEGMENTATION (anatomical_segmentation, nf-neuro)
+  4. SEGMENTATION (anatomical_segmentation, nf-neuro)
     Segment the T1 image into white matter, gray matter and CSF, in diffusion space.
-  DTI FITTING (dipy)
+  5. DTI FITTING (dipy)
     Fit the diffusion tensor model on the preprocessed DWI image and extract relevant metrics.
-  FRF ESTIMATION (scilpy)
+  6. FRF ESTIMATION (scilpy)
     Estimate the Fiber Response Function (FRF) from the preprocessed DWI image.
-  FODF FITTING (dipy)
+  7. FODF FITTING (dipy)
     Fit the Fiber Orientation Distribution Function (fODF), using Single or Multi Shell, Single or Multi Tissues models,
     on the preprocessed DWI image and extract relevant metrics.
-  PFT TRACKING (dipy)
+  8. PFT TRACKING (dipy)
     Perform Particle Filtering Tractography (PFT) on the FODF to generate whole brain tractograms.
-  LOCAL TRACKING (dipy on CPU, scilpy on GPU)
+  9. LOCAL TRACKING (dipy on CPU, scilpy on GPU)
     Perform Local Tracking on the FODF to generate whole brain tractograms.
 
   [1] https://tractoflow-documentation.readthedocs.io
@@ -125,7 +127,7 @@ args:
       type: boolean
       description: Enable N4 bias field correction for T1 image.
       default: true
-  - preproc_t1_run_synthbet:
+  - preproc_t1_run_synthstrip:
       type: boolean
       description: Enable SynthStrip brain extraction for T1 image.
       default: false
@@ -425,52 +427,61 @@ input:
   - ch_sbref:
       type: file
       description: |
-        (Optional) The input channel containing the single-band b0 reference for the DWI.
+        The input channel containing the single-band b0 reference for the DWI.
         Structure: [ val(meta), path(rev_b0) ]
+      mandatory: false
   - ch_rev_dwi:
       type: file
       description: |
-        (Optional) The input channel containing the reverse DWI file, B-values and B-vectors in FSL format files.
+        The input channel containing the reverse DWI file, B-values and B-vectors in FSL format files.
         Structure: [ val(meta), path(rev_dwi), path(bval), path(bvec) ]
+      mandatory: false
   - ch_rev_sbref:
       type: file
       description: |
-        (Optional) The input channel containing the reverse b0 file.
+        The input channel containing the reverse b0 file.
         Structure: [ val(meta), path(rev_b0) ]
+      mandatory: false
   - ch_aparc_aseg:
       type: file
       description: |
-        (Optional) The input channel containing freesurfer brain segmentation and gray matter parcellation (aparc+aseg).
+        The input channel containing freesurfer brain segmentation and gray matter parcellation (aparc+aseg).
         Must be supplied with ch_wm_parc. When supplied, those are used to generate tissues masks and probability maps.
         Structure: [ val(meta), path(aparc_aseg) ]
+      mandatory: false
   - ch_wm_parc:
       type: file
       description: |
-        (Optional) The input channel containing freesurfer white matter parcellations (wmparc). Must be supplied with
+        The input channel containing freesurfer white matter parcellations (wmparc). Must be supplied with
         ch_aparc_aseg. When supplied, those are used to generate tissues masks and probability maps.
         Structure: [ val(meta), path(wmparc) ]
+      mandatory: false
   - ch_topup_config:
       type: file
       description: |
-        (Optional) The input channel containing the config file for Topup. This input is optional.
+        The input channel containing the config file for Topup. This input is optional.
         See https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/topup/TopupUsersGuide#Configuration_files.
         Structure: [ path(config_file) ]
+      mandatory: false
   - ch_bet_template:
       type: file
       description: |
-        (Optional) The input channel containing the anatomical template for antsBET.
+        The input channel containing the anatomical template for antsBET.
         Structure: [ val(meta), path(bet_template) ]
+      mandatory: false
   - ch_bet_probability_map:
       type: file
       description: |
-        (Optional) The input channel containing the brain probability mask for antsBET,
+        The input channel containing the brain probability mask for antsBET,
         with intensity range 1 (definitely brain) to 0 (definitely background).
         Structure: [ val(meta), path(probability_map) ]
+      mandatory: false
   - ch_lesion_mask:
       type: file
       description: |
-        (Optional) The input channel containing the lesion mask for segmentation.
+        The input channel containing the lesion mask for segmentation.
         Structure: [ val(meta), path(lesion_mask) ]
+      mandatory: false
 output:
   - dwi:
       type: file
@@ -515,15 +526,17 @@ output:
   - aparc_aseg:
       type: file
       description: |
-        (Optional) Freesurfer brain segmentation and gray matter parcellation (aparc+aseg) in diffusion space. Only
+        Freesurfer brain segmentation and gray matter parcellation (aparc+aseg) in diffusion space. Only
         available if ch_aparc_aseg is provided in inputs.
         Structure: [ val(meta), path(aparc_aseg) ]
+      mandatory: false
   - wmparc:
       type: file
       description: |
-        (Optional) Freesurfer white matter parcellations (wmparc) in diffusion space. Only available if ch_wm_parc
+        Freesurfer white matter parcellations (wmparc) in diffusion space. Only available if ch_wm_parc
         is provided in inputs.
         Structure: [ val(meta), path(wmparc) ]
+      mandatory: false
   - anatomical_to_diffusion:
       type: file
       description: |
@@ -661,88 +674,105 @@ output:
       description: |
         Qball spherical harmonics coefficients.
         Structure: [ val(meta), path(qball) ]
+      mandatory: false
   - qball_a_power:
       type: file
       description: |
         Anisotropic power map.
         Structure: [ val(meta), path(qball_a_power) ]
+      mandatory: false
   - qball_peaks:
       type: file
       description: |
         Extracted peaks from Qball model.
         Structure: [ val(meta), path(qball_peaks) ]
+      mandatory: false
   - qball_peaks_indices:
       type: file
       description: |
         Generated peaks indices on the sphere from Qball model.
         Structure: [ val(meta), path(qball_peak_indices) ]
+      mandatory: false
   - qball_gfa:
       type: file
       description: |
         Generalized fractional anisotropy.
         Structure: [ val(meta), path(qball_gfa) ]
+      mandatory: false
   - qball_nufo:
       type: file
       description: |
         NUFO map from Qball model.
         Structure: [ val(meta), path(qball_nufo) ]
+      mandatory: false
   - pft_tractogram:
       type: file
       description: |
         Whole brain tractogram generated with Particle Filtering Tractography (PFT).
         Structure: [ val(meta), path(pft_tractogram) ]
+      mandatory: false
   - pft_config:
       type: file
       description: |
         Configuration file used for Particle Filtering Tractography (PFT).
         Structure: [ val(meta), path(pft_config) ]
+      mandatory: false
   - pft_map_include:
       type: file
       description: |
         Include map used for Particle Filtering Tractography (PFT).
         Structure: [ val(meta), path(pft_map_include) ]
+      mandatory: false
   - pft_map_exclude:
       type: file
       description: |
         Exclude map used for Particle Filtering Tractography (PFT).
         Structure: [ val(meta), path(pft_map_exclude) ]
+      mandatory: false
   - pft_seeding_mask:
       type: file
       description: |
         Seeding mask used for Particle Filtering Tractography (PFT).
-      Structure: [val(meta), path(pft_seeding_mask)]
+        Structure: [ val(meta), path(pft_seeding_mask) ]
+      mandatory: false
   - local_tractogram:
       type: file
       description: |
         Whole brain tractogram generated with Local Tracking.
         Structure: [ val(meta), path(local_tractogram) ]
+      mandatory: false
   - local_config:
       type: file
       description: |
         Configuration file used for Local Tracking.
         Structure: [ val(meta), path(local_config) ]
+      mandatory: false
   - local_seeding_mask:
       type: file
       description: |
         Seeding mask used for Local Tracking.
         Structure: [ val(meta), path(local_seeding_mask) ]
+      mandatory: false
   - local_tracking_mask:
       type: file
       description: |
         Tracking mask used for Local Tracking.
         Structure: [ val(meta), path(local_tracking_mask) ]
+      mandatory: false
   - mqc:
       type: file
       description: |
         QC files (png, gif, etc.) generated by all modules that can
         be leveraged in a subject-level MultiQC report.
         Structure: [ val(meta), path(*mqc.*) ]
+      mandatory: false
   - global_mqc:
       type: file
       description: |
         QC files (txt, npy, etc.) generated by all modules that can
         be leveraged in a global-level MultiQC report (all subjects).
         Structure: [ val(meta), path(*mqc.*) ]
+      mandatory: false
   - versions:
       type: file
       description: |

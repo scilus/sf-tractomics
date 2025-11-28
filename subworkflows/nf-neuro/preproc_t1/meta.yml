@@ -37,7 +37,7 @@ description: |
     brain extraction is reproducible only when run using a single thread.
 
 
-  Cropping (scil).
+  5. Cropping (scil).
     Crops the empty planes around the brain to optimize the next processing steps.
 
 
@@ -57,7 +57,7 @@ components:
   - preproc/n4
   - image/resample
   - betcrop/antsbet
-  - betcrop/synthbet
+  - betcrop/synthstrip
   - image/cropvolume
 
 input:
@@ -121,7 +121,7 @@ input:
   - ch_weights:
       type: file
       description: |
-        The input channel containing an alternative model weights for synthbet. Optional
+        The input channel containing an alternative model weights for synthstrip. Optional
         Structure: [ val(meta), path (weights)]
       pattern: "*.pt"
       mandatory: false
