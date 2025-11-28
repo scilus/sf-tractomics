@@ -171,7 +171,7 @@ output:
           type: file
           description: Affine transformation from moving to fixed
           pattern: "*_forward1_affine.mat"
-          optional: true
+          mandatory: false
           ontologies: []
   forward_warp:
     - - meta:
@@ -183,7 +183,7 @@ output:
           type: file
           description: Nifti volume containing warp field from moving to fixed
           pattern: "*_forward0_warp.nii.gz"
-          optional: true
+          mandatory: false
           ontologies:
             - edam: http://edamontology.org/format_3989 # GZIP format
   backward_warp:
@@ -196,7 +196,7 @@ output:
           type: file
           description: Nifti volume containing warp field from fixed to moving
           pattern: "*_backward1_warp.nii.gz"
-          optional: true
+          mandatory: false
           ontologies:
             - edam: http://edamontology.org/format_3989 # GZIP format
   backward_affine:
@@ -209,7 +209,7 @@ output:
           type: file
           description: Affine transformation from fixed to moving
           pattern: "*_backward0_affine.mat"
-          optional: true
+          mandatory: false
           ontologies: []
   forward_image_transform:
     - - meta:
@@ -274,7 +274,7 @@ output:
           description: .gif file containing quality control image for the registration
             process. Made for use in MultiQC report.
           pattern: "*_registration_ants_mqc.gif"
-          optional: true
+          mandatory: false
           ontologies: []
   versions:
     - versions.yml:

@@ -192,12 +192,12 @@
                     },
                     "registration/anattodwi": {
                         "branch": "main",
-                        "git_sha": "74181e9f66228d5e35e80d408086d676ce73b0ab",
+                        "git_sha": "cc32b2a11a13ff04ff95508efad4ef4cd0d3909c",
                         "installed_by": ["registration"]
                     },
                     "registration/ants": {
                         "branch": "main",
-                        "git_sha": "0fdd04fbe05e37bfe1273d23e1d49018297ea7de",
+                        "git_sha": "cc32b2a11a13ff04ff95508efad4ef4cd0d3909c",
                         "installed_by": ["registration"]
                     },
                     "registration/antsapplytransforms": {
@@ -212,12 +212,12 @@
                     },
                     "registration/easyreg": {
                         "branch": "main",
-                        "git_sha": "70ec5c35fbe3d0615c87497b02f7f289b24e4819",
+                        "git_sha": "cc32b2a11a13ff04ff95508efad4ef4cd0d3909c",
                         "installed_by": ["registration"]
                     },
                     "registration/synthmorph": {
                         "branch": "main",
-                        "git_sha": "10b76807b5e4e3dd5251725f7fe9cfd895ff5b03",
+                        "git_sha": "cc32b2a11a13ff04ff95508efad4ef4cd0d3909c",
                         "installed_by": ["registration"]
                     },
                     "segmentation/fastseg": {
@@ -281,7 +281,7 @@
                     },
                     "bundle_seg": {
                         "branch": "main",
-                        "git_sha": "74181e9f66228d5e35e80d408086d676ce73b0ab",
+                        "git_sha": "0b80b82a03984b69657f6a55d15b06da4cb1c8fa",
                         "installed_by": ["subworkflows"]
                     },
                     "io_bids": {
@@ -311,7 +311,7 @@
                     },
                     "registration": {
                         "branch": "main",
-                        "git_sha": "74181e9f66228d5e35e80d408086d676ce73b0ab",
+                        "git_sha": "cc32b2a11a13ff04ff95508efad4ef4cd0d3909c",
                         "installed_by": ["bundle_seg", "tractoflow"]
                     },
                     "topup_eddy": {
