@@ -112,7 +112,7 @@
                     },
                     "preproc/eddy": {
                         "branch": "main",
-                        "git_sha": "475ca43937134848fb422aeafc74663b05f61345",
+                        "git_sha": "037e2526ea1446120f7a9ddf36740bbedab8dc9c",
                         "installed_by": ["topup_eddy"]
                     },
                     "preproc/gibbs": {
@@ -137,7 +137,7 @@
                     },
                     "qc/multiqc": {
                         "branch": "main",
-                        "git_sha": "1fff553d147ef5f2752c92f49e1ee50d43159ab7",
+                        "git_sha": "861fa843b9d98787b9d15fdff1136438157c765e",
                         "installed_by": ["modules"]
                     },
                     "reconst/diffusivitypriors": {

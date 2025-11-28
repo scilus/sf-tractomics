@@ -6,7 +6,7 @@
                 [
                     {
                         "id": "test",
-                        "ses": "ses-01"
+                        "session": "ses-01"
                     },
                     "test_ses-01__dwi_eddy_corrected.bval:md5,4c61c53078316c31b4d5daf446a3d6ac"
                 ]
@@ -16,7 +16,7 @@
                 [
                     {
                         "id": "test",
-                        "ses": "ses-01"
+                        "session": "ses-01"
                     },
                     "test_ses-01__b0_bet_mask.nii.gz:md5,884e1028fb86b5556e1caac18a8d6e1f"
                 ]
@@ -30,9 +30,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
+            "nextflow": "25.04.4"
         },
-        "timestamp": "2025-11-20T20:25:40.142528"
+        "timestamp": "2025-11-28T09:45:20.989634172"
     },
     "eddy_light": {
         "content": [
@@ -62,9 +62,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
+            "nextflow": "25.04.4"
         },
-        "timestamp": "2025-11-20T20:28:06.2333"
+        "timestamp": "2025-11-28T09:47:44.893652151"
     },
     "eddy - stub-run": {
         "content": [
