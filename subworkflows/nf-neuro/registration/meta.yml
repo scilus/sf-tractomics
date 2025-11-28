@@ -105,35 +105,35 @@ output:
         ONLY PROVIDED BY REGISTRATION_EASYREG. Channel containing the reference image warped in moving space.
         Structure: [ val(meta), path(image) ]
       pattern: "*.{nii,nii.gz}"
-      optional: true
+      mandatory: false
   - forward_affine:
       type: file
       description: |
         Channel containing the affine transformation matrix to fixed space.
         Structure: [ val(meta), path(forward_affine) ]
       pattern: "*__forward*.{lta,mat}"
-      optional: true
+      mandatory: false
   - forward_warp:
       type: file
       description: |
         Channel containing the deformation field to fixed space.
         Structure: [ val(meta), path(forward_warp) ]
       pattern: "*__forward*.{nii,nii.gz}"
-      optional: true
+      mandatory: false
   - backward_warp:
       type: file
       description: |
         Channel containing the deformation field to moving space.
         Structure: [ val(meta), path(backward_warp) ]
       pattern: "*__backward*.{nii,nii.gz}"
-      optional: true
+      mandatory: false
   - backward_affine:
       type: file
       description: |
         Channel containing the affine transformation matrix to moving space.
         Structure: [ val(meta), path(backward_affine) ]
       pattern: "*__backward*.{lta,mat}"
-      optional: true
+      mandatory: false
   - forward_image_transform:
       type: list
       description: |
@@ -169,7 +169,7 @@ output:
         segmentation + parcellation in moving space (floating in Easyreg naming convention).
         Structure: [ val(meta), path(segmentation) ]
       pattern: "*.{nii,nii.gz}"
-      optional: true
+      mandatory: false
   - reference_segmentation:
       type: file
       description: |
@@ -177,14 +177,14 @@ output:
         segmentation + parcellation in fixed space (reference in Easyreg naming convention).
         Structure: [ val(meta), path(reference_segmentation) ]
       pattern: "*.{nii,nii.gz}"
-      optional: true
+      mandatory: false
   - mqc:
       type: file
       description: |
         Channel containing the MultiQC report data for the registration.
         Structure: [ path(mqc) ]
       pattern: "*mqc.*"
-      optional: true
+      mandatory: false
   - versions:
       type: file
       description: |

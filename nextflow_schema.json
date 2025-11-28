@@ -343,7 +343,8 @@
                 "manual_frf": {
                     "type": "string",
                     "description": "Force a fiber response function. Supply as 3 values : --manual_frf \"mean_b0 parallel_diff perpendicular_diff\".",
-                    "help_text": "Force a fiber response function. Supply as 3 values : --manual_frf \"mean_b0 parallel_diff perpendicular_diff\"."
+                    "help_text": "Force a fiber response function. Supply as 3 values : --manual_frf \"mean_b0 parallel_diff perpendicular_diff\".",
+                    "default": "15,4,4"
                 },
                 "mean_frf": {
                     "type": "boolean",
@@ -920,8 +921,7 @@
             "help_text": "Define the tractometry subworkflow configuration parameters.",
             "properties": {
                 "run_tractometry": {
-                    "type": "boolean",
-                    "default": false
+                    "type": "boolean"
                 },
                 "nb_points": {
                     "type": "integer",
@@ -971,54 +971,6 @@
         }
     ],
     "properties": {
-        "processes_denoise_dwi": {
-            "type": "integer",
-            "default": 4,
-            "description": "Number of processes for DWI denoising.",
-            "help_text": "Number of processes for DWI denoising."
-        },
-        "processes_eddy": {
-            "type": "integer",
-            "default": 4,
-            "description": "Number of processes for Eddy and motion filtering.",
-            "help_text": "Number of processes for Eddy and motion filtering."
-        },
-        "processes_fodf": {
-            "type": "integer",
-            "default": 4,
-            "description": "Number of processes for fODF fitting.",
-            "help_text": "Number of processes for fODF fitting."
-        },
-        "processes_local_tracking": {
-            "type": "integer",
-            "default": 4,
-            "description": "Number of processes for local tractography.",
-            "help_text": "Number of processes for local tractography."
-        },
-        "processes_denoise_t1": {
-            "type": "integer",
-            "default": 4,
-            "description": "Number of processes for T1 denoising",
-            "help_text": "Number of processes for T1 denoising"
-        },
-        "processes_brain_extraction_t1": {
-            "type": "integer",
-            "default": 4,
-            "description": "Number of processes for T1 brain extraction.",
-            "help_text": "Number of processes for T1 brain extraction."
-        },
-        "processes_registration": {
-            "type": "integer",
-            "default": 4,
-            "description": "Number of processes for registration task",
-            "help_text": "Number of processes for registration task"
-        },
-        "processes_noddi": {
-            "type": "integer",
-            "default": 1,
-            "description": "Number of processes for NODDI computation.",
-            "help_text": "Number of processes for NODDI computation."
-        },
         "run_noddi": {
             "type": "boolean",
             "description": "Compute NODDI maps.",
@@ -1028,12 +980,6 @@
             "type": "boolean",
             "description": "Run Freewater Elimination and compute Freewater corrected metrics.",
             "help_text": "Run Freewater Elimination and compute Freewater corrected metrics."
-        },
-        "processes_freewater_correction": {
-            "type": "integer",
-            "default": 1,
-            "description": "Number of processes for freewater estimation task.",
-            "help_text": "Number of processes for freewater estimation task."
         },
         "average_diff_priors": {
             "type": "boolean",
@@ -1061,12 +1007,6 @@
             "description": "Maximum perpendicular diffusivity value.",
             "help_text": "Maximum perpendicular diffusivity value. Specifying this will override automatically computed values."
         },
-        "processes_bundle_seg": {
-            "type": "integer",
-            "default": 4,
-            "description": "Number of processes used for bundle segmentation.",
-            "help_text": "Number of processes used for bundle segmentation."
-        },
         "run_qball": {
             "type": "boolean",
             "description": "Compute Q-Ball metrics.",
@@ -1079,7 +1019,6 @@
         },
         "run_atlas_based_tractometry": {
             "type": "boolean",
-            "default": false,
             "description": "Run atlas-based tractometry using ROI masks obtained from IIT."
         },
         "atlas_iit_b0": {
