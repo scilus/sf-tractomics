@@ -110,9 +110,9 @@ workflow NF_TRACTOFLOW {
             .join(TRACTOFLOW.out.wm_mask)
             .join(TRACTOFLOW.out.gm_mask))
     ch_sub_multiqc_files = ch_sub_multiqc_files.mix(QC_ENSEMBLE.out.mqc)
-    ch_global_mqc_files = ch_global_multiqc_files.mix(
+    ch_global_multiqc_files = ch_global_multiqc_files.mix(
         QC_ENSEMBLE.out.dice.map { _meta, dice_file -> dice_file } )
-    ch_global_mqc_files = ch_global_multiqc_files.mix(
+    ch_global_multiqc_files = ch_global_multiqc_files.mix(
         QC_ENSEMBLE.out.sc.map { _meta, sc_file -> sc_file } )
     //
     // Run RECONST/SH_METRICS
