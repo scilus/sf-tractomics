@@ -92,8 +92,8 @@ workflow NF_TRACTOFLOW {
     if (params.run_local_tracking && params.run_pft_tracking) {
         ch_tractogram_math_input = TRACTOFLOW.out.pft_tractogram
             .mix(TRACTOFLOW.out.local_tractogram)
-        TRACTOGRAM_MATH(ch_tractogram_math_input)
-        ch_input_tracking_qc = TRACTOGRAM_MATH.out.tractogram
+        ENSEMBLE_TRACKING(ch_tractogram_math_input)
+        ch_input_tracking_qc = ENSEMBLE_TRACKING.out.tractogram
     }
     else {
         ch_input_tracking_qc = TRACTOFLOW.out.pft_tractogram
