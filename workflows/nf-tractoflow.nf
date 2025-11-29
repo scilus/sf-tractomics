@@ -93,7 +93,7 @@ workflow NF_TRACTOFLOW {
         ch_tractogram_math_input = TRACTOFLOW.out.pft_tractogram
             .mix(TRACTOFLOW.out.local_tractogram)
         ENSEMBLE_TRACKING(ch_tractogram_math_input)
-        ch_input_tracking_qc = ENSEMBLE_TRACKING.out.tractogram
+        ch_input_tracking_qc = ENSEMBLE_TRACKING.out.trk
     }
     else {
         ch_input_tracking_qc = TRACTOFLOW.out.pft_tractogram
