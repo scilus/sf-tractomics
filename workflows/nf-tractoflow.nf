@@ -237,6 +237,7 @@ workflow NF_TRACTOFLOW {
                 name: "aggregated_atlas-iit_label-mean_desc-roi_stats.tsv",
                 skip: 1,
                 keepHeader: true)
+        ch_global_multiqc_files = ch_global_multiqc_files.mix(ch_collection_mean_input)
 
         ch_collection_std_input = STATS_METRICSINROI.out.stats_std
             .map{ _meta, stats_tab -> stats_tab }
