@@ -3,30 +3,30 @@ report_comment: >
   analysis pipeline.
 
 report_section_order:
-  "scilus-nf-tractoflow-summary":
-    order: -1001
-  "shell_qc":
-    order: -600
-  "topup_qc":
-    order: -625
-  "eddy_qc":
-    order: -650
-  framewise_displacement:
-    order: -640
-  "anattodwi_qc":
-    order: -680
-  "metrics_qc":
-    order: -675
-  "tracking_qc":
-    order: -725
-  "nf-tractoflow-methods-description":
-    order: -900
   software_versions:
+    order: -1001
+  "nf-tractoflow-summary":
+    title: "nf-tractoflow Workflow Summary"
+    order: -1002
+  "nf-tractoflow-methods-description":
     order: -1000
+  tracking_qc:
+    order: 100
+  anattodwi_qc:
+    order: 200
+  metrics_qc:
+    order: 300
+  eddy_qc:
+    order: 400
+  framewise_displacement:
+    order: 500
+
+modules_order:
+  - framewise_displacement
+  - custom_content
 
 custom_content:
   order:
-    - shell_qc
     - topup_qc
     - eddy_qc
     - anattodwi_qc
@@ -34,20 +34,6 @@ custom_content:
     - tracking_qc
 
 custom_data:
-  shell_qc:
-    file_format: "tsv"
-    section_name: "Shell QC"
-    description: |
-      This section contains QC images for the diffusion shell, displaying
-      the distribution of b-vectors on the sphere. This visualization ensures
-      that the diffusion-weighted gradient directions are correctly assigned
-      and evenly distributed, which is critical for accurate modeling of
-      diffusion properties. To assess the quality of the b-vectors, check that
-      the gradient directions form a uniform and symmetric distribution on
-      the sphere, corresponding to the expected acquisition scheme (e.g.,
-      single-shell, multi-shell). Look for missing or misaligned directions,
-      which may indicate acquisition or preprocessing errors.
-    plot_type: "image"
   eddy_qc:
     file_format: "gif"
     section_name: "Eddy QC"
@@ -95,18 +81,55 @@ custom_data:
     section_name: "Metrics QC" # This is the new section name
     description: |
       This section contains QC images for diffusion tensor imaging
-      (DTI) metric maps and FODF metric maps, including fractional anisotropy
-      (FA), mean diffusivity (MD), RGB FA, and number of fiber orientation (NuFO).
+      (DTI) metric maps, including fractional anisotropy
+      (FA), mean diffusivity (MD), axial diffusivity (AD), radial diffusivity (RD),
+      RGB FA, and the fit residuals.
       To assess the quality of the DTI metrics, ensure that FA highlights major
       white matter tracts with expected high values (e.g., corpus callosum,
-      corticospinal tract) and that MD, RGB FA, and NuFO values follow known
+      corticospinal tract) and that MD and RGB FA  follow known
       anatomical distributions. Look for smooth, artifact-free maps, avoiding
       unexpected signal dropout, distortions, or excessive noise. Pay special
       attention to regions prone to artifacts, such as near the ventricles or
       areas affected by eddy currents and susceptibility distortions.
     plot_type: "image"
+  tracking_qc:
+    file_format: "tsv"
+    section_name: "Tracking Coverage" # This is the new section name
+    description: |
+      This section contains QC images of tractography coverage, shown as an
+      overlay of the tract density image (pink) with the WM mask (green).
+      This visualization assesses how well
+      the reconstructed streamlines cover the white matter mask used for
+      tracking, with higher coverage generally indicating better results.
+      To evaluate tracking quality, check that the tract density image spans
+      the full extent of the white matter mask, ensuring that major pathways
+      (e.g., corpus callosum, corticospinal tract) are well-represented.
+      Ideally, the coverage should be uniform across the mask, with minimal
+      gaps or missing regions. Areas of low coverage may indicate poor
+      tracking due to insufficient diffusion signal, masking errors, or
+      overly restrictive tracking parameters. Conversely, excessive streamlines
+      outside the mask may suggest tracking leakage into non-white matter
+      regions, requiring further filtering.
+    plot_type: "image"
+  tractogram_qc:
+    file_format: "tsv"
+    section_name: "Tractogram QC"
+    description: |
+      This section contains QC images for the tractogram, visualizing the
+      reconstructed streamlines from diffusion MRI data.
+      To assess the quality of the tractogram, ensure that the streamlines
+      accurately represent known white matter pathways without excessive
+      noise or artifacts. Look for well-defined bundles that correspond to
+      major tracts (e.g., corpus callosum, corticospinal tract) and check
+      for uniform distribution throughout the brain's white matter.
+      Avoid over-clustering of streamlines or unrealistic trajectories that
+      deviate significantly from anatomical norms. If issues are observed,
+      consider reviewing tracking parameters or preprocessing steps.
+    plot_type: "image"
 
 sp:
+  framewise_displacement:
+    fn: "*dwi_eddy_restricted_movement_rms.txt"
   topup_qc:
     fn: "*_b0_topup_mqc.gif"
   eddy_qc:
@@ -114,10 +137,13 @@ sp:
   anattodwi_qc:
     fn: "*_registration_anattodwi_mqc.gif"
   metrics_qc:
-    fn: "*metrics_mqc.png"
+    fn: "*dti_mqc.png"
   tracking_qc:
     fn: "*coverage_overlay_mqc.png"
+  tractogram_qc:
+    fn: "*tracking_mqc.png"
 
-export_plots: true
+remove_sections:
+  - tractogram_qc
 
-disable_version_detection: false
+export_plots: false
