@@ -88,7 +88,7 @@ workflow NF_TRACTOFLOW {
     )
     ch_versions = ch_versions.mix(TRACTOFLOW.out.versions)
     ch_sub_multiqc_files = ch_sub_multiqc_files.mix(TRACTOFLOW.out.mqc)
-    ch_global_multiqc_files = ch_global_multiqc_files.mix(TRACTOFLOW.out.global_mqc)
+    // ch_global_multiqc_files = ch_global_multiqc_files.mix(TRACTOFLOW.out.global_mqc)
 
     //
     // Ensemble tracking
@@ -109,6 +109,11 @@ workflow NF_TRACTOFLOW {
     QC_ENSEMBLE(ch_input_tracking_qc
             .join(TRACTOFLOW.out.wm_mask)
             .join(TRACTOFLOW.out.gm_mask))
+    ch_sub_multiqc_files = ch_sub_multiqc_files.mix(QC_ENSEMBLE.out.mqc)
+    ch_global_mqc_files = ch_global_multiqc_files.mix(
+        QC_ENSEMBLE.out.dice.map { _meta, dice_file -> dice_file } )
+    ch_global_mqc_files = ch_global_multiqc_files.mix(
+        QC_ENSEMBLE.out.sc.map { _meta, sc_file -> sc_file } )
     //
     // Run RECONST/SH_METRICS
     //
@@ -258,13 +263,13 @@ workflow NF_TRACTOFLOW {
         ch_versions = ch_versions.mix(TRACTOMETRY.out.versions)
 
         ch_tractometry_mqc = TRACTOMETRY.out.mean_tsv
-            .map{ _meta, stats -> stats.collectFile(
+            .map{ _meta, stats -> stats }
+            .collectFile(
                 storeDir: "${params.outdir}/metrics/",
                 name: "bundles_mean_stats.tsv",
                 skip: 1,
                 keepHeader: true
             )
-        }
         ch_global_multiqc_files = ch_global_multiqc_files.mix(ch_tractometry_mqc)
     }
 
