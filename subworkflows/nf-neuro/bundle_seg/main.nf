@@ -105,5 +105,7 @@ workflow BUNDLE_SEG {
     emit:
         bundles = BUNDLE_RECOGNIZE.out.bundles              // channel: [ val(meta), [ bundles ] ]
         mqc = ch_mqc                                        // channel: [ *mqc.* ]
+        bundles_mqc = BUNDLE_RECOGNIZE.out.bundles_mqc      // channel: [ *_bundles_mosaic_mqc.png ]
+        stats_mqc = BUNDLE_RECOGNIZE.out.stats_mqc          // channel: [ *_bundles_stats_mqc.json ]
         versions = ch_versions                              // channel: [ versions.yml ]
 }

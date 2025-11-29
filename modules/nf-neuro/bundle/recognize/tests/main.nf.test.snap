@@ -38,16 +38,34 @@
                         "test_AF_L_cleaned.trk"
                     ]
                 ],
+                "bundles_mqc": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test__bundles_mosaic_mqc.png"
+                    ]
+                ],
+                "stats_mqc": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test__bundles_stats_mqc.json"
+                    ]
+                ],
                 "versions": [
                     "versions.yml:md5,1f560cf0ebc3623686b411831c7b2f90"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "25.04.8"
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.4"
         },
-        "timestamp": "2025-10-16T16:21:40.42494296"
+        "timestamp": "2025-11-29T09:15:56.284386064"
     },
     "bundle - recognize - base": {
         "content": [

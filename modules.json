@@ -67,7 +67,7 @@
                     },
                     "bundle/recognize": {
                         "branch": "main",
-                        "git_sha": "70ec5c35fbe3d0615c87497b02f7f289b24e4819",
+                        "git_sha": "ef72ecee67775464f4beb17b04f777494f30ceb3",
                         "installed_by": ["bundle_seg"]
                     },
                     "bundle/stats": {
@@ -291,7 +291,7 @@
                     },
                     "bundle_seg": {
                         "branch": "main",
-                        "git_sha": "0b80b82a03984b69657f6a55d15b06da4cb1c8fa",
+                        "git_sha": "ef72ecee67775464f4beb17b04f777494f30ceb3",
                         "installed_by": ["subworkflows"]
                     },
                     "io_bids": {

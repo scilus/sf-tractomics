@@ -80,6 +80,20 @@ output:
         Structure: [ *mqc.* ]
       pattern: "*mqc.*"
       mandatory: false
+  - bundles_mqc:
+      type: file
+      description: |
+        Channel containing the bundle segmentation mosaic images for QC.
+        Structure: [ *_bundles_mosaic_mqc.png ]
+      pattern: "*_bundles_mosaic_mqc.png"
+      mandatory: false
+  - stats_mqc:
+      type: file
+      description: |
+        Channel containing the bundle segmentation statistics for QC.
+        Structure: [ *_bundles_stats_mqc.json ]
+      pattern: "*_bundles_stats_mqc.json"
+      mandatory: false
   - versions:
       type: file
       description: |
