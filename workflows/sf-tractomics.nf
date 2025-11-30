@@ -19,7 +19,8 @@ include { BUNDLE_SEG             } from '../subworkflows/nf-neuro/bundle_seg/mai
 include { REGISTRATION_ANTS as REGISTER_ATLAS_B0 } from '../modules/nf-neuro/registration/ants/main'
 include { REGISTRATION_ANTSAPPLYTRANSFORMS as TRANSFORM_ATLAS_BUNDLES } from '../modules/nf-neuro/registration/antsapplytransforms/main.nf'
 include { STATS_METRICSINROI     } from '../modules/nf-neuro/stats/metricsinroi/main'
-include { TRACTOMETRY } from '../subworkflows/nf-neuro/tractometry/main'
+include { IIT_ROIMETRICS         } from '../subworkflows/local/iit_roimetrics/main'
+include { TRACTOMETRY            } from '../subworkflows/nf-neuro/tractometry/main'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
@@ -184,48 +185,18 @@ workflow SF_TRACTOMICS {
             .join(RECONST_FW_NODDI.out.noddi_ecvf)
     }
 
+    ch_input_metrics = ch_input_metrics.map {tuple ->
+        def meta = tuple[0]
+        def metrics = tuple[1..-1]
+        return [meta, metrics]
+    }
+
     if (params.run_atlas_based_tractometry) {
-        ATLAS_IIT()
-        ch_versions = ch_versions.mix(ATLAS_IIT.out.versions)
-
-        // Register IIT atlas to subject space
-        ch_input_register_iit = TRACTOFLOW.out.b0
-            .combine(ATLAS_IIT.out.b0)
-            .map{ meta, b0, template_b0 -> [meta, b0, template_b0, []] }
-        REGISTER_ATLAS_B0(ch_input_register_iit)
-
-        // Apply the transformation to subject space to the bundles
-        ch_iit_transform_bundles = TRACTOFLOW.out.b0
-            .join(REGISTER_ATLAS_B0.out.forward_image_transform)
-            .combine(ATLAS_IIT.out.bundle_masks.toList())
-            .map {
-                meta, b0, transform, bundles ->
-                    [meta, bundles, b0, transform]
-            }
-        TRANSFORM_ATLAS_BUNDLES(ch_iit_transform_bundles)
-        ch_versions = ch_versions.mix(TRANSFORM_ATLAS_BUNDLES.out.versions)
-
-        //
-        // EXTRACT ROI VOLUME STATISTICS
-        //
-        // Input: [meta, [metrics_list], [masks]]
-        ch_input_metricsinroi = ch_input_metrics
-            .map {tuple ->
-                def meta = tuple[0]
-                def metrics = tuple[1..-1]
-                return [meta, metrics]
-            }
-            .join(TRANSFORM_ATLAS_BUNDLES.out.warped_image)
-            .map {
-                meta, metrics, masks ->
-                    [meta, metrics, masks, []]
-            }
-
-        STATS_METRICSINROI(ch_input_metricsinroi)
-
-        //
-        // COLLECT/GROUP ROI STATS
-        //
+        IIT_ROIMETRICS(
+            TRACTOFLOW.out.b0,
+            ch_input_metrics
+        )
+        ch_versions = ch_versions.mix(IIT_ROIMETRICS.out.versions)
 
         // Collect all ROI stats into a single file
         // by appending each row of the TSV/CSV files,
@@ -250,16 +221,10 @@ workflow SF_TRACTOMICS {
     }
 
     if ( params.run_tractometry ) {
-        ch_input_metrics_for_tractometry = ch_input_metrics
-            .map {tuple ->
-                def meta = tuple[0]
-                def metrics = tuple[1..-1]
-                return [meta, metrics]
-            }
         TRACTOMETRY(
             ch_bundle_seg,
             channel.empty(),
-            ch_input_metrics_for_tractometry,
+            ch_input_metrics,
             channel.empty(),
             TRACTOFLOW.out.fodf)
         ch_versions = ch_versions.mix(TRACTOMETRY.out.versions)
