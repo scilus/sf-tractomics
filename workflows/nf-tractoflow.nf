@@ -3,7 +3,8 @@
     IMPORT MODULES / SUBWORKFLOWS / FUNCTIONS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-include { MULTIQC                } from '../modules/nf-core/multiqc/main'
+include { QC_MULTIQC as MULTIQC  } from '../modules/nf-neuro/qc/multiqc/main'
+include { QC_MULTIQC as MULTIQC_GLOBAL  } from '../modules/nf-neuro/qc/multiqc/main'
 include { paramsSummaryMap       } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
@@ -38,7 +39,8 @@ workflow NF_TRACTOFLOW {
     main:
 
     ch_versions = Channel.empty()
-    ch_multiqc_files = Channel.empty()
+    ch_sub_multiqc_files = Channel.empty()
+    ch_global_multiqc_files = Channel.empty()
     ch_topup_config = Channel.empty()
     ch_bet_template = Channel.empty()
     ch_bet_probability = Channel.empty()
@@ -85,6 +87,8 @@ workflow NF_TRACTOFLOW {
             .filter{ it[1] }
     )
     ch_versions = ch_versions.mix(TRACTOFLOW.out.versions)
+    ch_sub_multiqc_files = ch_sub_multiqc_files.mix(TRACTOFLOW.out.mqc)
+    // ch_global_multiqc_files = ch_global_multiqc_files.mix(TRACTOFLOW.out.global_mqc)
 
     //
     // Ensemble tracking
@@ -105,6 +109,11 @@ workflow NF_TRACTOFLOW {
     QC_ENSEMBLE(ch_input_tracking_qc
             .join(TRACTOFLOW.out.wm_mask)
             .join(TRACTOFLOW.out.gm_mask))
+    ch_sub_multiqc_files = ch_sub_multiqc_files.mix(QC_ENSEMBLE.out.mqc)
+    ch_global_multiqc_files = ch_global_multiqc_files.mix(
+        QC_ENSEMBLE.out.dice.map { _meta, dice_file -> dice_file } )
+    ch_global_multiqc_files = ch_global_multiqc_files.mix(
+        QC_ENSEMBLE.out.sc.map { _meta, sc_file -> sc_file } )
     //
     // Run RECONST/SH_METRICS
     //
@@ -132,6 +141,7 @@ workflow NF_TRACTOFLOW {
         )
 
         ch_versions = ch_versions.mix(BUNDLE_SEG.out.versions)
+        ch_sub_multiqc_files = ch_sub_multiqc_files.mix(BUNDLE_SEG.out.mqc)
         ch_bundle_seg = BUNDLE_SEG.out.bundles
     }
 
@@ -227,6 +237,7 @@ workflow NF_TRACTOFLOW {
                 name: "aggregated_atlas-iit_label-mean_desc-roi_stats.tsv",
                 skip: 1,
                 keepHeader: true)
+        ch_global_multiqc_files = ch_global_multiqc_files.mix(ch_collection_mean_input)
 
         ch_collection_std_input = STATS_METRICSINROI.out.stats_std
             .map{ _meta, stats_tab -> stats_tab }
@@ -251,6 +262,16 @@ workflow NF_TRACTOFLOW {
             channel.empty(),
             TRACTOFLOW.out.fodf)
         ch_versions = ch_versions.mix(TRACTOMETRY.out.versions)
+
+        ch_tractometry_mqc = TRACTOMETRY.out.mean_tsv
+            .map{ _meta, stats -> stats }
+            .collectFile(
+                storeDir: "${params.outdir}/metrics/",
+                name: "bundles_mean_stats.tsv",
+                skip: 1,
+                keepHeader: true
+            )
+        ch_global_multiqc_files = ch_global_multiqc_files.mix(ch_tractometry_mqc)
     }
 
     //
@@ -268,8 +289,12 @@ workflow NF_TRACTOFLOW {
     //
     // MODULE: MultiQC
     //
-    ch_multiqc_config        = Channel.fromPath(
+    ch_multiqc_files = Channel.empty() // To store versions, methods description, etc.
+
+    ch_multiqc_config_subject = Channel.fromPath(
         "$projectDir/assets/multiqc_config.yml", checkIfExists: true)
+    ch_multiqc_config_global = Channel.fromPath(
+        "$projectDir/assets/multiqc_config_global.yml", checkIfExists: true)
     ch_multiqc_custom_config = params.multiqc_config ?
         Channel.fromPath(params.multiqc_config, checkIfExists: true) :
         Channel.empty()
@@ -296,17 +321,45 @@ workflow NF_TRACTOFLOW {
         )
     )
 
-//    MULTIQC (
-//        ch_multiqc_files.collect(),
-//        ch_multiqc_config.toList(),
-//        ch_multiqc_custom_config.toList(),
-//        ch_multiqc_logo.toList(),
-//        [],
-//        []
-//    )
+    // Reorganizing subject-specific multiqc files here.
+    qc_files = ch_sub_multiqc_files
+        .groupTuple()
+        .map{ meta, files ->
+            def f = files.flatten().findAll { it != null }
+            return tuple(meta, f)
+        }
+
+    MULTIQC (
+        qc_files,
+        ch_multiqc_files.collect(),
+        ch_multiqc_config_subject.toList(),
+        ch_multiqc_custom_config.toList(),
+        ch_multiqc_logo.toList(),
+        [],
+        []
+    )
+
+    ch_fd_files = ch_sub_multiqc_files
+        .filter { _meta, files ->
+            files.any { it.name.contains("dwi_eddy_restricted_movement_rms") }
+        }
+        .map{ it[1] }
+    ch_global_multiqc_files = ch_global_multiqc_files.mix(ch_fd_files.flatten())
+    ch_global_multiqc_files = ch_global_multiqc_files.mix(ch_multiqc_files)
+
+    // Global multiqc
+    MULTIQC_GLOBAL (
+        Channel.of([meta:[id: 'global'], qc_images: []]),
+        ch_global_multiqc_files.collect(),
+        ch_multiqc_config_global.toList(),
+        ch_multiqc_custom_config.toList(),
+        ch_multiqc_logo.toList(),
+        [],
+        []
+    )
 
     emit:
-//    multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
+    multiqc_report = MULTIQC.out.report.toList() // channel: /path/to/multiqc_report.html
     versions       = ch_versions                 // channel: [ path(versions.yml) ]
 
 }
