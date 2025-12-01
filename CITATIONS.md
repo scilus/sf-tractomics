@@ -1,4 +1,4 @@
-# scilus/nf-tractoflow: Citations
+# scilus/sf-tractomics: Citations
 
 ## [nf-core](https://pubmed.ncbi.nlm.nih.gov/32055031/)
 

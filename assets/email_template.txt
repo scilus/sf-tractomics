@@ -1,10 +1,10 @@
 Run Name: $runName
 
 <% if (success){
-    out << "## scilus/nf-tractoflow execution completed successfully! ##"
+    out << "## scilus/sf-tractomics execution completed successfully! ##"
 } else {
     out << """####################################################
-## scilus/nf-tractoflow execution completed unsuccessfully! ##
+## scilus/sf-tractomics execution completed unsuccessfully! ##
 ####################################################
 The exit status of the task that caused the workflow execution to fail was: $exitStatus.
 The full error message was:
@@ -27,5 +27,5 @@ Pipeline Configuration:
 <% out << summary.collect{ k,v -> " - $k: $v" }.join("\n") %>
 
 --
-scilus/nf-tractoflow
-https://github.com/scilus/nf-tractoflow
+scilus/sf-tractomics
+https://github.com/scilus/sf-tractomics

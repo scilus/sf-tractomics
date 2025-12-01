@@ -17,7 +17,7 @@
                         "size": "Large",
                         "weight": "Bolder",
                         "color": "<% if (success) { %>Good<% } else { %>Attention<%} %>",
-                        "text": "scilus/nf-tractoflow v${version} - ${runName}",
+                        "text": "scilus/sf-tractomics v${version} - ${runName}",
                         "wrap": true
                     },
                     {

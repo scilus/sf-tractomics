@@ -1,9 +1,9 @@
 lint:
   files_exist:
     - CODE_OF_CONDUCT.md
-    - assets/nf-core-tractoflow_logo_light.png
-    - docs/images/nf-core-tractoflow_logo_light.png
-    - docs/images/nf-core-tractoflow_logo_dark.png
+    - assets/nf-core-sf-tractomics_logo_light.png
+    - docs/images/nf-core-sf-tractomics_logo_light.png
+    - docs/images/nf-core-sf-tractomics_logo_dark.png
     - .github/ISSUE_TEMPLATE/config.yml
     - .github/workflows/awstest.yml
     - .github/workflows/awsfulltest.yml
@@ -11,9 +11,9 @@ lint:
     - conf/igenomes_ignored.config
   files_unchanged:
     - CODE_OF_CONDUCT.md
-    - assets/nf-core-tractoflow_logo_light.png
-    - docs/images/nf-core-tractoflow_logo_light.png
-    - docs/images/nf-core-tractoflow_logo_dark.png
+    - assets/nf-core-sf-tractomics_logo_light.png
+    - docs/images/nf-core-sf-tractomics_logo_light.png
+    - docs/images/nf-core-sf-tractomics_logo_dark.png
     - .github/ISSUE_TEMPLATE/bug_report.yml
   multiqc_config:
     - report_comment
@@ -23,14 +23,14 @@ lint:
   schema_description: false
   schema_lint: false
   schema_params: false
-nf_core_version: 3.3.2
+nf_core_version: 3.2.0
 repository_type: pipeline
 template:
   author: "@AlexVCaron"
   description: Human diffusion MRI processing and tractography
   force: false
   is_nfcore: false
-  name: nf-tractoflow
+  name: sf-tractomics
   org: scilus
   outdir: .
   skip_features:

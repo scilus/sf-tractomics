@@ -1,7 +1,7 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://raw.githubusercontent.com/scilus/nf-tractoflow/master/nextflow_schema.json",
-    "title": "scilus/nf-tractoflow pipeline parameters",
+    "$id": "https://raw.githubusercontent.com/scilus/sf-tractomics/master/nextflow_schema.json",
+    "title": "scilus/sf-tractomics pipeline parameters",
     "description": "Human diffusion MRI processing and tractography",
     "type": "object",
     "$defs": {

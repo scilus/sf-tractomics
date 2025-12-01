@@ -1,5 +1,5 @@
 //
-// Subworkflow with functionality specific to the scilus/nf-tractoflow pipeline
+// Subworkflow with functionality specific to the scilus/sf-tractomics pipeline
 //
 
 /*
@@ -223,3 +223,4 @@ def methodsDescriptionText(mqc_methods_yaml) {
 
     return description_html.toString()
 }
+
