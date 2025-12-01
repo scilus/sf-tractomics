@@ -20,6 +20,8 @@ report_section_order:
     order: 400
   framewise_displacement:
     order: 500
+  bundle_seg_qc:
+    order: 50
 
 modules_order:
   - framewise_displacement
@@ -126,6 +128,15 @@ custom_data:
       deviate significantly from anatomical norms. If issues are observed,
       consider reviewing tracking parameters or preprocessing steps.
     plot_type: "image"
+  bundle_seg_qc:
+    file_format: "png"
+    section_name: "Bundle Segmentation QC"
+    description: |
+      This section contains a mosaic image for the bundle segmentation,
+      visualizing the segmented white matter bundles from the tractogram.
+      To assess the quality of the bundle segmentation, ensure that the
+      segmented bundles accurately correspond to known anatomical pathways.
+    plot_type: "image"
 
 sp:
   framewise_displacement:
@@ -141,10 +152,13 @@ sp:
   tracking_qc:
     fn: "*coverage_overlay_mqc.png"
   tractogram_qc:
-    fn: "*tracking_mqc.png"
+    fn: "*tracking_mqc"
+  bundle_seg_qc:
+    fn: "*_bundles_mosaic_mqc.png"
 
 remove_sections:
   - tractogram_qc
+  - bundle_seg_qc
 
 # Customisable module parameters
 framewise_displacement:

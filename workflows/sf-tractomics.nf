@@ -142,6 +142,7 @@ workflow SF_TRACTOMICS {
 
         ch_versions = ch_versions.mix(BUNDLE_SEG.out.versions)
         ch_sub_multiqc_files = ch_sub_multiqc_files.mix(BUNDLE_SEG.out.mqc)
+        ch_sub_multiqc_files = ch_sub_multiqc_files.mix(BUNDLE_SEG.out.bundles_mqc)
         ch_bundle_seg = BUNDLE_SEG.out.bundles
     }
 
@@ -300,7 +301,7 @@ workflow SF_TRACTOMICS {
         Channel.empty()
     ch_multiqc_logo          = params.multiqc_logo ?
         Channel.fromPath(params.multiqc_logo, checkIfExists: true) :
-        Channel.empty()
+        Channel.fromPath("$projectDir/assets/sf-tractomics-multiqc-logo.png", checkIfExists: true)
 
     summary_params      = paramsSummaryMap(
         workflow, parameters_schema: "nextflow_schema.json")
