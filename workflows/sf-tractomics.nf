@@ -195,7 +195,7 @@ workflow SF_TRACTOMICS {
         return [meta, metrics]
     }
 
-    if (params.run_atlas_based_tractometry) {
+    if (params.run_atlas_roimetrics) {
         IIT_ROIMETRICS(
             TRACTOFLOW.out.b0,
             ch_input_metrics

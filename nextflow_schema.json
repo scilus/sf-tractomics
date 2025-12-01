@@ -1019,7 +1019,7 @@
             "description": "Use Q-Ball model for tractography instead of fODFs.",
             "help_text": "Use Q-Ball model for tractography instead of fODFs."
         },
-        "run_atlas_based_tractometry": {
+        "run_atlas_roimetrics": {
             "type": "boolean",
             "default": false,
             "description": "Run atlas-based tractometry using ROI masks obtained from IIT."
