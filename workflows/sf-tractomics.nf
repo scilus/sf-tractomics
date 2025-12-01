@@ -142,7 +142,7 @@ workflow SF_TRACTOMICS {
 
         ch_versions = ch_versions.mix(BUNDLE_SEG.out.versions)
         ch_sub_multiqc_files = ch_sub_multiqc_files.mix(BUNDLE_SEG.out.mqc)
-        ch_sug_multiqc_files = ch_sug_multiqc_files.mix(BUNDLE_SEG.out.bundles_mqc)
+        ch_sub_multiqc_files = ch_sub_multiqc_files.mix(BUNDLE_SEG.out.bundles_mqc)
         ch_bundle_seg = BUNDLE_SEG.out.bundles
     }
 
