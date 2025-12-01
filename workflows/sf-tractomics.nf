@@ -19,7 +19,7 @@ include { BUNDLE_SEG             } from '../subworkflows/nf-neuro/bundle_seg/mai
 include { REGISTRATION_ANTS as REGISTER_ATLAS_B0 } from '../modules/nf-neuro/registration/ants/main'
 include { REGISTRATION_ANTSAPPLYTRANSFORMS as TRANSFORM_ATLAS_BUNDLES } from '../modules/nf-neuro/registration/antsapplytransforms/main.nf'
 include { STATS_METRICSINROI     } from '../modules/nf-neuro/stats/metricsinroi/main'
-include { IIT_ROIMETRICS         } from '../subworkflows/local/iit_roimetrics/main'
+include { ATLAS_ROIMETRICS       } from '../subworkflows/local/atlas_roimetrics/main'
 include { TRACTOMETRY            } from '../subworkflows/nf-neuro/tractometry/main'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -195,17 +195,17 @@ workflow SF_TRACTOMICS {
     }
 
     if (params.run_atlas_roimetrics) {
-        IIT_ROIMETRICS(
+        ATLAS_ROIMETRICS(
             TRACTOFLOW.out.b0,
             ch_input_metrics
         )
-        ch_versions = ch_versions.mix(IIT_ROIMETRICS.out.versions)
+        ch_versions = ch_versions.mix(ATLAS_ROIMETRICS.out.versions)
 
         // Collect all ROI stats into a single file
         // by appending each row of the TSV/CSV files,
         // while keeping the header from the first
         // file only and skipping it in the rest.
-        ch_collection_mean_input = IIT_ROIMETRICS.out.tab_mean
+        ch_collection_mean_input = ATLAS_ROIMETRICS.out.tab_mean
             .map{ _meta, stats_tab -> stats_tab }
             .collectFile(
                 storeDir: "${params.outdir}/stats/",
@@ -214,7 +214,7 @@ workflow SF_TRACTOMICS {
                 keepHeader: true)
         ch_global_multiqc_files = ch_global_multiqc_files.mix(ch_collection_mean_input)
 
-        ch_collection_std_input = IIT_ROIMETRICS.out.tab_std
+        ch_collection_std_input = ATLAS_ROIMETRICS.out.tab_std
             .map{ _meta, stats_tab -> stats_tab }
             .collectFile(
                 storeDir: "${params.outdir}/stats/",
