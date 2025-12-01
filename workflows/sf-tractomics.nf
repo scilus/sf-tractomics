@@ -103,18 +103,22 @@ workflow SF_TRACTOMICS {
         ENSEMBLE_TRACKING(ch_tractogram_math_input)
         ch_input_tracking_qc = ENSEMBLE_TRACKING.out.trk
     }
-    else {
+    else if (params.run_local_tracking || params.run_pft_tracking) {
         ch_input_tracking_qc = TRACTOFLOW.out.pft_tractogram
             .mix(TRACTOFLOW.out.local_tractogram)
     }
-    QC_ENSEMBLE(ch_input_tracking_qc
-            .join(TRACTOFLOW.out.wm_mask)
-            .join(TRACTOFLOW.out.gm_mask))
-    ch_sub_multiqc_files = ch_sub_multiqc_files.mix(QC_ENSEMBLE.out.mqc)
-    ch_global_multiqc_files = ch_global_multiqc_files.mix(
-        QC_ENSEMBLE.out.dice.map { _meta, dice_file -> dice_file } )
-    ch_global_multiqc_files = ch_global_multiqc_files.mix(
-        QC_ENSEMBLE.out.sc.map { _meta, sc_file -> sc_file } )
+
+    if (params.run_local_tracking || params.run_pft_tracking) {
+        QC_ENSEMBLE(ch_input_tracking_qc
+                .join(TRACTOFLOW.out.wm_mask)
+                .join(TRACTOFLOW.out.gm_mask))
+        ch_sub_multiqc_files = ch_sub_multiqc_files.mix(QC_ENSEMBLE.out.mqc)
+        ch_global_multiqc_files = ch_global_multiqc_files.mix(
+            QC_ENSEMBLE.out.dice.map { _meta, dice_file -> dice_file } )
+        ch_global_multiqc_files = ch_global_multiqc_files.mix(
+            QC_ENSEMBLE.out.sc.map { _meta, sc_file -> sc_file } )
+    }
+
     //
     // Run RECONST/SH_METRICS
     //
@@ -202,7 +206,7 @@ workflow SF_TRACTOMICS {
         // by appending each row of the TSV/CSV files,
         // while keeping the header from the first
         // file only and skipping it in the rest.
-        ch_collection_mean_input = STATS_METRICSINROI.out.stats_mean
+        ch_collection_mean_input = IIT_ROIMETRICS.out.tab_mean
             .map{ _meta, stats_tab -> stats_tab }
             .collectFile(
                 storeDir: "${params.outdir}/stats/",
@@ -211,7 +215,7 @@ workflow SF_TRACTOMICS {
                 keepHeader: true)
         ch_global_multiqc_files = ch_global_multiqc_files.mix(ch_collection_mean_input)
 
-        ch_collection_std_input = STATS_METRICSINROI.out.stats_std
+        ch_collection_std_input = IIT_ROIMETRICS.out.tab_std
             .map{ _meta, stats_tab -> stats_tab }
             .collectFile(
                 storeDir: "${params.outdir}/stats/",
