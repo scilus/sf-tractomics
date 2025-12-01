@@ -19,9 +19,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
+            "nextflow": "25.04.4"
         },
-        "timestamp": "2025-11-25T12:46:23.985314"
+        "timestamp": "2025-11-30T23:48:49.764525182"
     },
     "multiqc-neuroimaging - global report": {
         "content": [

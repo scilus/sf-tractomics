@@ -40,3 +40,7 @@ module_order:
   - tractometry
   - cortical
   - subcortical
+
+sp:
+  framewise_displacement:
+    fn: "*_eddy_restricted_movement_rms.txt"
