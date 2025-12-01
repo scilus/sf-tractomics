@@ -3,6 +3,15 @@
     "homePage": "https://github.com/scilus/sf-tractomics",
     "repos": {
         "https://github.com/nf-core/modules.git": {
+            "modules": {
+                "nf-core": {
+                    "multiqc": {
+                        "branch": "master",
+                        "git_sha": "0b2435805036a16dcdcf21533632d956b8273ac4",
+                        "installed_by": ["modules"]
+                    }
+                }
+            },
             "subworkflows": {
                 "nf-core": {
                     "utils_nextflow_pipeline": {
