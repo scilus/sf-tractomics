@@ -29,7 +29,7 @@ process QC_MULTIQC {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = "${meta.id}-${workflow.start.format('yyMMdd-HHmm')}"
+    def prefix = task.ext.prefix ? "$task.ext.prefix-${workflow.start.format('yyMMdd-HHmm')}" : "${meta.id}-${workflow.start.format('yyMMdd-HHmm')}"
     def config = multiqc_config ? "--config $multiqc_config" : ''
     def extra_config = extra_multiqc_config ? "--config $extra_multiqc_config" : ''
     def logo = multiqc_logo ? "--cl-config 'custom_logo: \"${multiqc_logo}\"'" : ''
