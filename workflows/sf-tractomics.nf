@@ -197,7 +197,8 @@ workflow SF_TRACTOMICS {
     if (params.run_atlas_roimetrics) {
         ATLAS_ROIMETRICS(
             TRACTOFLOW.out.b0,
-            ch_input_metrics
+            ch_input_metrics,
+            [ use_atlas_iit: true ]
         )
         ch_versions = ch_versions.mix(ATLAS_ROIMETRICS.out.versions)
 
@@ -205,7 +206,7 @@ workflow SF_TRACTOMICS {
         // by appending each row of the TSV/CSV files,
         // while keeping the header from the first
         // file only and skipping it in the rest.
-        ch_collection_mean_input = ATLAS_ROIMETRICS.out.tab_mean
+        ch_collection_mean_input = ATLAS_ROIMETRICS.out.stats_tab_mean
             .map{ _meta, stats_tab -> stats_tab }
             .collectFile(
                 storeDir: "${params.outdir}/stats/",
@@ -214,7 +215,7 @@ workflow SF_TRACTOMICS {
                 keepHeader: true)
         ch_global_multiqc_files = ch_global_multiqc_files.mix(ch_collection_mean_input)
 
-        ch_collection_std_input = ATLAS_ROIMETRICS.out.tab_std
+        ch_collection_std_input = ATLAS_ROIMETRICS.out.stats_tab_std
             .map{ _meta, stats_tab -> stats_tab }
             .collectFile(
                 storeDir: "${params.outdir}/stats/",
@@ -226,9 +227,9 @@ workflow SF_TRACTOMICS {
     if ( params.run_tractometry ) {
         TRACTOMETRY(
             ch_bundle_seg,
-            channel.empty(),
+            Channel.empty(),
             ch_input_metrics,
-            channel.empty(),
+            Channel.empty(),
             TRACTOFLOW.out.fodf)
         ch_versions = ch_versions.mix(TRACTOMETRY.out.versions)
 
