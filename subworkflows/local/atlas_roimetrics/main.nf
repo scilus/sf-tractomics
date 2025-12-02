@@ -7,43 +7,44 @@ workflow ATLAS_ROIMETRICS {
     take:
     ch_subject_reference  // channel : [required] meta, subject_ref_image
     ch_metrics            // channel : [required] meta, [metrics]
+    options               // channel : [optional] map of options
 
     main:
     ch_versions = channel.empty()
     ch_bundle_masks = Channel.empty()
     ch_template_ref = Channel.empty()
 
-    assert [params.use_atlas_iit].count(true) <= 1 :
+    assert [options.use_atlas_iit].count(true) <= 1 :
         "Only one atlas can be selected at a time for ROI metrics extraction." +
-        " Please set only one of 'params.use_atlas_*' to 'true'."
+        " Please set only one of the options 'use_atlas_*' to 'true'."
 
-    if (params.use_atlas_iit) {
+    if (options.use_atlas_iit) {
         ATLAS_IIT()
         ch_versions = ch_versions.mix(ATLAS_IIT.out.versions)
         ch_bundle_masks = ATLAS_IIT.out.bundle_masks.toList()
         ch_template_ref = ATLAS_IIT.out.b0
     }
     else {
-        error "No atlas selected for ROI metrics extraction. Please set one of 'params.use_atlas_*'"
-              "to 'true' to run atlas-based ROI metrics"
+        error "No atlas selected for ROI metrics extraction. " +
+            "Please set one of the options 'use_atlas_*' to 'true' to run atlas-based ROI metrics."
     }
 
-    // Register IIT atlas to subject space
-    ch_input_register_iit = ch_subject_reference
+    // Register atlas reference image to subject space
+    ch_input_register_atlas = ch_subject_reference
         .combine(ch_template_ref)
         .map{ meta, subject_ref, template_ref -> [meta, subject_ref, template_ref, []] }
-    REGISTER_ATLAS_REF(ch_input_register_iit)
+    REGISTER_ATLAS_REF(ch_input_register_atlas)
     ch_versions = ch_versions.mix(REGISTER_ATLAS_REF.out.versions)
 
     // Apply the transformation to subject space to the bundles
-    ch_iit_transform_bundles = ch_subject_reference
+    ch_atlas_transform_bundles = ch_subject_reference
         .join(REGISTER_ATLAS_REF.out.forward_image_transform)
         .combine(ch_bundle_masks)
         .map {
             meta, subject_ref, transform, bundles ->
                 [meta, bundles, subject_ref, transform]
         }
-    TRANSFORM_ATLAS_BUNDLES(ch_iit_transform_bundles)
+    TRANSFORM_ATLAS_BUNDLES(ch_atlas_transform_bundles)
     ch_versions = ch_versions.mix(TRANSFORM_ATLAS_BUNDLES.out.versions)
 
     //
@@ -61,9 +62,9 @@ workflow ATLAS_ROIMETRICS {
     ch_versions = ch_versions.mix(STATS_METRICSINROI.out.versions)
 
     emit:
-    json        = STATS_METRICSINROI.out.stats_json
-    tab_mean    = STATS_METRICSINROI.out.stats_mean
-    tab_std     = STATS_METRICSINROI.out.stats_std
+    stats_json        = STATS_METRICSINROI.out.stats_json
+    stats_tab_mean    = STATS_METRICSINROI.out.stats_mean
+    stats_tab_std     = STATS_METRICSINROI.out.stats_std
 
     versions        = ch_versions
 }
