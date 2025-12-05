@@ -1030,12 +1030,6 @@
             "type": "string",
             "description": "Path to the directory holding all IIT bundle (binary) masks nifti files.",
             "help_text": "Path to the directory holding all IIT bundle (binary) masks nifti files."
-        },
-        "use_atlas_iit": {
-            "type": "boolean",
-            "description": "Use IIT atlas for atlas-based ROI metrics.",
-            "help_text": "Use IIT atlas for atlas-based ROI metrics.",
-            "default": true
         }
     }
 }
