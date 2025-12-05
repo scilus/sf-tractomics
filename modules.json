@@ -203,12 +203,12 @@
                     "registration/ants": {
                         "branch": "main",
                         "git_sha": "cc32b2a11a13ff04ff95508efad4ef4cd0d3909c",
-                        "installed_by": ["registration"]
+                        "installed_by": ["atlas_roimetrics", "registration"]
                     },
                     "registration/antsapplytransforms": {
                         "branch": "main",
                         "git_sha": "cc32b2a11a13ff04ff95508efad4ef4cd0d3909c",
-                        "installed_by": ["tractoflow"]
+                        "installed_by": ["atlas_roimetrics", "tractoflow"]
                     },
                     "registration/convert": {
                         "branch": "main",
@@ -243,7 +243,7 @@
                     "stats/metricsinroi": {
                         "branch": "main",
                         "git_sha": "7999bbf679834f0458b3a38a528f99a0c45e66ee",
-                        "installed_by": ["modules"]
+                        "installed_by": ["atlas_roimetrics", "modules"]
                     },
                     "tracking/localtracking": {
                         "branch": "main",
@@ -287,6 +287,11 @@
                     "atlas_iit": {
                         "branch": "main",
                         "git_sha": "70b2e60539593782696da65c8f51df1a35756a86",
+                        "installed_by": ["atlas_roimetrics", "subworkflows"]
+                    },
+                    "atlas_roimetrics": {
+                        "branch": "main",
+                        "git_sha": "73f718711e1a03ff2398879c53d8e13f75824090",
                         "installed_by": ["subworkflows"]
                     },
                     "bundle_seg": {

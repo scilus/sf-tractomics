@@ -899,8 +899,7 @@
             "help_text": "Define the bundle_seg subworkflow configuration parameters.",
             "properties": {
                 "run_bundle_seg": {
-                    "type": "boolean",
-                    "default": false
+                    "type": "boolean"
                 },
                 "atlas_directory": {
                     "type": "string",
@@ -922,8 +921,7 @@
             "help_text": "Define the tractometry subworkflow configuration parameters.",
             "properties": {
                 "run_tractometry": {
-                    "type": "boolean",
-                    "default": false
+                    "type": "boolean"
                 },
                 "nb_points": {
                     "type": "integer",
@@ -1016,14 +1014,13 @@
         },
         "use_qball_for_tracking": {
             "type": "boolean",
-            "default": false,
             "description": "Use Q-Ball model for tractography instead of fODFs.",
             "help_text": "Use Q-Ball model for tractography instead of fODFs."
         },
-        "run_atlas_based_tractometry": {
+        "run_atlas_roimetrics": {
             "type": "boolean",
-            "default": false,
-            "description": "Run atlas-based tractometry using ROI masks obtained from IIT."
+            "description": "Run atlas-based ROI metrics. The atlas used must be specified using one of the 'use_atlas_*' parameters.",
+            "help_text": "Run atlas-based ROI metrics. The atlas used must be specified using one of the 'use_atlas_*' parameters."
         },
         "atlas_iit_b0": {
             "type": "string",
@@ -1034,6 +1031,12 @@
             "type": "string",
             "description": "Path to the directory holding all IIT bundle (binary) masks nifti files.",
             "help_text": "Path to the directory holding all IIT bundle (binary) masks nifti files."
+        },
+        "use_atlas_iit": {
+            "type": "boolean",
+            "description": "Use the IIT atlas for atlas-based ROI metrics.",
+            "help_text": "Use the IIT atlas for atlas-based ROI metrics.",
+            "default": true
         }
     }
 }
