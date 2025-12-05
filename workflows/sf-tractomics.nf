@@ -94,6 +94,7 @@ workflow SF_TRACTOMICS {
     //
     // Ensemble tracking
     //
+    ch_input_tracking_qc = Channel.empty()
     if (params.run_local_tracking && params.run_pft_tracking) {
         ch_tractogram_math_input = TRACTOFLOW.out.pft_tractogram
             .join(TRACTOFLOW.out.local_tractogram)
@@ -108,16 +109,14 @@ workflow SF_TRACTOMICS {
             .mix(TRACTOFLOW.out.local_tractogram)
     }
 
-    if (params.run_local_tracking || params.run_pft_tracking) {
-        QC_ENSEMBLE(ch_input_tracking_qc
-                .join(TRACTOFLOW.out.wm_mask)
-                .join(TRACTOFLOW.out.gm_mask))
-        ch_sub_multiqc_files = ch_sub_multiqc_files.mix(QC_ENSEMBLE.out.mqc)
-        ch_global_multiqc_files = ch_global_multiqc_files.mix(
-            QC_ENSEMBLE.out.dice.map { _meta, dice_file -> dice_file } )
-        ch_global_multiqc_files = ch_global_multiqc_files.mix(
-            QC_ENSEMBLE.out.sc.map { _meta, sc_file -> sc_file } )
-    }
+    QC_ENSEMBLE(ch_input_tracking_qc
+        .join(TRACTOFLOW.out.wm_mask)
+        .join(TRACTOFLOW.out.gm_mask))
+    ch_sub_multiqc_files = ch_sub_multiqc_files.mix(QC_ENSEMBLE.out.mqc)
+    ch_global_multiqc_files = ch_global_multiqc_files.mix(
+        QC_ENSEMBLE.out.dice.map { _meta, dice_file -> dice_file } )
+    ch_global_multiqc_files = ch_global_multiqc_files.mix(
+        QC_ENSEMBLE.out.sc.map { _meta, sc_file -> sc_file } )
 
     //
     // Run RECONST/SH_METRICS
@@ -198,7 +197,7 @@ workflow SF_TRACTOMICS {
         ATLAS_ROIMETRICS(
             TRACTOFLOW.out.b0,
             ch_input_metrics,
-            [ use_atlas_iit: true ]
+            [ use_atlas_iit: params.use_atlas_iit ]
         )
         ch_versions = ch_versions.mix(ATLAS_ROIMETRICS.out.versions)
 
