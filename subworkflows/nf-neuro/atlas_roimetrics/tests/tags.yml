@@ -1,0 +1,2 @@
+subworkflows/atlas_roimetrics:
+  - subworkflows/nf-neuro/atlas_roimetrics/**
