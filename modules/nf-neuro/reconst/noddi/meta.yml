@@ -54,12 +54,31 @@ input:
         pattern: kernels
     - para_diff:
         type: float
-        description: Parallel diffusivity value (diff prior).
+        description: Parallel diffusivity value (diff prior) (mm2/s).
         mandatory: false
     - iso_diff:
         type: float
-        description: Isotropic diffusivity value (diff prior).
+        description: Isotropic diffusivity value (diff prior) (mm2/s).
         mandatory: false
+args:
+  - para_diff:
+      type: float
+      description: Axial diffusivity (AD) in the CC (mm2/s). It overwrites the input para_diff if provided.
+  - iso_diff:
+      type: float
+      description: Mean diffusivity (MD) in ventricles (mm2/s). It overwrites the input iso_diff if provided.
+  - noddi_lambda1:
+      type: float
+      description: First regularization parameter for NODDI fitting.
+  - noddi_lambda2:
+      type: float
+      description: Second regularization parameter for NODDI fitting.
+  - b_thr:
+      type: float
+      description: Limit value to consider that a b-value is on an existing shell. Above this limit, the b-value is placed on a new shell. This includes b0s values.
+  - compute_only:
+      type: boolean
+      description: Compute kernels only.
 
 output:
   dir:

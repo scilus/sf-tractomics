@@ -162,7 +162,7 @@
                     },
                     "reconst/freewater": {
                         "branch": "main",
-                        "git_sha": "cc32b2a11a13ff04ff95508efad4ef4cd0d3909c",
+                        "git_sha": "0eef6f86bca0cad0c9144161467b104a0e95eec1",
                         "installed_by": ["modules", "reconst_fw_noddi"]
                     },
                     "reconst/frf": {
@@ -182,7 +182,7 @@
                     },
                     "reconst/noddi": {
                         "branch": "main",
-                        "git_sha": "cc32b2a11a13ff04ff95508efad4ef4cd0d3909c",
+                        "git_sha": "611d7598cbede2b0755f681f4ee2694905eb353b",
                         "installed_by": ["modules", "reconst_fw_noddi"]
                     },
                     "reconst/qball": {
@@ -286,7 +286,7 @@
                     },
                     "atlas_iit": {
                         "branch": "main",
-                        "git_sha": "70b2e60539593782696da65c8f51df1a35756a86",
+                        "git_sha": "cf3c47a430239aab4371da03399ebf99499a85bf",
                         "installed_by": ["atlas_roimetrics", "subworkflows"]
                     },
                     "atlas_roimetrics": {
