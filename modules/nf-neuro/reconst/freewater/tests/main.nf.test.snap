@@ -32,15 +32,15 @@
             11,
             "test__dwi_fw_corrected.nii.gz",
             "test__dir.nii.gz:md5:header,cdd1570ac5fe51b109eea3de58e196ae,data,13fca38aa5e4f153cb0a106814180d0b",
-            "test__FiberVolume.nii.gz:md5:header,1a990130273ad871a33b3bee1beac9be,data,9aaac504776670be80de379990415fac",
-            "test__FW.nii.gz:md5:header,1a990130273ad871a33b3bee1beac9be,data,f9e560e89999812ba4205a85019bd612",
-            "test__NRMSE.nii.gz:md5:header,1a990130273ad871a33b3bee1beac9be,data,b7cca4f00472537b44abcbdb831ca6cb"
+            "test__FiberVolume.nii.gz:md5:header,1a990130273ad871a33b3bee1beac9be,data,c0d0e79a0c07de7be46d2d80771de643",
+            "test__FW.nii.gz:md5:header,1a990130273ad871a33b3bee1beac9be,data,40e747296ffe833bb66a9b7b07d0662f",
+            "test__NRMSE.nii.gz:md5:header,1a990130273ad871a33b3bee1beac9be,data,e035707f21a0ac25e94e6524d4e91c9d"
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "25.04.7"
+            "nf-test": "0.9.3",
+            "nextflow": "25.04.4"
         },
-        "timestamp": "2025-09-24T01:00:13.785472199"
+        "timestamp": "2025-12-08T10:24:15.171855566"
     },
     "reconst - freewater - with priors": {
         "content": [
@@ -50,14 +50,14 @@
             11,
             "test__dwi_fw_corrected.nii.gz",
             "test__dir.nii.gz:md5:header,cdd1570ac5fe51b109eea3de58e196ae,data,13fca38aa5e4f153cb0a106814180d0b",
-            "test__FiberVolume.nii.gz:md5:header,1a990130273ad871a33b3bee1beac9be,data,9aaac504776670be80de379990415fac",
-            "test__FW.nii.gz:md5:header,1a990130273ad871a33b3bee1beac9be,data,f9e560e89999812ba4205a85019bd612",
-            "test__NRMSE.nii.gz:md5:header,1a990130273ad871a33b3bee1beac9be,data,b7cca4f00472537b44abcbdb831ca6cb"
+            "test__FiberVolume.nii.gz:md5:header,1a990130273ad871a33b3bee1beac9be,data,c0d0e79a0c07de7be46d2d80771de643",
+            "test__FW.nii.gz:md5:header,1a990130273ad871a33b3bee1beac9be,data,40e747296ffe833bb66a9b7b07d0662f",
+            "test__NRMSE.nii.gz:md5:header,1a990130273ad871a33b3bee1beac9be,data,e035707f21a0ac25e94e6524d4e91c9d"
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.6"
+            "nextflow": "25.04.4"
         },
-        "timestamp": "2025-11-13T17:21:27.211485782"
+        "timestamp": "2025-12-08T10:25:58.775951731"
     }
 }
