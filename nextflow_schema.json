@@ -985,7 +985,6 @@
         },
         "average_diff_priors": {
             "type": "boolean",
-            "default": true,
             "description": "Average diffusivity priors across subjects.",
             "help_text": "Average diffusivity priors across subjects."
         },
