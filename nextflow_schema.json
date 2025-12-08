@@ -989,22 +989,22 @@
             "help_text": "Average diffusivity priors across subjects."
         },
         "para_diff": {
-            "type": "string",
+            "type": "number",
             "description": "Average parallel diffusivity value.",
             "help_text": "Average parallel diffusivity value. Specifying this will override automatically computed values."
         },
         "iso_diff": {
-            "type": "string",
+            "type": "number",
             "description": "Average isotropic diffusivity value.",
             "help_text": "Average isotropic diffusivity value. Specifying this will override automatically computed values."
         },
         "perp_diff_min": {
-            "type": "string",
+            "type": "number",
             "description": "Minimum perpendicular diffusivity value.",
             "help_text": "Minimum perpendicular diffusivity value. Specifying this will override automatically computed values."
         },
         "perp_diff_max": {
-            "type": "string",
+            "type": "number",
             "description": "Maximum perpendicular diffusivity value.",
             "help_text": "Maximum perpendicular diffusivity value. Specifying this will override automatically computed values."
         },
