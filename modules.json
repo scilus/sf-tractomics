@@ -47,7 +47,7 @@
                     },
                     "betcrop/synthstrip": {
                         "branch": "main",
-                        "git_sha": "b9a147a1075d1431189341976ee673ff31900603",
+                        "git_sha": "ee491c1d1fb00b79e11a171cabfa9da579626fdb",
                         "installed_by": ["preproc_t1"]
                     },
                     "bundle/centroid": {
@@ -306,7 +306,7 @@
                     },
                     "load_test_data": {
                         "branch": "main",
-                        "git_sha": "0fdd04fbe05e37bfe1273d23e1d49018297ea7de",
+                        "git_sha": "cf3c47a430239aab4371da03399ebf99499a85bf",
                         "installed_by": ["subworkflows"]
                     },
                     "preproc_dwi": {
