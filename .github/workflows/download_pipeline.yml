@@ -43,7 +43,7 @@ jobs:
           echo "REPO_BRANCH=${{ github.event.inputs.testbranch || 'dev' }}" >> "$GITHUB_OUTPUT"
 
   download:
-    runs-on: nf-neuro-docker-large
+    runs-on: scilus-docker-large
     needs: configure
     steps:
       - name: Install Nextflow
