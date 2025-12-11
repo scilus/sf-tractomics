@@ -100,6 +100,11 @@
                     "fa_icon": "fas fa-file-signature",
                     "help_text": "MultiQC report title. Printed as page header, used for filename if not otherwise specified.",
                     "hidden": true
+                },
+                "participants_tsv": {
+                    "type": "string",
+                    "description": "Path to the participants.tsv file.",
+                    "help_text": "Path to the participants.tsv file. If this is not specified, the participants.tsv file will be fetched automatically if the input is a BIDS directory, otherwise no additional covariates will be used."
                 }
             }
         },
@@ -938,6 +943,12 @@
                     "default": 10,
                     "description": "Number of points for tractometry.",
                     "help_text": "Number of points for tractometry."
+                },
+                "tractometry_covariates": {
+                    "type": "string",
+                    "default": "site,age,sex,handedness,disease",
+                    "description": "Comma separated list of covariates to include in the tractometry analysis.",
+                    "help_text": "Comma separated list of covariates to include in the tractometry analysis."
                 }
             }
         },
@@ -1095,14 +1106,5 @@
         {
             "$ref": "#/$defs/atlas_iit"
         }
-    ],
-    "properties": {
-        "participants_tsv": {
-            "type": "string"
-        },
-        "tractometry_covariates": {
-            "type": "string",
-            "default": "['site', 'age', 'sex', 'handedness', 'disease']"
-        }
-    }
+    ]
 }
