@@ -1,3 +1,28 @@
+def validateTSV(file_obj, expected_covariates) {
+    def lines = file_obj.text.split('\n')
+    assert lines.size() >= 2 : "File ${file_obj} is empty or missing header"
+
+    def header = lines[0].split('\t')
+    def header_map = [:]
+    header.eachWithIndex { col, idx -> header_map[col] = idx }
+
+    // Check headers exist
+    expected_covariates.each { col, val ->
+        assert header_map.containsKey(col) : "Column ${col} missing in ${file_obj}"
+    }
+
+    // Check values in all rows
+    lines.drop(1).each { line -> // Skip header
+        if (line.trim()) {
+            def row = line.split('\t')
+            expected_covariates.each { col, val ->
+                def idx = header_map[col]
+                assert row[idx] == val : "Value mismatch for ${col} in ${file_obj}. Expected '${val}', got '${row[idx]}'"
+            }
+        }
+    }
+}
+
 nextflow_process {
 
     name "Test Process BUNDLE_STATS"
@@ -11,6 +36,8 @@ nextflow_process {
 
     tag "subworkflows"
     tag "subworkflows/load_test_data"
+
+
 
     setup {
         run("LOAD_TEST_DATA", alias: "LOAD_DATA") {
@@ -112,6 +139,44 @@ nextflow_process {
             )
         }
     }
+
+    test("bundle - stats - with covariates") {
+
+        config "./nextflow_covariates.config"
+        tag "working"
+
+        when {
+            process {
+                """
+                input[0] = LOAD_DATA.out.test_data_directory.map{
+                    test_data_directory -> [
+                        [ id:'test', single_end:false, 'sex': 1, 'age': 25, 'site': 'testingSite' ], // meta map
+                        file("\${test_data_directory}/IFGWM.trk",),
+                        file("\${test_data_directory}/IFGWM_labels_map.nii.gz"),
+                        file("\${test_data_directory}/mni_masked.nii.gz"),
+                        file("\${test_data_directory}/IFGWM.nii.gz")
+                    ]}
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                {
+                    def expected_covariates = [
+                        'sex': '1',
+                        'age': '25',
+                        'site': 'testingSite',
+                        'unknown': ''
+                    ]
+
+                    validateTSV(file(process.out.mean_tsv.get(0).get(1)), expected_covariates)
+                    validateTSV(file(process.out.mean_per_point_tsv.get(0).get(1)), expected_covariates)
+                }
+            )
+        }
+    }
+
 
     test("bundle - stats - stub-run") {
         tag "stub"

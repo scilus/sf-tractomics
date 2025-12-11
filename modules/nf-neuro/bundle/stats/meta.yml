@@ -128,6 +128,11 @@ args:
       description: If set, compute the mean and std of the metrics along the
         bundle for each point(labels).
       default: false
+  - meta_columns:
+      type: list
+      description: List of metadata columns (from the input meta map) to include in
+        the output TSV files as covariates.
+      default: []
 output:
   length:
     - - meta:

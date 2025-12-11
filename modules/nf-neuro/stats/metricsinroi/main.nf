@@ -24,6 +24,10 @@ process STATS_METRICSINROI {
     def use_label = task.ext.use_label ? true : false
     def key_substrs_to_remove = task.ext.key_substrs_to_remove ?: []
     def value_substrs_to_remove = task.ext.value_substrs_to_remove ?: []
+
+    def meta_columns = task.ext.meta_columns ?: []
+    def meta_columns_values  = meta_columns.collect { col -> meta.containsKey(col) ? meta[col] : "null" }
+
     def output_format = task.ext.output_format ?: 'tsv'  // 'csv' or 'tsv'
 
     assert output_format in ['csv', 'tsv'] : "output_format must be either 'csv' or 'tsv'"
@@ -62,6 +66,23 @@ process STATS_METRICSINROI {
         mv ${prefix}_${suffix}_tmp.json ${prefix}_${suffix}.json
     done
 
+    # Extract 'desc' substring from keys and store it temporarily in values
+    # This allows us to remove the substring from the key now and append it later
+    jq -r '
+        with_entries(
+            .value |= with_entries(
+                if (.key | test("_desc-[a-zA-Z0-9]+")) then
+                    (.key | capture("_desc-(?<desc>[a-zA-Z0-9]+)").desc) as \$d |
+                    .value.extracted_desc = \$d |
+                    .key |= sub("_desc-[a-zA-Z0-9]+"; "")
+                else
+                    .
+                end
+            )
+        )
+    ' ${prefix}_${suffix}.json > ${prefix}_${suffix}_tmp.json
+    mv ${prefix}_${suffix}_tmp.json ${prefix}_${suffix}.json
+
     # Remove all substrings from the values as specified
     # in the configuration via 'task.ext.value_substrs_to_remove'
     for substr in ${value_substrs_to_remove.join(' ')};
@@ -75,6 +96,22 @@ process STATS_METRICSINROI {
         ' ${prefix}_${suffix}.json > ${prefix}_${suffix}_tmp.json
         mv ${prefix}_${suffix}_tmp.json ${prefix}_${suffix}.json
     done
+
+    # Append the extracted 'desc' to the keys, before the extension if present
+    jq -r '
+        with_entries(
+            .value |= with_entries(
+                if (.value.extracted_desc) then
+                    (.value.extracted_desc) as \$d |
+                    del(.value.extracted_desc) |
+                    .key |= if test("\\\\.") then sub("(?<base>.*?)(?<ext>\\\\..*)\$"; .base + "_" + \$d + .ext) else . + "_" + \$d end
+                else
+                    .
+                end
+            )
+        )
+    ' ${prefix}_${suffix}.json > ${prefix}_${suffix}_tmp.json
+    mv ${prefix}_${suffix}_tmp.json ${prefix}_${suffix}.json
 
     # Get all ROIs names from the JSON
     rois=\$(jq -r "keys[]" ${prefix}_${suffix}.json)
@@ -90,6 +127,14 @@ process STATS_METRICSINROI {
     # (sample, roi, metric1, metric2, ..., metricN)
     header_mean="sample${sep}roi"
     header_std="sample${sep}roi"
+
+    # Create the meta columns
+    for meta_col in ${meta_columns.join(' ')}; do
+        header_mean="\${header_mean}${sep}\${meta_col}"
+        header_std="\${header_std}${sep}\${meta_col}"
+    done
+
+    # Add the metric columns
     for metric in \$metrics; do
         header_mean="\${header_mean}${sep}\${metric}"
         header_std="\${header_std}${sep}\${metric}"
@@ -102,6 +147,17 @@ process STATS_METRICSINROI {
         # Initialize lines with sample and roi
         line_mean="${prefix}${sep}\${roi}"
         line_std="${prefix}${sep}\${roi}"
+
+        # Add meta columns values if specified
+        for meta_val in ${meta_columns_values.join(' ')}; do
+            if [ "\${meta_val}" == "null" ]; then
+                line_mean="\${line_mean}${sep}" # no value = empty string
+                line_std="\${line_std}${sep}" # no value = empty string
+            else
+                line_mean="\${line_mean}${sep}\${meta_val}"
+                line_std="\${line_std}${sep}\${meta_val}"
+            fi
+        done
 
         for metric in \$metrics;
         do
