@@ -96,6 +96,49 @@ workflow PIPELINE_INITIALISATION {
                 rev_b0: IO_BIDS.out.ch_rev_b0,
                 lesion: Channel.empty()
             ]
+
+            // Define the schema for participants.tsv
+            def tsv_file = file("${params.input}/participants.tsv")
+            def all_tsv_headers = tsv_file.readLines()[0].split('\t')
+                .collect { item -> item.trim() }
+                .toList()
+
+            // Create joining keys
+            def primary_keys = ['participant_id', 'session', 'run']
+            def content_keys = all_tsv_headers - primary_keys
+            def default_content = content_keys.collectEntries { key -> [key, ""] }
+
+            // Parse "${params.inputs}/participants.tsv"
+            participants_path = channel.fromPath(tsv_file)
+            participants_content = participants_path
+                .splitCsv(header: true, sep: '\t')
+                .map { row ->
+                    def id = row.participant_id
+                    def ses = row.session ? "ses-" + row.session: ""
+                    def run = row.run ? "run-" + row.run: ""
+
+                    def key = [id: id, session: ses, run: run]
+                    def content = default_content.clone()
+                    content_keys.each { ckey -> content[ckey] = row[ckey] }
+                    content = content.collectEntries { k, v -> [k.toLowerCase(), v] }
+                    return [key, content]
+                }
+
+            // Prepare keys
+            ch_original_meta = ch_samplesheet.t1
+                .map { meta, _content ->
+                    def key = [id: meta.id, session: meta.session ?: "", run: meta.run ?: ""]
+                    return [key, meta]
+                }
+
+            // Join with participants.tsv content
+            ch_covariates = ch_original_meta
+                .join(participants_content, by: 0, remainder: true)
+                .filter { _key, original_meta, _tsv_meta -> original_meta != null } // Remove unmatched entries from the participants.tsv
+                .map { _key, original_meta, tsv_meta ->
+                    def extra_meta = tsv_meta ?: default_content.collectEntries { k, v -> [k.toLowerCase(), v] }
+                    return [original_meta, extra_meta]
+                }
         }
         else {
             ch_input_sheets = Channel
@@ -134,6 +177,9 @@ workflow PIPELINE_INITIALISATION {
                     rev_b0: [meta, rev_sbref]
                     lesion: [meta, lesion]
                 }
+
+            // TODO: Add covariates into this channel
+            ch_covariates = channel.empty()
         }
     }
 
@@ -146,9 +192,36 @@ workflow PIPELINE_INITIALISATION {
     rev_dwi_bval_bvec = ch_samplesheet.rev_dwi_bval_bvec
     rev_b0 = ch_samplesheet.rev_b0
     lesion = ch_samplesheet.lesion
+
+    // We avoid merging the covariates (i.e. the extra meta fields)
+    // directly into the samplesheet's multimap meta fields, as those covariates are not used
+    // in most of the pipeline steps. This means, that if the participants.tsv changes for whatever
+    // reason, the entire cache of the pipeline would be invalidated, thus causing the
+    // pipeline to reprocess everything from scratch. Instead, we provide the mergeCovariatesIntoMeta
+    // function, which can be used to merge the covariates into the samplesheet's multimap
+    // on the fly, when needed (which should be done only when the inputs requires those fields).
+    covariates = ch_extra_meta
+
     versions    = ch_versions
 }
 
+def mergeCovariatesIntoMeta(ch_src, ch_covariates) {
+    def ch = ch_src.join(ch_covariates, by: 0)
+        .map { item ->
+            def original_meta = item[0]
+            def content = item[1..-2]
+            def covariates = item[-1]
+            // Merge original meta with covariates without overwriting existing fields
+            def merged_meta = original_meta.clone()
+            covariates.each { k, v ->
+                if (merged_meta[k] == null || merged_meta[k] == "") {
+                    merged_meta[k] = v
+                }
+            }
+            return [merged_meta] + content
+        }
+    return ch
+}
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     SUBWORKFLOW FOR PIPELINE COMPLETION
