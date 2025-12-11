@@ -200,7 +200,7 @@ workflow PIPELINE_INITIALISATION {
     // pipeline to reprocess everything from scratch. Instead, we provide the mergeCovariatesIntoMeta
     // function, which can be used to merge the covariates into the samplesheet's multimap
     // on the fly, when needed (which should be done only when the inputs requires those fields).
-    covariates = ch_extra_meta
+    covariates  = ch_covariates
 
     versions    = ch_versions
 }
