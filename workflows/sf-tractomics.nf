@@ -211,7 +211,7 @@ workflow SF_TRACTOMICS {
         ch_collection_mean_input = ATLAS_ROIMETRICS.out.stats_tab_mean
             .map{ _meta, stats_tab -> stats_tab }
             .collectFile(
-                storeDir: "${params.outdir}/stats/",
+                storeDir: "${params.outdir}/metrics/",
                 name: "aggregated_atlas-iit_label-mean_desc-roi_stats.tsv",
                 skip: 1,
                 keepHeader: true)
@@ -220,7 +220,7 @@ workflow SF_TRACTOMICS {
         ch_collection_std_input = ATLAS_ROIMETRICS.out.stats_tab_std
             .map{ _meta, stats_tab -> stats_tab }
             .collectFile(
-                storeDir: "${params.outdir}/stats/",
+                storeDir: "${params.outdir}/metrics/",
                 name: "aggregated_atlas-iit_label-std_desc-roi_stats.tsv",
                 skip: 1,
                 keepHeader: true)
