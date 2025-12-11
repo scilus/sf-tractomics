@@ -72,7 +72,7 @@
                     },
                     "bundle/stats": {
                         "branch": "main",
-                        "git_sha": "0059a7c5c9277288f069d6c908c016d50cc0bd0c",
+                        "git_sha": "5a24a97f39279bebe20d53b57bb7217d16a52452",
                         "installed_by": ["tractometry"]
                     },
                     "bundle/uniformize": {
@@ -242,7 +242,7 @@
                     },
                     "stats/metricsinroi": {
                         "branch": "main",
-                        "git_sha": "7999bbf679834f0458b3a38a528f99a0c45e66ee",
+                        "git_sha": "50808b498e4da28c4e068ee12c6d6ca89342efa5",
                         "installed_by": ["atlas_roimetrics", "modules"]
                     },
                     "tracking/localtracking": {
