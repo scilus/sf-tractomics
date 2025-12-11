@@ -99,8 +99,13 @@ workflow PIPELINE_INITIALISATION {
 
             if (params.participants_tsv) {
                 participants_tsv_path = "${params.participants_tsv}"
-            } else {
+            }
+            else if (file("${params.input}/participants.tsv").exists()) {
                 participants_tsv_path = "${params.input}/participants.tsv"
+            }
+            else {
+                participants_tsv_path = null
+                log.warn("No participants.tsv provided, covariates will not be used.")
             }
         }
         else {
@@ -150,6 +155,13 @@ workflow PIPELINE_INITIALISATION {
         }
     }
 
+    // We avoid merging the covariates (i.e. the extra meta fields)
+    // directly into the samplesheet's multimap meta fields, as those covariates are not used
+    // in most of the pipeline steps. This means, that if the participants.tsv changes for whatever
+    // reason, the entire cache of the pipeline would be invalidated, thus causing the
+    // pipeline to reprocess everything from scratch. Instead, we provide the mergeCovariatesIntoMeta
+    // function, which can be used to merge the covariates into the samplesheet's multimap
+    // on the fly, when needed (which should be done only when the inputs requires those fields).
     ch_covariates = parseParticipantsTsv(participants_tsv_path, ch_samplesheet.t1)
 
     emit:
@@ -161,14 +173,6 @@ workflow PIPELINE_INITIALISATION {
     rev_dwi_bval_bvec = ch_samplesheet.rev_dwi_bval_bvec
     rev_b0 = ch_samplesheet.rev_b0
     lesion = ch_samplesheet.lesion
-
-    // We avoid merging the covariates (i.e. the extra meta fields)
-    // directly into the samplesheet's multimap meta fields, as those covariates are not used
-    // in most of the pipeline steps. This means, that if the participants.tsv changes for whatever
-    // reason, the entire cache of the pipeline would be invalidated, thus causing the
-    // pipeline to reprocess everything from scratch. Instead, we provide the mergeCovariatesIntoMeta
-    // function, which can be used to merge the covariates into the samplesheet's multimap
-    // on the fly, when needed (which should be done only when the inputs requires those fields).
     covariates  = ch_covariates
 
     versions    = ch_versions
