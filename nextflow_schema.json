@@ -1099,6 +1099,10 @@
     "properties": {
         "participants_tsv": {
             "type": "string"
+        },
+        "tractometry_covariates": {
+            "type": "string",
+            "default": "['site', 'age', 'sex', 'handedness', 'disease']"
         }
     }
 }
