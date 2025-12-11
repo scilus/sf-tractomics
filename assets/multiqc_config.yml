@@ -3,10 +3,11 @@ report_comment: >
   analysis pipeline.
 
 report_section_order:
+  "scilus-sf-tractomics-methods-description":
+    order: -1000
   software_versions:
     order: -1001
   "scilus-sf-tractomics-summary":
-    title: "sf-tractomics Workflow Summary"
     order: -1002
   "sf-tractomics-methods-description":
     order: -1000
