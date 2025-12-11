@@ -247,7 +247,7 @@
                     },
                     "tracking/localtracking": {
                         "branch": "main",
-                        "git_sha": "63dc80c43cdca798a5f11cd5124da35337a94ac5",
+                        "git_sha": "2e214a7c8e447a2304cf882d69740795bc1574a6",
                         "installed_by": ["tractoflow"]
                     },
                     "tracking/pfttracking": {
