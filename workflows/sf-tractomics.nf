@@ -198,8 +198,8 @@ workflow SF_TRACTOMICS {
 
     if (params.run_atlas_roimetrics) {
         ATLAS_ROIMETRICS(
-            mergeCovariatesIntoMeta(TRACTOFLOW.out.b0),
-            mergeCovariatesIntoMeta(ch_input_metrics),
+            mergeCovariatesIntoMeta(TRACTOFLOW.out.b0, ch_covariates),
+            mergeCovariatesIntoMeta(ch_input_metrics, ch_covariates),
             [ use_atlas_iit: params.use_atlas_iit ]
         )
         ch_versions = ch_versions.mix(ATLAS_ROIMETRICS.out.versions)
@@ -228,11 +228,11 @@ workflow SF_TRACTOMICS {
 
     if ( params.run_tractometry ) {
         TRACTOMETRY(
-            mergeCovariatesIntoMeta(ch_bundle_seg),
+            mergeCovariatesIntoMeta(ch_bundle_seg, ch_covariates),
             Channel.empty(),
-            mergeCovariatesIntoMeta(ch_input_metrics),
+            mergeCovariatesIntoMeta(ch_input_metrics, ch_covariates),
             Channel.empty(),
-            mergeCovariatesIntoMeta(TRACTOFLOW.out.fodf))
+            mergeCovariatesIntoMeta(TRACTOFLOW.out.fodf, ch_covariates))
         ch_versions = ch_versions.mix(TRACTOMETRY.out.versions)
 
         ch_tractometry_mqc = TRACTOMETRY.out.mean_tsv

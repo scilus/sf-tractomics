@@ -150,7 +150,7 @@ workflow PIPELINE_INITIALISATION {
         }
     }
 
-    ch_covariates = parseParticipantsTsv(participants_tsv_path)
+    ch_covariates = parseParticipantsTsv(participants_tsv_path, ch_samplesheet.t1)
 
     emit:
     t1 = ch_samplesheet.t1
@@ -174,7 +174,8 @@ workflow PIPELINE_INITIALISATION {
     versions    = ch_versions
 }
 
-def parseParticipantsTsv(participants_path) {
+
+def parseParticipantsTsv(participants_path, ch_with_proper_meta) {
 
     if (participants_path == null) {
         return channel.empty()
@@ -192,8 +193,8 @@ def parseParticipantsTsv(participants_path) {
     def default_content = content_keys.collectEntries { key -> [key, ""] }
 
     // Parse "${params.inputs}/participants.tsv"
-    participants_path = channel.fromPath(tsv_file)
-    participants_content = participants_path
+    def ch_participants = channel.fromPath(tsv_file)
+    def participants_content = ch_participants
         .splitCsv(header: true, sep: '\t')
         .map { row ->
             def id = row.participant_id
@@ -208,14 +209,14 @@ def parseParticipantsTsv(participants_path) {
         }
 
     // Prepare keys
-    ch_original_meta = ch_samplesheet.t1
+    def ch_original_meta = ch_with_proper_meta
         .map { meta, _content ->
             def key = [id: meta.id, session: meta.session ?: "", run: meta.run ?: ""]
             return [key, meta]
         }
 
     // Join with participants.tsv content
-    ch_covariates = ch_original_meta
+    def ch_covariates = ch_original_meta
         .join(participants_content, by: 0, remainder: true)
         .filter { _key, original_meta, _tsv_meta -> original_meta != null } // Remove unmatched entries from the participants.tsv
         .map { _key, original_meta, tsv_meta ->
