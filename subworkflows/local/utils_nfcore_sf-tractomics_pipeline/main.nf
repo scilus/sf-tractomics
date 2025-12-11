@@ -97,48 +97,11 @@ workflow PIPELINE_INITIALISATION {
                 lesion: Channel.empty()
             ]
 
-            // Define the schema for participants.tsv
-            def tsv_file = file("${params.input}/participants.tsv")
-            def all_tsv_headers = tsv_file.readLines()[0].split('\t')
-                .collect { item -> item.trim() }
-                .toList()
-
-            // Create joining keys
-            def primary_keys = ['participant_id', 'session', 'run']
-            def content_keys = all_tsv_headers - primary_keys
-            def default_content = content_keys.collectEntries { key -> [key, ""] }
-
-            // Parse "${params.inputs}/participants.tsv"
-            participants_path = channel.fromPath(tsv_file)
-            participants_content = participants_path
-                .splitCsv(header: true, sep: '\t')
-                .map { row ->
-                    def id = row.participant_id
-                    def ses = row.session ? "ses-" + row.session: ""
-                    def run = row.run ? "run-" + row.run: ""
-
-                    def key = [id: id, session: ses, run: run]
-                    def content = default_content.clone()
-                    content_keys.each { ckey -> content[ckey] = row[ckey] }
-                    content = content.collectEntries { k, v -> [k.toLowerCase(), v] }
-                    return [key, content]
-                }
-
-            // Prepare keys
-            ch_original_meta = ch_samplesheet.t1
-                .map { meta, _content ->
-                    def key = [id: meta.id, session: meta.session ?: "", run: meta.run ?: ""]
-                    return [key, meta]
-                }
-
-            // Join with participants.tsv content
-            ch_covariates = ch_original_meta
-                .join(participants_content, by: 0, remainder: true)
-                .filter { _key, original_meta, _tsv_meta -> original_meta != null } // Remove unmatched entries from the participants.tsv
-                .map { _key, original_meta, tsv_meta ->
-                    def extra_meta = tsv_meta ?: default_content.collectEntries { k, v -> [k.toLowerCase(), v] }
-                    return [original_meta, extra_meta]
-                }
+            if (params.participants_tsv) {
+                participants_tsv_path = "${params.participants_tsv}"
+            } else {
+                participants_tsv_path = "${params.input}/participants.tsv"
+            }
         }
         else {
             ch_input_sheets = Channel
@@ -178,10 +141,16 @@ workflow PIPELINE_INITIALISATION {
                     lesion: [meta, lesion]
                 }
 
-            // TODO: Add covariates into this channel
-            ch_covariates = channel.empty()
+            if (params.participants_tsv) {
+                participants_tsv_path = params.participants_tsv
+            } else {
+                participants_tsv_path = null
+                log.warn("No participants.tsv provided, covariates will not be used.")
+            }
         }
     }
+
+    ch_covariates = parseParticipantsTsv(participants_tsv_path)
 
     emit:
     t1 = ch_samplesheet.t1
@@ -205,7 +174,65 @@ workflow PIPELINE_INITIALISATION {
     versions    = ch_versions
 }
 
+def parseParticipantsTsv(participants_path) {
+
+    if (participants_path == null) {
+        return channel.empty()
+    }
+
+    // Define the schema for participants.tsv
+    def tsv_file = file(participants_path)
+    def all_tsv_headers = tsv_file.readLines()[0].split('\t')
+        .collect { item -> item.trim() }
+        .toList()
+
+    // Create joining keys
+    def primary_keys = ['participant_id', 'session', 'run']
+    def content_keys = all_tsv_headers - primary_keys
+    def default_content = content_keys.collectEntries { key -> [key, ""] }
+
+    // Parse "${params.inputs}/participants.tsv"
+    participants_path = channel.fromPath(tsv_file)
+    participants_content = participants_path
+        .splitCsv(header: true, sep: '\t')
+        .map { row ->
+            def id = row.participant_id
+            def ses = row.session ? "ses-" + row.session: ""
+            def run = row.run ? "run-" + row.run: ""
+
+            def key = [id: id, session: ses, run: run]
+            def content = default_content.clone()
+            content_keys.each { ckey -> content[ckey] = row[ckey] }
+            content = content.collectEntries { k, v -> [k.toLowerCase(), v] }
+            return [key, content]
+        }
+
+    // Prepare keys
+    ch_original_meta = ch_samplesheet.t1
+        .map { meta, _content ->
+            def key = [id: meta.id, session: meta.session ?: "", run: meta.run ?: ""]
+            return [key, meta]
+        }
+
+    // Join with participants.tsv content
+    ch_covariates = ch_original_meta
+        .join(participants_content, by: 0, remainder: true)
+        .filter { _key, original_meta, _tsv_meta -> original_meta != null } // Remove unmatched entries from the participants.tsv
+        .map { _key, original_meta, tsv_meta ->
+            def extra_meta = tsv_meta ?: default_content.collectEntries { k, v -> [k.toLowerCase(), v] }
+            return [original_meta, extra_meta]
+        }
+
+    return ch_covariates
+}
+
 def mergeCovariatesIntoMeta(ch_src, ch_covariates) {
+    if (params.participants_tsv == null && !file(params.input).isDirectory()) {
+        // The input is a samplesheet and no participants.tsv was provided.
+        // So there are no covariates to parse.
+        return ch_src
+    }
+
     def ch = ch_src.join(ch_covariates, by: 0)
         .map { item ->
             def original_meta = item[0]
