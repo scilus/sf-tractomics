@@ -33,13 +33,12 @@ process RECONST_NODDI {
     def compute_only = task.ext.compute_only && !kernels ? "--compute_only" : ""
 
     """
-
-    ## Check if data are multi-shell based on b-values and set number of clusters accordingly
+    # Check if data are multi-shell based on b-values and set number of clusters accordingly
     # Set tolerance threshold (default 40 if not specified)
     b_threshold=${task.ext.b_thr ?: 40}
 
     # Load sorted values - handle both space and newline separated b-values
-    vals=(\$(cat "$bval" | tr ' ' '\n' | awk '{print int(\$1 + 0.5)}' | sort -n | uniq))
+    vals=(\$(cat "$bval" | tr ' ' '\\n' | awk '{print int(\$1 + 0.5)}' | sort -n | uniq))
 
     clusters=1
     uniq_bvals=("\${vals[0]}")
