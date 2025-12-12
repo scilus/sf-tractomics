@@ -54,6 +54,10 @@ jobs:
           python-version: "3.12"
           architecture: "x64"
 
+      - name: Install dependencies
+        run: |
+          apt-get remove --purge gdebi gdebi-core -y
+
       - name: Setup Apptainer
         uses: eWaterCycle/setup-apptainer@4bb22c52d4f63406c49e94c804632975787312b3 # v2.0.0
         with:
