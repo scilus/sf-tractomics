@@ -182,7 +182,7 @@
                     },
                     "reconst/noddi": {
                         "branch": "main",
-                        "git_sha": "611d7598cbede2b0755f681f4ee2694905eb353b",
+                        "git_sha": "27c194efef0eeff128d6cc70833f8e707bd72817",
                         "installed_by": ["modules", "reconst_fw_noddi"]
                     },
                     "reconst/qball": {
