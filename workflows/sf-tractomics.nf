@@ -21,6 +21,7 @@ include { REGISTRATION_ANTSAPPLYTRANSFORMS as TRANSFORM_ATLAS_BUNDLES } from '..
 include { STATS_METRICSINROI     } from '../modules/nf-neuro/stats/metricsinroi/main'
 include { ATLAS_ROIMETRICS       } from '../subworkflows/nf-neuro/atlas_roimetrics/main'
 include { TRACTOMETRY            } from '../subworkflows/nf-neuro/tractometry/main'
+include { mergeCovariatesIntoMeta } from '../subworkflows/local/utils_nfcore_sf-tractomics_pipeline/main'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
@@ -37,6 +38,7 @@ workflow SF_TRACTOMICS {
     ch_rev_dwi_bval_bvec
     ch_rev_b0
     ch_lesion
+    ch_covariates
     main:
 
     ch_versions = Channel.empty()
@@ -196,8 +198,8 @@ workflow SF_TRACTOMICS {
 
     if (params.run_atlas_roimetrics) {
         ATLAS_ROIMETRICS(
-            TRACTOFLOW.out.b0,
-            ch_input_metrics,
+            mergeCovariatesIntoMeta(TRACTOFLOW.out.b0, ch_covariates),
+            mergeCovariatesIntoMeta(ch_input_metrics, ch_covariates),
             [ use_atlas_iit: params.use_atlas_iit ]
         )
         ch_versions = ch_versions.mix(ATLAS_ROIMETRICS.out.versions)
@@ -209,7 +211,7 @@ workflow SF_TRACTOMICS {
         ch_collection_mean_input = ATLAS_ROIMETRICS.out.stats_tab_mean
             .map{ _meta, stats_tab -> stats_tab }
             .collectFile(
-                storeDir: "${params.outdir}/stats/",
+                storeDir: "${params.outdir}/metrics/",
                 name: "aggregated_atlas-iit_label-mean_desc-roi_stats.tsv",
                 skip: 1,
                 keepHeader: true)
@@ -218,7 +220,7 @@ workflow SF_TRACTOMICS {
         ch_collection_std_input = ATLAS_ROIMETRICS.out.stats_tab_std
             .map{ _meta, stats_tab -> stats_tab }
             .collectFile(
-                storeDir: "${params.outdir}/stats/",
+                storeDir: "${params.outdir}/metrics/",
                 name: "aggregated_atlas-iit_label-std_desc-roi_stats.tsv",
                 skip: 1,
                 keepHeader: true)
@@ -226,11 +228,11 @@ workflow SF_TRACTOMICS {
 
     if ( params.run_tractometry ) {
         TRACTOMETRY(
-            ch_bundle_seg,
+            mergeCovariatesIntoMeta(ch_bundle_seg, ch_covariates),
             Channel.empty(),
-            ch_input_metrics,
+            mergeCovariatesIntoMeta(ch_input_metrics, ch_covariates),
             Channel.empty(),
-            TRACTOFLOW.out.fodf)
+            mergeCovariatesIntoMeta(TRACTOFLOW.out.fodf, ch_covariates))
         ch_versions = ch_versions.mix(TRACTOMETRY.out.versions)
 
         ch_tractometry_mqc = TRACTOMETRY.out.mean_tsv
