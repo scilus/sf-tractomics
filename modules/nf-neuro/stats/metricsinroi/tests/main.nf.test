@@ -1,3 +1,28 @@
+def validateTSV(file_obj, expected_covariates) {
+    def lines = file_obj.text.split('\n')
+    assert lines.size() >= 2 : "File ${file_obj} is empty or missing header"
+
+    def header = lines[0].split('\t')
+    def header_map = [:]
+    header.eachWithIndex { col, idx -> header_map[col] = idx }
+
+    // Check headers exist
+    expected_covariates.each { col, val ->
+        assert header_map.containsKey(col) : "Column ${col} missing in ${file_obj}"
+    }
+
+    // Check values in all rows
+    lines.drop(1).each { line -> // Skip header
+        if (line.trim()) {
+            def row = line.split('\t')
+            expected_covariates.each { col, val ->
+                def idx = header_map[col]
+                assert row[idx] == val : "Value mismatch for ${col} in ${file_obj}. Expected '${val}', got '${row[idx]}'"
+            }
+        }
+    }
+}
+
 nextflow_process {
 
     name "Test Process STATS_METRICSINROI"
@@ -21,6 +46,48 @@ nextflow_process {
                 input[1] = "test.load-test-data"
                 """
             }
+        }
+    }
+
+    test("stats - metrics in ROI - with covariates") {
+        config "./nextflow_covariates.config"
+
+        tag "working"
+
+        when {
+            process {
+                """
+                ch_split_test_data = LOAD_DATA.out.test_data_directory
+                    .branch{
+                        tractometry: it.simpleName == "tractometry"
+                        plot: it.simpleName == "plot"
+                    }
+                input[0] = ch_split_test_data.tractometry.map{
+                    test_data_directory -> [
+                        [ id:'test', single_end:false, 'sex': 1, 'age': 25, 'site': 'testingSite' ], // meta map
+                        file("\${test_data_directory}/mni_masked.nii.gz"),
+                        file("\${test_data_directory}/IFGWM.nii.gz"),
+                        []
+                    ]
+                }
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert process.success },
+                {
+                    def expected_covariates = [
+                        'sex': '1',
+                        'age': '25',
+                        'site': 'testingSite',
+                        'unknown': ''
+                    ]
+
+                    validateTSV(file(process.out.stats_mean.get(0).get(1)), expected_covariates)
+                    validateTSV(file(process.out.stats_std.get(0).get(1)), expected_covariates)
+                }
+            )
         }
     }
 

@@ -53,6 +53,13 @@ process TRACKING_LOCALTRACKING {
     }
 
     """
+    # Set home directory. This is problematic if the container is run
+    # with non-root user which does not create a home directory. When
+    # running the local tracking using GPU, its trying to write to
+    # ~/.cache/ directory, causing the job to fail.
+    mkdir -p /tmp
+    export HOME=/tmp
+
     export ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=1
     export OMP_NUM_THREADS=1
     export OPENBLAS_NUM_THREADS=1

@@ -2,15 +2,14 @@
 name: "load_test_data"
 
 description: |
-  Load test data from Scilpy in a local temporary directory. Archives names can be found at:
-    https://github.com/scilus/scilpy/blob/96ab12eb5d303754ef7ad74d7385137683cb9d47/scilpy/io/fetcher.py#L59
+  Download test datasets for modules and subworkflows. A full listing of the packages ids
+  is available in the nf-neuro repository, under `tests/test_data.json`.
 keywords:
   - load
   - test
   - data
   - scilpy
-components:
-  - testdata/scilpy
+components: []
 input:
   - ch_archive:
       type: string

@@ -69,6 +69,33 @@ input:
         type: float
         description: Maximum perpendicular diffusivity value (diff prior).
         mandatory: false
+
+args:
+  - para_diff:
+      type: float
+      description: Axial diffusivity (AD) in the CC. It overwrites the input para_diff if provided.
+  - iso_diff:
+      type: float
+      description: Mean diffusivity (MD) in ventricles (mm2/s). It overwrites the input iso_diff if provided.
+  - perp_diff_min:
+      type: float
+      description: Radial diffusivity (RD) minimum (mm2/s). It overwrites the input perp_diff_min if provided.
+  - perp_diff_max:
+      type: float
+      description: Radial diffusivity (RD) maximum (mm2/s). It overwrites the input perp_diff_max if provided.
+  - fw_lambda1:
+      type: float
+      description: First regularization parameter for freewater fitting.
+  - fw_lambda2:
+      type: float
+      description: Second regularization parameter for freewater fitting.
+  - b_thr:
+      type: float
+      description: Limit value to consider that a b-value is on an existing shell. Above this limit, the b-value is placed on a new shell. This includes b0s values.
+  - compute_only:
+      type: boolean
+      description: Compute kernels only.
+
 output:
   dwi_fw_corrected:
     - - meta:
@@ -142,5 +169,6 @@ output:
         pattern: versions.yml
         ontologies:
           - edam: http://edamontology.org/format_3750 # YAML
+
 authors:
   - "@karanphil"

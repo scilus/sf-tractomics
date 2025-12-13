@@ -85,6 +85,15 @@ args:
         - "csv"
         - "tsv"
       default: "tsv"
+  - meta_columns:
+      type: list
+      description: |
+        List of keys from the meta map to add as extra columns in the tabular stats files.
+        e.g. `['age', 'laterality']` will add two columns with the corresponding names
+        and values for each sample taken from the input meta map. This is particularly useful
+        to add covariates such as the age, laterality, diagnosis, etc. of each subject.
+        If the key is not found in the meta map, an empty value will be used.
+      default: []
 
 output:
   stats_json:

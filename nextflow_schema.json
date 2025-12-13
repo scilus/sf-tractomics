@@ -100,6 +100,11 @@
                     "fa_icon": "fas fa-file-signature",
                     "help_text": "MultiQC report title. Printed as page header, used for filename if not otherwise specified.",
                     "hidden": true
+                },
+                "participants_tsv": {
+                    "type": "string",
+                    "description": "Path to the participants.tsv file.",
+                    "help_text": "Path to the participants.tsv file. If this is not specified, the participants.tsv file will be fetched automatically if the input is a BIDS directory, otherwise no additional covariates will be used."
                 }
             }
         },
@@ -213,6 +218,16 @@
                     "help_text": "FA threshold to compute WM mask for normalization.",
                     "minimum": 0,
                     "maximum": 1
+                },
+                "run_qball": {
+                    "type": "boolean",
+                    "description": "Compute Q-Ball metrics.",
+                    "help_text": "Compute Q-Ball metrics (gfa, nufo, odf, ...)."
+                },
+                "use_qball_for_tracking": {
+                    "type": "boolean",
+                    "description": "Use Q-Ball model for tractography instead of fODFs.",
+                    "help_text": "Use Q-Ball model for tractography instead of fODFs."
                 }
             }
         },
@@ -899,8 +914,7 @@
             "help_text": "Define the bundle_seg subworkflow configuration parameters.",
             "properties": {
                 "run_bundle_seg": {
-                    "type": "boolean",
-                    "default": false
+                    "type": "boolean"
                 },
                 "atlas_directory": {
                     "type": "string",
@@ -922,14 +936,126 @@
             "help_text": "Define the tractometry subworkflow configuration parameters.",
             "properties": {
                 "run_tractometry": {
-                    "type": "boolean",
-                    "default": false
+                    "type": "boolean"
                 },
                 "nb_points": {
                     "type": "integer",
                     "default": 10,
                     "description": "Number of points for tractometry.",
                     "help_text": "Number of points for tractometry."
+                },
+                "tractometry_covariates": {
+                    "type": "string",
+                    "default": "site,age,sex,handedness,disease",
+                    "description": "Comma separated list of covariates to include in the tractometry analysis.",
+                    "help_text": "Comma separated list of covariates to include in the tractometry analysis."
+                }
+            }
+        },
+        "reconst_fw_noddi": {
+            "title": "Reconst FW NODDI options",
+            "type": "object",
+            "description": "Define the behaviour of the reconst_fw_noddi subworkflow.",
+            "default": "",
+            "help_text": "Define the reconst_fw_noddi subworkflow configuration parameters.",
+            "properties": {
+                "run_noddi": {
+                    "type": "boolean",
+                    "description": "Compute NODDI maps.",
+                    "help_text": "Compute NODDI maps."
+                },
+                "run_freewater": {
+                    "type": "boolean",
+                    "description": "Run Freewater Elimination and compute Freewater corrected metrics.",
+                    "help_text": "Run Freewater Elimination and compute Freewater corrected metrics."
+                },
+                "average_diff_priors": {
+                    "type": "boolean",
+                    "description": "Average diffusivity priors across subjects.",
+                    "help_text": "Average diffusivity priors across subjects."
+                },
+                "para_diff": {
+                    "type": "number",
+                    "description": "Average parallel diffusivity value (mm\u00b2/s).",
+                    "help_text": "Average parallel diffusivity value. Specifying this will override automatically computed values.",
+                    "default": 0.0015
+                },
+                "iso_diff": {
+                    "type": "number",
+                    "description": "Average isotropic diffusivity value (mm\u00b2/s).",
+                    "help_text": "Average isotropic diffusivity value. Specifying this will override automatically computed values.",
+                    "default": 0.003
+                },
+                "perp_diff_min": {
+                    "type": "number",
+                    "description": "Minimum perpendicular diffusivity value (mm\u00b2/s).",
+                    "help_text": "Minimum perpendicular diffusivity value. Specifying this will override automatically computed values.",
+                    "default": 0.0001
+                },
+                "perp_diff_max": {
+                    "type": "number",
+                    "description": "Maximum perpendicular diffusivity value (mm\u00b2/s).",
+                    "help_text": "Maximum perpendicular diffusivity value. Specifying this will override automatically computed values.",
+                    "default": 0.0007
+                },
+                "noddi_lambda1": {
+                    "type": "number",
+                    "description": "NODDI first regularization parameter.",
+                    "default": 0.5
+                },
+                "noddi_lambda2": {
+                    "type": "number",
+                    "description": "NODDI second regularization parameter.",
+                    "default": 0.001
+                },
+                "fw_lambda1": {
+                    "type": "number",
+                    "description": "Freeewater first regularization parameter.",
+                    "default": 0.0
+                },
+                "fw_lambda2": {
+                    "type": "number",
+                    "description": "Freewater second regularization parameter.",
+                    "default": 0.25
+                }
+            }
+        },
+        "atlas_roimetrics": {
+            "title": "",
+            "type": "object",
+            "description": "Define the behaviour of the atlas_roimetrics subworkflow.",
+            "default": "",
+            "help_text": "Define the atlas_roimetrics subworkflow configuration parameters.",
+            "properties": {
+                "run_atlas_roimetrics": {
+                    "type": "boolean",
+                    "description": "Run atlas-based ROI metrics. The atlas used must be specified using one of the 'use_atlas_*' parameters.",
+                    "help_text": "Run atlas-based ROI metrics. The atlas used must be specified using one of the 'use_atlas_*' parameters."
+                }
+            }
+        },
+        "atlas_iit": {
+            "title": "Atlas IIT options",
+            "type": "object",
+            "description": "Define the behaviour of the atlas_iit subworkflow.",
+            "default": "",
+            "help_text": "Define the atlas_iit subworkflow configuration parameters.",
+            "properties": {
+                "atlas_iit_b0": {
+                    "type": "string",
+                    "description": "Path to the IIT mean B0 nifti image file.",
+                    "help_text": "Path to the IIT mean B0 nifti image file."
+                },
+                "atlas_iit_bundle_masks_dir": {
+                    "type": "string",
+                    "description": "Path to the directory holding all IIT bundle (binary) masks nifti files.",
+                    "help_text": "Path to the directory holding all IIT bundle (binary) masks nifti files."
+                },
+                "use_atlas_iit": {
+                    "type": "boolean",
+                    "description": "Use the IIT atlas for atlas-based ROI metrics.",
+                    "help_text": "Use the IIT atlas for atlas-based ROI metrics.",
+                    "default": true
                 }
             }
         }
@@ -970,70 +1096,15 @@
         },
         {
             "$ref": "#/$defs/tractometry_options"
+        },
+        {
+            "$ref": "#/$defs/reconst_fw_noddi"
+        },
+        {
+            "$ref": "#/$defs/atlas_roimetrics"
+        },
+        {
+            "$ref": "#/$defs/atlas_iit"
         }
-    ],
-    "properties": {
-        "run_noddi": {
-            "type": "boolean",
-            "description": "Compute NODDI maps.",
-            "help_text": "Compute NODDI maps."
-        },
-        "run_freewater": {
-            "type": "boolean",
-            "description": "Run Freewater Elimination and compute Freewater corrected metrics.",
-            "help_text": "Run Freewater Elimination and compute Freewater corrected metrics."
-        },
-        "average_diff_priors": {
-            "type": "boolean",
-            "default": true,
-            "description": "Average diffusivity priors across subjects.",
-            "help_text": "Average diffusivity priors across subjects."
-        },
-        "para_diff": {
-            "type": "string",
-            "description": "Average parallel diffusivity value.",
-            "help_text": "Average parallel diffusivity value. Specifying this will override automatically computed values."
-        },
-        "iso_diff": {
-            "type": "string",
-            "description": "Average isotropic diffusivity value.",
-            "help_text": "Average isotropic diffusivity value. Specifying this will override automatically computed values."
-        },
-        "perp_diff_min": {
-            "type": "string",
-            "description": "Minimum perpendicular diffusivity value.",
-            "help_text": "Minimum perpendicular diffusivity value. Specifying this will override automatically computed values."
-        },
-        "perp_diff_max": {
-            "type": "string",
-            "description": "Maximum perpendicular diffusivity value.",
-            "help_text": "Maximum perpendicular diffusivity value. Specifying this will override automatically computed values."
-        },
-        "run_qball": {
-            "type": "boolean",
-            "description": "Compute Q-Ball metrics.",
-            "help_text": "Compute Q-Ball metrics (gfa, nufo, odf, ...)."
-        },
-        "use_qball_for_tracking": {
-            "type": "boolean",
-            "default": false,
-            "description": "Use Q-Ball model for tractography instead of fODFs.",
-            "help_text": "Use Q-Ball model for tractography instead of fODFs."
-        },
-        "run_atlas_based_tractometry": {
-            "type": "boolean",
-            "default": false,
-            "description": "Run atlas-based tractometry using ROI masks obtained from IIT."
-        },
-        "atlas_iit_b0": {
-            "type": "string",
-            "description": "Path to the IIT mean B0 nifti image file.",
-            "help_text": "Path to the IIT mean B0 nifti image file."
-        },
-        "atlas_iit_bundle_masks_dir": {
-            "type": "string",
-            "description": "Path to the directory holding all IIT bundle (binary) masks nifti files.",
-            "help_text": "Path to the directory holding all IIT bundle (binary) masks nifti files."
-        }
-    }
+    ]
 }

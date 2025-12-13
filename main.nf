@@ -36,6 +36,7 @@ workflow SCILUS_SF_TRACTOMICS {
     rev_dwi_bval_bvec   // channel: rev_dwi_bval_bvec read in from --input
     rev_b0              // channel: rev_b0 read in from --input
     lesion              // channel: lesion read in from --input
+    covariates          // channel: covariates parsed from participants.tsv
 
     main:
 
@@ -50,7 +51,8 @@ workflow SCILUS_SF_TRACTOMICS {
         b0,
         rev_dwi_bval_bvec,
         rev_b0,
-        lesion
+        lesion,
+        covariates
     )
     emit:
     multiqc_report = SF_TRACTOMICS.out.multiqc_report // channel: /path/to/multiqc_report.html
@@ -86,7 +88,8 @@ workflow {
         PIPELINE_INITIALISATION.out.b0,
         PIPELINE_INITIALISATION.out.rev_dwi_bval_bvec,
         PIPELINE_INITIALISATION.out.rev_b0,
-        PIPELINE_INITIALISATION.out.lesion
+        PIPELINE_INITIALISATION.out.lesion,
+        PIPELINE_INITIALISATION.out.covariates
     )
     //
     // SUBWORKFLOW: Run completion tasks
