@@ -1,0 +1,121 @@
+name: Debug Apptainer Setup
+
+on:
+  workflow_dispatch:
+    inputs:
+      enable_monitoring:
+        description: 'Enable APT monitoring'
+        required: false
+        type: boolean
+        default: true
+
+jobs:
+  debug-apt:
+    runs-on: [self-hosted, Linux, scilus-docker-large]
+
+    # Enable debug mode for this job
+    env:
+      APT_DEBUG_ENABLED: "true"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Start APT monitoring
+        if: ${{ inputs.enable_monitoring }}
+        run: |
+          echo "🔍 Starting APT monitoring..."
+          /usr/local/bin/apt-debug/apt-monitor.sh start
+
+      - name: Show environment
+        run: |
+          echo "=== Environment ==="
+          echo "Hostname: $(hostname)"
+          echo "User: $(whoami)"
+          echo "PWD: $PWD"
+          echo ""
+          echo "=== Network Configuration ==="
+          ip addr show eth0 || true
+          echo ""
+          echo "=== DNS ==="
+          cat /etc/resolv.conf
+          echo ""
+          echo "=== APT Configuration ==="
+          apt-config dump | grep -E 'Acquire|Pipeline|Queue|Timeout|Retries' || true
+
+      - name: Test basic connectivity
+        run: |
+          echo "=== Testing DNS resolution ==="
+          nslookup archive.ubuntu.com || true
+          echo ""
+          echo "=== Testing HTTP connectivity ==="
+          curl -v --max-time 10 http://archive.ubuntu.com 2>&1 | head -30 || true
+
+      - name: APT update with monitoring
+        if: ${{ inputs.enable_monitoring }}
+        run: |
+          echo "📦 Running APT update with monitoring..."
+          /usr/local/bin/apt-debug/apt-monitor.sh wrap sudo apt-get update
+
+      - name: APT update without monitoring
+        if: ${{ !inputs.enable_monitoring }}
+        run: |
+          echo "📦 Running APT update..."
+          sudo apt-get update
+
+      - name: Setup Apptainer with monitoring
+        if: ${{ inputs.enable_monitoring }}
+        run: |
+          echo "🚀 Installing Apptainer with monitoring..."
+          /usr/local/bin/apt-debug/apt-monitor.sh wrap sudo apt-get install -y gdebi
+
+          # Now install apptainer
+          echo "📦 Setting up Apptainer..."
+          # The actual setup-apptainer action would go here
+          # For testing purposes, we're just installing gdebi as it was the problematic package
+
+      - name: Setup Apptainer without monitoring
+        if: ${{ !inputs.enable_monitoring }}
+        uses: eWaterCycle/setup-apptainer@v2
+
+      - name: Stop APT monitoring
+        if: always() && inputs.enable_monitoring
+        run: |
+          echo "🛑 Stopping monitoring..."
+          /usr/local/bin/apt-debug/apt-monitor.sh stop || true
+
+      - name: Collect debug logs
+        if: always() && inputs.enable_monitoring
+        run: |
+          echo "📦 Collecting debug logs..."
+          /usr/local/bin/apt-debug/collect-logs.sh || true
+
+      - name: Upload debug artifacts
+        if: always() && inputs.enable_monitoring
+        uses: actions/upload-artifact@v4
+        with:
+          name: apt-debug-logs-${{ github.run_id }}
+          path: /home/runner/_work/_debug/*.tar.gz
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: Show debug summary
+        if: always() && inputs.enable_monitoring
+        run: |
+          echo "📊 Debug Session Summary"
+          echo "========================"
+          echo ""
+          if [ -f /tmp/apt-debug-dir ]; then
+            DEBUG_DIR=$(cat /tmp/apt-debug-dir)
+            echo "Debug directory: $DEBUG_DIR"
+            echo ""
+            echo "Files captured:"
+            ls -lh "$DEBUG_DIR/" 2>/dev/null || echo "No files found"
+            echo ""
+            echo "Logs size:"
+            du -sh "$DEBUG_DIR/" 2>/dev/null || echo "Directory not found"
+          else
+            echo "⚠️  No debug session directory found"
+          fi
+          echo ""
+          echo "✅ Artifacts uploaded. Download them from the Actions tab."
