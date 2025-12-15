@@ -100,6 +100,7 @@ workflow {
         params.plaintext_email,
         params.outdir,
         params.monochrome_logs,
+        params.hook_url,
         SCILUS_SF_TRACTOMICS.out.multiqc_report
     )
 }
