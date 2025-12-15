@@ -18,7 +18,7 @@ on:
 
 jobs:
   debug-apt:
-    runs-on: [self-hosted, Linux, scilus-docker-large]
+    runs-on: scilus-docker-large
 
     # Enable debug mode for this job
     env:
