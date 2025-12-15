@@ -46,6 +46,11 @@ jobs:
     runs-on: scilus-docker-large
     needs: configure
     steps:
+      - name: Setup Apptainer
+        uses: eWaterCycle/setup-apptainer@4bb22c52d4f63406c49e94c804632975787312b3 # v2.0.0
+        with:
+          apptainer-version: 1.4.5
+
       - name: Install Nextflow
         uses: nf-core/setup-nextflow@v2
 
@@ -53,11 +58,6 @@ jobs:
         with:
           python-version: "3.12"
           architecture: "x64"
-
-      - name: Setup Apptainer
-        uses: eWaterCycle/setup-apptainer@4bb22c52d4f63406c49e94c804632975787312b3 # v2.0.0
-        with:
-          apptainer-version: 1.4.5
 
       - name: Install dependencies
         run: |
