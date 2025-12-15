@@ -1,6 +1,13 @@
 name: Debug Apptainer Setup
 
 on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+    branches:
+      - dev
   workflow_dispatch:
     inputs:
       enable_monitoring:
