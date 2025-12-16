@@ -46,8 +46,10 @@ jobs:
     runs-on: scilus-docker-large
     needs: configure
     steps:
-      - name: Update APT packages
-        run: sudo apt-get update
+      - name: Update APT packages and install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y tree diffutils
 
       - name: Setup Apptainer
         uses: eWaterCycle/setup-apptainer@3f706d898c9db585b1d741b4692e66755f3a1b40 # v2.0.0
