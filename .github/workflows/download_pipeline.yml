@@ -46,13 +46,13 @@ jobs:
     runs-on: scilus-docker-large
     needs: configure
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Update APT packages
+        run: sudo apt-get update
 
       - name: Setup Apptainer
-        uses: eWaterCycle/setup-apptainer@4bb22c52d4f63406c49e94c804632975787312b3 # v2.0.0
-        with:
-          apptainer-version: 1.3.4
+        uses: eWaterCycle/setup-apptainer@3f706d898c9db585b1d741b4692e66755f3a1b40 # v2.0.0
+        # with:
+        #   apptainer-version: 1.3.4
 
       - name: Install Nextflow
         uses: nf-core/setup-nextflow@v2
