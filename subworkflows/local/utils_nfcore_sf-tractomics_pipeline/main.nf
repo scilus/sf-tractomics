@@ -164,6 +164,33 @@ workflow PIPELINE_INITIALISATION {
     // on the fly, when needed (which should be done only when the inputs requires those fields).
     ch_covariates = parseParticipantsTsv(participants_tsv_path, ch_samplesheet.t1)
 
+    if (params.subjects_only) {
+        subjects_to_process = params.subjects_only.split(",").collect { item -> item.trim() }
+        log.info("Filtering for subjects: ${subjects_to_process}")
+
+        ch_samplesheet = ch_samplesheet.collectEntries { key, value ->
+            def filtered = value.filter { item ->
+                def meta = item[0]
+
+                // The user can provide a list of subjects to process, separated by commas
+                // in the same format as the prefix (i.e. sub-XX_ses-XX_run-XX). The implementation
+                // allows the user to provide a list of subjects of different scopes to run.
+                // For example, if the user provides:
+                // sub-01, then all sessions and runs of sub-01 will be processed.
+                // sub-01_ses-01, then all runs of sub-01_ses-01 will be processed.
+                // sub-01_ses-01_run-01, then only sub-01_ses-01_run-01 will be processed.
+
+                def sid = [meta.id].findAll { x -> x }.join("_")
+                def sid_ses = [meta.id, meta.session].findAll { x -> x }.join("_")
+                def sid_run = [meta.id, meta.session, meta.run].findAll { x -> x }.join("_")
+
+                return sid in subjects_to_process || sid_ses in subjects_to_process || sid_run in subjects_to_process
+            }
+
+            return [key, filtered]
+        }
+    }
+
     emit:
     t1 = ch_samplesheet.t1
     wmparc = ch_samplesheet.wmparc

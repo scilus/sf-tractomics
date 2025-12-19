@@ -1106,5 +1106,10 @@
         {
             "$ref": "#/$defs/atlas_iit"
         }
-    ]
+    ],
+    "properties": {
+        "subjects_only": {
+            "type": "string"
+        }
+    }
 }
