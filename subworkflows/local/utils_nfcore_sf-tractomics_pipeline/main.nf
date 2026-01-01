@@ -164,9 +164,9 @@ workflow PIPELINE_INITIALISATION {
     // on the fly, when needed (which should be done only when the inputs requires those fields).
     ch_covariates = parseParticipantsTsv(participants_tsv_path, ch_samplesheet.t1)
 
-    if (params.subjects_only) {
-        subjects_to_process = params.subjects_only.split(",").collect { item -> item.trim() }
-        log.info("Filtering for subjects: ${subjects_to_process}")
+    if (params.participant_label) {
+        participants_to_process = params.participant_label.split(",").collect { item -> item.trim() }
+        log.info("Filtering for participants: ${participants_to_process}")
 
         ch_samplesheet = ch_samplesheet.collectEntries { key, value ->
             def filtered = value.filter { item ->
@@ -184,7 +184,7 @@ workflow PIPELINE_INITIALISATION {
                 def sid_ses = [meta.id, meta.session].findAll { x -> x }.join("_")
                 def sid_run = [meta.id, meta.session, meta.run].findAll { x -> x }.join("_")
 
-                return sid in subjects_to_process || sid_ses in subjects_to_process || sid_run in subjects_to_process
+                return sid in participants_to_process || sid_ses in participants_to_process || sid_run in participants_to_process
             }
 
             return [key, filtered]

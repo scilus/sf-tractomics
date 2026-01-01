@@ -1108,7 +1108,7 @@
         }
     ],
     "properties": {
-        "subjects_only": {
+        "participant_label": {
             "type": "string"
         }
     }
