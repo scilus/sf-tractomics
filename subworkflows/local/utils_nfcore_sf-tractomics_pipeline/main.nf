@@ -169,13 +169,15 @@ workflow PIPELINE_INITIALISATION {
 
     if (params.participant_label) {
         participants_to_include = params.participant_label.split(",").collect { item -> item.trim() }
+        log.info "Including participants: ${participants_to_include.join(", ")}"
     }
 
     if (params.exclude_participant_label) {
         participants_to_exclude = params.exclude_participant_label.split(",").collect { item -> item.trim() }
+        log.info "Excluding participants: ${participants_to_exclude.join(", ")}"
     }
 
-    if (!participants_to_include.empty() || !participants_to_exclude.empty()) {
+    if (participants_to_include || participants_to_exclude) {
         ch_samplesheet = ch_samplesheet.collectEntries { key, value ->
             def filtered = value.filter { item ->
                 def meta = item[0]
@@ -202,7 +204,7 @@ workflow PIPELINE_INITIALISATION {
 
                 // If inclusion list is provided, only keep the participant if in that list
                 // and not in the exclusion list.
-                if (!participants_to_include.empty()) {
+                if (participants_to_include) {
                     return is_included && !is_excluded
                 }
                 // If we only have an exclusion list, filter out participants in that list
