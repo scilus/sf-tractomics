@@ -261,28 +261,28 @@ workflow SF_TRACTOMICS {
     //
     // MODULE: MultiQC
     //
-    ch_multiqc_files = Channel.empty() // To store versions, methods description, etc.
+    ch_multiqc_files = channel.empty() // To store versions, methods description, etc.
 
-    ch_multiqc_config_subject = Channel.fromPath(
+    ch_multiqc_config_subject = channel.fromPath(
         "$projectDir/assets/multiqc_config.yml", checkIfExists: true)
-    ch_multiqc_config_global = Channel.fromPath(
+    ch_multiqc_config_global = channel.fromPath(
         "$projectDir/assets/multiqc_config_global.yml", checkIfExists: true)
     ch_multiqc_custom_config = params.multiqc_config ?
-        Channel.fromPath(params.multiqc_config, checkIfExists: true) :
-        Channel.empty()
+        channel.fromPath(params.multiqc_config, checkIfExists: true) :
+        channel.empty()
     ch_multiqc_logo          = params.multiqc_logo ?
-        Channel.fromPath(params.multiqc_logo, checkIfExists: true) :
-        Channel.fromPath("$projectDir/assets/sf-tractomics-multiqc-logo.png", checkIfExists: true)
+        channel.fromPath(params.multiqc_logo, checkIfExists: true) :
+        channel.fromPath("$projectDir/assets/sf-tractomics-multiqc-logo.png", checkIfExists: true)
 
     summary_params      = paramsSummaryMap(
         workflow, parameters_schema: "nextflow_schema.json")
-    ch_workflow_summary = Channel.value(paramsSummaryMultiqc(summary_params))
+    ch_workflow_summary = channel.value(paramsSummaryMultiqc(summary_params))
     ch_multiqc_files = ch_multiqc_files.mix(
         ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
     ch_multiqc_custom_methods_description = params.multiqc_methods_description ?
         file(params.multiqc_methods_description, checkIfExists: true) :
         file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
-    ch_methods_description                = Channel.value(
+    ch_methods_description                = channel.value(
         methodsDescriptionText(ch_multiqc_custom_methods_description))
 
     ch_multiqc_files = ch_multiqc_files.mix(ch_collated_versions)
@@ -316,12 +316,11 @@ workflow SF_TRACTOMICS {
             files.any { it.name.contains("dwi_eddy_restricted_movement_rms") }
         }
         .map{ it[1] }
-    ch_global_multiqc_files = ch_global_multiqc_files.mix(ch_fd_files.flatten())
     ch_global_multiqc_files = ch_global_multiqc_files.mix(ch_multiqc_files)
 
     // Global multiqc
     MULTIQC_GLOBAL (
-        Channel.of([meta:[id: 'global'], qc_images: []]),
+        channel.of([meta:[id: 'global'], qc_images: []]),
         ch_global_multiqc_files.collect(),
         ch_multiqc_config_global.toList(),
         ch_multiqc_custom_config.toList(),
@@ -335,9 +334,6 @@ workflow SF_TRACTOMICS {
     versions       = ch_versions                 // channel: [ path(versions.yml) ]
 
 }
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     THE END
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */

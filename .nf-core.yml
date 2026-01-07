@@ -20,11 +20,11 @@ lint:
   nextflow_config:
     - manifest.name
     - manifest.homePage
+  nf_test_content: false
+  schema_description: false
   schema_lint: false
   schema_params: false
-  schema_description: false
-  nf_test_content: false
-nf_core_version: 3.2.0
+nf_core_version: 3.5.1
 repository_type: pipeline
 template:
   author: "@AlexVCaron"
