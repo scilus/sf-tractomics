@@ -1,26 +1,42 @@
 lint:
   files_exist:
-  - CODE_OF_CONDUCT.md
-  - assets/nf-core-tractoflow_logo_light.png
-  - docs/images/nf-core-tractoflow_logo_light.png
-  - docs/images/nf-core-tractoflow_logo_dark.png
-  - .github/ISSUE_TEMPLATE/config.yml
-  - .github/workflows/awstest.yml
-  - .github/workflows/awsfulltest.yml
-  - conf/igenomes.config
+    - CODE_OF_CONDUCT.md
+    - assets/nf-core-sf-tractomics_logo_light.png
+    - docs/images/nf-core-sf-tractomics_logo_light.png
+    - docs/images/nf-core-sf-tractomics_logo_dark.png
+    - .github/ISSUE_TEMPLATE/config.yml
+    - .github/workflows/awstest.yml
+    - .github/workflows/awsfulltest.yml
+    - conf/igenomes.config
+    - conf/igenomes_ignored.config
   files_unchanged:
-  - CODE_OF_CONDUCT.md
-  - assets/nf-core-tractoflow_logo_light.png
-  - docs/images/nf-core-tractoflow_logo_light.png
-  - docs/images/nf-core-tractoflow_logo_dark.png
-  - .github/ISSUE_TEMPLATE/bug_report.yml
+    - CODE_OF_CONDUCT.md
+    - assets/nf-core-sf-tractomics_logo_light.png
+    - docs/images/nf-core-sf-tractomics_logo_light.png
+    - docs/images/nf-core-sf-tractomics_logo_dark.png
+    - .github/ISSUE_TEMPLATE/bug_report.yml
   multiqc_config:
-  - report_comment
+    - report_comment
   nextflow_config:
-  - manifest.name
-  - manifest.homePage
+    - manifest.name
+    - manifest.homePage
+  nf_test_content: false
+  schema_description: false
+  schema_lint: false
+  schema_params: false
+nf_core_version: 3.5.1
 repository_type: pipeline
 template:
-  prefix: nf
-  skip:
-  - igenomes
+  author: "@AlexVCaron"
+  description: Human diffusion MRI processing and tractography
+  force: false
+  is_nfcore: false
+  name: sf-tractomics
+  org: scilus
+  outdir: .
+  skip_features:
+    - igenomes
+    - fastqc
+    - slackreport
+    - seqera_platform
+  version: 1.0dev

@@ -1,13 +1,11 @@
 #!/usr/bin/env nextflow
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    nf/tractoflow
+    scilus/sf-tractomics
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    Github : https://github.com/nf/tractoflow
+    Github : https://github.com/scilus/sf-tractomics
 ----------------------------------------------------------------------------------------
 */
-
-nextflow.enable.dsl = 2
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -15,10 +13,9 @@ nextflow.enable.dsl = 2
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { TRACTOFLOW  } from './workflows/tractoflow'
-include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_tractoflow_pipeline'
-include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_tractoflow_pipeline'
-
+include { SF-TRACTOMICS  } from './workflows/sf-tractomics'
+include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_sf-tractomics_pipeline'
+include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_sf-tractomics_pipeline'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     NAMED WORKFLOWS FOR PIPELINE
@@ -28,7 +25,7 @@ include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_trac
 //
 // WORKFLOW: Run main analysis pipeline depending on type of input
 //
-workflow NF_TRACTOFLOW {
+workflow SCILUS_SF-TRACTOMICS {
 
     take:
     samplesheet // channel: samplesheet read in from --input
@@ -38,13 +35,11 @@ workflow NF_TRACTOFLOW {
     //
     // WORKFLOW: Run pipeline
     //
-    TRACTOFLOW (
+    SF-TRACTOMICS (
         samplesheet
     )
-
     emit:
-    multiqc_report = TRACTOFLOW.out.multiqc_report // channel: /path/to/multiqc_report.html
-
+    multiqc_report = SF-TRACTOMICS.out.multiqc_report // channel: /path/to/multiqc_report.html
 }
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -55,27 +50,27 @@ workflow NF_TRACTOFLOW {
 workflow {
 
     main:
-
     //
     // SUBWORKFLOW: Run initialisation tasks
     //
     PIPELINE_INITIALISATION (
         params.version,
-        params.help,
         params.validate_params,
         params.monochrome_logs,
         args,
         params.outdir,
-        params.input
+        params.input,
+        params.help,
+        params.help_full,
+        params.show_hidden
     )
 
     //
     // WORKFLOW: Run main workflow
     //
-    NF_TRACTOFLOW (
+    SCILUS_SF-TRACTOMICS (
         PIPELINE_INITIALISATION.out.samplesheet
     )
-
     //
     // SUBWORKFLOW: Run completion tasks
     //
@@ -86,7 +81,7 @@ workflow {
         params.outdir,
         params.monochrome_logs,
         params.hook_url,
-        NF_TRACTOFLOW.out.multiqc_report
+        SCILUS_SF-TRACTOMICS.out.multiqc_report
     )
 }
 
