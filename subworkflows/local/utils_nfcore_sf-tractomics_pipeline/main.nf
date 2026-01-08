@@ -65,10 +65,10 @@ workflow PIPELINE_INITIALISATION {
     \033[0;34m  |\\ | |__  __ |\\ | |__  |  | |__) /  \\     \033[0;33m(o)_    ) )\033[0m
     \033[0;34m  | \\| |       | \\| |___ |__| |  \\ \\__/     \033[0;32m    (o)_.'\033[0m
                                                 \033[0;32m     )/\033[0m
-    \033[0;35m  scilus/sf-tractomics ${manifest.version}\033[0m
+    \033[0;35m  scilus/sf-tractomics ${workflow.manifest.version}\033[0m
     -\033[2m------------------------------------------------------\033[0m-
     """
-    after_text = """${manifest.doi ? "\n* The pipeline\n" : ""}${manifest.doi.tokenize(",").collect { "    https://doi.org/${it.trim().replace('https://doi.org/','')}"}.join("\n")}${manifest.doi ? "\n" : ""}
+    after_text = """${workflow.manifest.doi ? "\n* The pipeline\n" : ""}${workflow.manifest.doi.tokenize(",").collect { "    https://doi.org/${it.trim().replace('https://doi.org/','')}"}.join("\n")}${workflow.manifest.doi ? "\n" : ""}
     * The nf-neuro project
         https://scilus.github.io/nf-neuro
 
@@ -109,19 +109,19 @@ workflow PIPELINE_INITIALISATION {
         //
         if (file(params.input).isDirectory()) {
             IO_BIDS(
-                Channel.fromPath(params.input),
-                Channel.value(params.fsbids ?: []),
-                Channel.value(params.bidsignore ?: [])
+                channel.fromPath(params.input),
+                channel.value(params.fsbids ?: []),
+                channel.value(params.bidsignore ?: [])
             )
             ch_samplesheet = [
                 t1: IO_BIDS.out.ch_t1,
                 wmparc: IO_BIDS.out.ch_wmparc,
                 aparc_aseg: IO_BIDS.out.ch_aparc_aseg,
                 dwi_bval_bvec: IO_BIDS.out.ch_dwi_bval_bvec,
-                b0: Channel.empty(),
+                b0: channel.empty(),
                 rev_dwi_bval_bvec: IO_BIDS.out.ch_rev_dwi_bval_bvec,
                 rev_b0: IO_BIDS.out.ch_rev_b0,
-                lesion: Channel.empty()
+                lesion: channel.empty()
             ]
 
             if (params.participants_tsv) {
