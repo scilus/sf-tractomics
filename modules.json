@@ -7,7 +7,7 @@
                 "nf-core": {
                     "multiqc": {
                         "branch": "master",
-                        "git_sha": "af27af1be706e6a2bb8fe454175b0cdf77f47b49",
+                        "git_sha": "5bdb098216aaf5df9c3b6343e6204cd932503c16",
                         "installed_by": ["modules"]
                     }
                 }
@@ -286,7 +286,7 @@
                     },
                     "atlas_iit": {
                         "branch": "main",
-                        "git_sha": "70b2e60539593782696da65c8f51df1a35756a86",
+                        "git_sha": "cf3c47a430239aab4371da03399ebf99499a85bf",
                         "installed_by": ["atlas_roimetrics", "subworkflows"]
                     },
                     "atlas_roimetrics": {
