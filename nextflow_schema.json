@@ -1128,5 +1128,12 @@
         {
             "$ref": "#/$defs/atlas_iit"
         }
-    ]
+    ],
+    "properties": {
+        "hook_url": {
+            "type": "string",
+            "description": "Hook URL to notify a web server e.g. Microsoft Teams and Slack ",
+            "help_text": "Hook URL to notify a web server e.g. Microsoft Teams and Slack "
+        }
+    }
 }
