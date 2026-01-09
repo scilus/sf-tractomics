@@ -14,7 +14,9 @@ repos:
           (?x)^(
               .*ro-crate-metadata.json$|
               modules/nf-core/.*|
+              modules/nf-neuro/.*|
               subworkflows/nf-core/.*|
+              subworkflows/nf-neuro/.*|
               .*\.snap$
           )$
       - id: end-of-file-fixer
@@ -22,6 +24,8 @@ repos:
           (?x)^(
               .*ro-crate-metadata.json$|
               modules/nf-core/.*|
+              modules/nf-neuro/.*|
               subworkflows/nf-core/.*|
+              subworkflows/nf-neuro/.*|
               .*\.snap$
           )$
