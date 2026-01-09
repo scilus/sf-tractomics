@@ -93,4 +93,3 @@ workflow IO_BIDS {
 
     versions = ch_versions                     // channel: [ versions.yml ]
 }
-

@@ -94,5 +94,3 @@ main:
     mean_per_point_lesions_tsv      = BUNDLE_STATS.out.mean_per_point_lesions_tsv ?: Channel.empty()
     versions = ch_versions
 }
-
-

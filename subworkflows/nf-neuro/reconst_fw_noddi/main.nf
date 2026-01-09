@@ -165,4 +165,3 @@ workflow RECONST_FW_NODDI {
 
     versions = ch_versions
 }
-
