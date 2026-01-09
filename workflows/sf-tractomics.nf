@@ -333,6 +333,7 @@ workflow SF_TRACTOMICS {
             files.any { it.name.contains("dwi_eddy_restricted_movement_rms") }
         }
         .map{ it[1] }
+    ch_global_multiqc_files = ch_global_multiqc_files.mix(ch_fd_files.flatten())
     ch_global_multiqc_files = ch_global_multiqc_files.mix(ch_multiqc_files)
 
     // Global multiqc
