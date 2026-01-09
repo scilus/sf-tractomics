@@ -1106,5 +1106,17 @@
         {
             "$ref": "#/$defs/atlas_iit"
         }
-    ]
+    ],
+    "properties": {
+        "participant_label": {
+            "type": "string",
+            "description": "Comma-separated list of participant labels include in the processing. If specified, only these participants will be processed (unless excluded by 'exclude_participant_label').",
+            "help_text": "Comma-separated list of participant labels include in the processing. If specified, only these participants will be processed (unless excluded by 'exclude_participant_label')."
+        },
+        "exclude_participant_label": {
+            "type": "string",
+            "description": "Comma-separated list of prefixes to exclude from the processing. If specified, participants with labels starting with any of these prefixes will be excluded from processing.",
+            "help_text": "Comma-separated list of prefixes to exclude from the processing. If specified, participants with labels starting with any of these prefixes will be excluded from processing."
+        }
+    }
 }

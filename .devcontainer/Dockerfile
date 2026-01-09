@@ -37,7 +37,7 @@ RUN curl -fSL https://github.com/seqeralabs/tower-agent/releases/latest/download
 
 # Uncomment if we need to pin the Nextflow version
 ENV NXF_EDGE=0
-ENV NXF_VER=24.10.4
+ENV NXF_VER=25.04.6
 ENV NXF_HOME=/workspaces/.nextflow
 
 ENV NFNEURO_RAW_REPOSITORY="https://raw.githubusercontent.com/nf-neuro/modules/main"
@@ -72,7 +72,7 @@ RUN conda install --name=base conda-anaconda-tos && \
     conda install --quiet --yes --name base \
         mamba \
         nextflow=$NXF_VER \
-        nf-core=3.2.0 \
+        nf-core=3.5.1 \
         nf-test=0.9.2 \
         black \
         prettier \

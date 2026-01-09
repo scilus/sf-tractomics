@@ -164,6 +164,57 @@ workflow PIPELINE_INITIALISATION {
     // on the fly, when needed (which should be done only when the inputs requires those fields).
     ch_covariates = parseParticipantsTsv(participants_tsv_path, ch_samplesheet.t1)
 
+    def participants_to_include = []
+    def participants_to_exclude = []
+
+    if (params.participant_label) {
+        participants_to_include = params.participant_label.split(",").collect { item -> item.trim() }
+        log.info "Including participants: ${participants_to_include.join(", ")}"
+    }
+
+    if (params.exclude_participant_label) {
+        participants_to_exclude = params.exclude_participant_label.split(",").collect { item -> item.trim() }
+        log.info "Excluding participants: ${participants_to_exclude.join(", ")}"
+    }
+
+    if (participants_to_include || participants_to_exclude) {
+        ch_samplesheet = ch_samplesheet.collectEntries { key, value ->
+            def filtered = value.filter { item ->
+                def meta = item[0]
+
+                // The user can provide a list of subjects to include or to exclude, separated by commas
+                // in the same format as the prefix (i.e. sub-XX_ses-XX_run-XX). The implementation
+                // allows the user to provide a list of subjects of different scopes to run.
+                // For example, if the user provides:
+                // sub-01, then all sessions and runs of sub-01 will be processed.
+                // sub-01_ses-01, then all runs of sub-01_ses-01 will be processed.
+                // sub-01_ses-01_run-01, then only sub-01_ses-01_run-01 will be processed.
+
+                def sid = [meta.id].findAll { x -> x }.join("_")
+                def sid_ses = [meta.id, meta.session].findAll { x -> x }.join("_")
+                def sid_run = [meta.id, meta.session, meta.run].findAll { x -> x }.join("_")
+
+                def is_included = sid in participants_to_include ||
+                    sid_ses in participants_to_include ||
+                    sid_run in participants_to_include
+
+                def is_excluded = sid in participants_to_exclude ||
+                    sid_ses in participants_to_exclude ||
+                    sid_run in participants_to_exclude
+
+                // If inclusion list is provided, only keep the participant if in that list
+                // and not in the exclusion list.
+                if (participants_to_include) {
+                    return is_included && !is_excluded
+                }
+                // If we only have an exclusion list, filter out participants in that list
+                return !is_excluded
+            }
+
+            return [key, filtered]
+        }
+    }
+
     emit:
     t1 = ch_samplesheet.t1
     wmparc = ch_samplesheet.wmparc
