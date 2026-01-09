@@ -78,8 +78,8 @@ nextflow_process {
                 { assert process.success },
                 { assert snapshot(
                     file(process.out.dir.get(0).get(1)).name,
-                    file(process.out.fwf.get(0).get(1)).name,
-                    file(process.out.ndi.get(0).get(1)).name,
+                    file(process.out.isovf.get(0).get(1)).name,
+                    file(process.out.icvf.get(0).get(1)).name,
                     file(process.out.ecvf.get(0).get(1)).name,
                     file(process.out.odi.get(0).get(1)).name,
                     process.out.versions,
@@ -113,8 +113,8 @@ nextflow_process {
                 { assert process.success },
                 { assert snapshot(
                     file(process.out.dir.get(0).get(1)).name,
-                    file(process.out.fwf.get(0).get(1)).name,
-                    file(process.out.ndi.get(0).get(1)).name,
+                    file(process.out.isovf.get(0).get(1)).name,
+                    file(process.out.icvf.get(0).get(1)).name,
                     file(process.out.ecvf.get(0).get(1)).name,
                     file(process.out.odi.get(0).get(1)).name,
                     process.out.versions,

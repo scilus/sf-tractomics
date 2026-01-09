@@ -9,6 +9,7 @@ workflow RECONST_FW_NODDI {
     dwi_bval_bvec
     brain_mask
     fa_ad_rd_md
+    diffusivities // multiMap channel with para_diff, iso_diff, perp_diff_min, perp_diff_max
 
     main:
 
@@ -19,90 +20,178 @@ workflow RECONST_FW_NODDI {
         error "At least one of params.run_noddi or params.run_freewater must be true to run this subworkflow."
     }
 
+    // Prepase base input channels
+    ch_base_noddi = dwi_bval_bvec.join(brain_mask)
+    ch_base_freewater = dwi_bval_bvec.join(brain_mask)
+
+    // Format inputs to get the same shape of tuple for all possible cases.
+    def format_input = { ch ->
+        ch.ifEmpty { [[tag: 'empty'], null] }
+            .map { it ->
+                // If we have subject-bound, leave as is
+                if (it instanceof List && it.size() == 2)
+                    return it
+                // If we have a single value, convert to tuple
+                else {
+                    return [[tag: 'global'], it]
+                }
+            }
+    }
+    para_diff = format_input(diffusivities.para_diff)
+    iso_diff = format_input(diffusivities.iso_diff)
+    perp_diff_min = format_input(diffusivities.perp_diff_min)
+    perp_diff_max = format_input(diffusivities.perp_diff_max)
+
+    // Combine all diffusivity priors together, and assess wheter they are
+    // empty, single value, or per-subject values.
+    ch_priors_branched = para_diff
+        .combine( iso_diff )
+        .combine( perp_diff_min )
+        .combine( perp_diff_max )
+        .map { items ->
+            // Flatten the combined tuples
+            def flattened = items.flatten()
+
+            def para_t = flattened[0..1]
+            def iso_t = flattened[2..3]
+            def perp_min_t = flattened[4..5]
+            def perp_max_t = flattened[6..7]
+
+            // Assertions to check which one we got
+            def has_para = !(para_t[0].containsKey('tag') && para_t[0].tag == 'empty')
+            def has_iso = !(iso_t[0].containsKey('tag') && iso_t[0].tag == 'empty')
+            def has_perp_min = !(perp_min_t[0].containsKey('tag') && perp_min_t[0].tag == 'empty')
+            def has_perp_max = !(perp_max_t[0].containsKey('tag') && perp_max_t[0].tag == 'empty')
+
+            // Validation checks for NODDI
+            if (params.run_noddi && (has_para != has_iso)) {
+                error "For NODDI reconstruction, both para_diff and iso_diff must be provided together."
+            }
+
+            // Validation checks for Freewater
+            if (params.run_freewater && (has_para != has_iso || has_para != has_perp_min || has_para != has_perp_max)) {
+                error "For Freewater Elimination reconstruction, para_diff, iso_diff, perp_diff_min and perp_diff_max "
+                    "must be provided together."
+            }
+
+            // Check if per-subject values were provided
+            def subject_bound = has_para && para_t[0].containsKey('id') && !para_t[0].containsKey('tag')
+
+            // Warn if both custom priors and averaging are requested
+            if ((has_para || has_iso) && params.average_diff_priors) {
+                log.warn "Both custom diffusivity priors and params.average_diff_priors parameter were provided. " +
+                    "The specified custom diffusivity priors will be used across subjects."
+            }
+
+            return tuple(has_para, has_iso, has_perp_min, has_perp_max, subject_bound,
+                para_t, iso_t, perp_min_t, perp_max_t)
+        }
+        .branch{
+            has_para, has_iso, has_perp_min, has_perp_max, subject_bound,
+            para_t, iso_t, perp_min_t, perp_max_t ->
+
+            custom_subject_bound: (has_para && has_iso) && subject_bound
+                return tuple(para_t, iso_t, perp_min_t, perp_max_t)
+            custom: (has_para && has_iso) && !subject_bound
+                return tuple(para_t[1], iso_t[1], has_perp_min ? perp_min_t[1] : null, has_perp_max ? perp_max_t[1] : null)
+            compute: true
+                // No custom priors provided, will compute them later
+                return true
+        }
+
     // Prepare NODDI inputs. This channel will be combined/joined in the
     // lines that follow with diffusivity priors w.r.t the following 3 scenarios:
     // Option 1: The user specifies the diffusivity priors to use (via params.para_diff and params.iso_diff).
     // Option 2: The user wants to compute the mean diffusivity priors across subjects. (Recommended)
     // Option 3: The user wants to compute diffusivity priors for each subject individually.
 
-    if (params.run_noddi && ([params.iso_diff, params.para_diff].any()
-        && ! [params.iso_diff, params.para_diff].every())) {
-        error "Please provide both params.iso_diff and params.para_diff parameters to use custom diffusivity priors for NODDI."
-    }
-    else if (params.run_freewater
-        && [params.iso_diff, params.para_diff, params.perp_diff_min, params.perp_diff_max].any()
-        && ! [params.iso_diff, params.para_diff, params.perp_diff_min, params.perp_diff_max].every()) {
-        error "Please provide all params.iso_diff, params.para_diff, params.perp_diff_min and params.perp_diff_max parameters to use custom "
-            "diffusivity priors for Freewater Elimination. Otherwise, specify none and the priors will be "
-            "automatically computed."
-    }
-
-    ch_noddi_input = dwi_bval_bvec
-        .join(brain_mask)
-    ch_freewater_input = dwi_bval_bvec
-        .join(brain_mask)
-
-    noddi_custom_priors = [params.para_diff, params.iso_diff].every()
-    fw_custom_priors = [params.para_diff, params.iso_diff, params.perp_diff_min, params.perp_diff_max].every()
-    if (((params.run_noddi && !params.run_freewater) && noddi_custom_priors) || (params.run_freewater && fw_custom_priors)) {
-        // Use user-specified diffusivity priors across subjects.
-        if (params.average_diff_priors) {
-            log.warn "Both custom diffusivity priors and params.average_diff_priors parameter were provided."
-                "The specified custom diffusivity priors will be used across subjects."
+    // Branch 1: Custom diffusivity priors provided per-subject
+    ch_custom_subject = ch_priors_branched.custom_subject_bound
+        .multiMap{ para_t, iso_t, perp_min_t, perp_max_t ->
+            para: para_t
+            iso: iso_t
+            perp_min: perp_min_t
+            perp_max: perp_max_t
         }
 
-        ch_noddi_input = ch_noddi_input
-            .combine(Channel.value(params.para_diff))
-            .combine(Channel.value(params.iso_diff))
-        ch_freewater_input = ch_freewater_input
-            .combine(Channel.value(params.para_diff))
-            .combine(Channel.value(params.iso_diff))
-            .combine(Channel.value(params.perp_diff_min))
-            .combine(Channel.value(params.perp_diff_max))
+    ch_noddi_custom_subj = ch_base_noddi
+        .join( ch_custom_subject.para )         // para
+        .join( ch_custom_subject.iso )          // iso
+
+    ch_freewater_custom_subj = ch_base_freewater
+        .join( ch_custom_subject.para )         // para
+        .join( ch_custom_subject.iso )          // iso
+        .join( ch_custom_subject.perp_min )     // perp_min
+        .join( ch_custom_subject.perp_max )     // perp_max
+
+    // Branch 2: Custom diffusivity priors provided (single value across subjects)
+    ch_custom = ch_priors_branched.custom
+        .multiMap{ para, iso, perp_min, perp_max ->
+            para: para
+            iso: iso
+            perp_min: perp_min
+            perp_max: perp_max
+        }
+
+    ch_noddi_custom = ch_base_noddi
+        .combine( ch_custom.para )        // para
+        .combine( ch_custom.iso )         // iso
+
+    ch_freewater_custom = ch_base_freewater
+        .combine( ch_custom.para )        // para
+        .combine( ch_custom.iso )         // iso
+        .combine( ch_custom.perp_min )    // perp_min
+        .combine( ch_custom.perp_max )    // perp_max
+
+    // Branch 3: Compute diffusivity priors
+    ch_compute_diff_priors = ch_priors_branched.compute
+        .combine( fa_ad_rd_md )
+        .map{ bool, meta, fa, ad, rd, md ->
+            return tuple(meta, fa, ad, rd, md)
+        }
+
+    RECONST_DIFFUSIVITYPRIORS( ch_compute_diff_priors )
+    ch_versions = ch_versions.mix(RECONST_DIFFUSIVITYPRIORS.out.versions)
+
+    // Then compute mean diffusivity priors across subjects.
+    if (params.average_diff_priors) {
+        RECONST_MEANDIFFUSIVITYPRIORS(
+            RECONST_DIFFUSIVITYPRIORS.out.para_diff_file
+                .map{ _meta, path -> path }
+                .collect(),
+            RECONST_DIFFUSIVITYPRIORS.out.iso_diff_file
+                .map{ _meta, path -> path }
+                .collect(),
+            RECONST_DIFFUSIVITYPRIORS.out.perp_diff_file
+                .map{ _meta, path -> path }
+                .collect()
+        )
+        ch_versions = ch_versions.mix(RECONST_MEANDIFFUSIVITYPRIORS.out.versions)
+
+        ch_noddi_computed = ch_base_noddi
+            .combine(RECONST_MEANDIFFUSIVITYPRIORS.out.mean_para_diff)
+            .combine(RECONST_MEANDIFFUSIVITYPRIORS.out.mean_iso_diff)
+        ch_freewater_computed = ch_base_freewater
+            .combine(RECONST_MEANDIFFUSIVITYPRIORS.out.mean_para_diff)
+            .combine(RECONST_MEANDIFFUSIVITYPRIORS.out.mean_iso_diff)
+            .combine(RECONST_MEANDIFFUSIVITYPRIORS.out.min_perp_diff)
+            .combine(RECONST_MEANDIFFUSIVITYPRIORS.out.max_perp_diff)
     }
     else {
-        // Compute diffusivity priors for each subject.
-        RECONST_DIFFUSIVITYPRIORS(fa_ad_rd_md)
-        ch_versions = ch_versions.mix(RECONST_DIFFUSIVITYPRIORS.out.versions)
-
-        // Then compute mean diffusivity priors across subjects.
-        if (params.average_diff_priors) {
-            RECONST_MEANDIFFUSIVITYPRIORS(
-                RECONST_DIFFUSIVITYPRIORS.out.para_diff_file
-                    .map{ _meta, path -> path }
-                    .collect(),
-                RECONST_DIFFUSIVITYPRIORS.out.iso_diff_file
-                    .map{ _meta, path -> path }
-                    .collect(),
-                RECONST_DIFFUSIVITYPRIORS.out.perp_diff_file
-                    .map{ _meta, path -> path }
-                    .collect()
-            )
-            ch_versions = ch_versions.mix(RECONST_MEANDIFFUSIVITYPRIORS.out.versions)
-
-            ch_noddi_input = ch_noddi_input
-                .combine(RECONST_MEANDIFFUSIVITYPRIORS.out.mean_para_diff)
-                .combine(RECONST_MEANDIFFUSIVITYPRIORS.out.mean_iso_diff)
-            ch_freewater_input = ch_freewater_input
-                .combine(RECONST_MEANDIFFUSIVITYPRIORS.out.mean_para_diff)
-                .combine(RECONST_MEANDIFFUSIVITYPRIORS.out.mean_iso_diff)
-                .combine(RECONST_MEANDIFFUSIVITYPRIORS.out.min_perp_diff)
-                .combine(RECONST_MEANDIFFUSIVITYPRIORS.out.max_perp_diff)
-        }
-        else {
-            ch_noddi_input = ch_noddi_input
-                .join(RECONST_DIFFUSIVITYPRIORS.out.mean_para_diff)
-                .join(RECONST_DIFFUSIVITYPRIORS.out.mean_iso_diff)
-            ch_freewater_input = ch_freewater_input
-                .join(RECONST_DIFFUSIVITYPRIORS.out.mean_para_diff)
-                .join(RECONST_DIFFUSIVITYPRIORS.out.mean_iso_diff)
-                .join(RECONST_DIFFUSIVITYPRIORS.out.min_perp_diff)
-                .join(RECONST_DIFFUSIVITYPRIORS.out.max_perp_diff)
-        }
+        ch_noddi_computed = ch_base_noddi
+            .join(RECONST_DIFFUSIVITYPRIORS.out.mean_para_diff)
+            .join(RECONST_DIFFUSIVITYPRIORS.out.mean_iso_diff)
+        ch_freewater_computed = ch_base_freewater
+            .join(RECONST_DIFFUSIVITYPRIORS.out.mean_para_diff)
+            .join(RECONST_DIFFUSIVITYPRIORS.out.mean_iso_diff)
+            .join(RECONST_DIFFUSIVITYPRIORS.out.min_perp_diff)
+            .join(RECONST_DIFFUSIVITYPRIORS.out.max_perp_diff)
     }
 
     if (params.run_noddi) {
-        ch_noddi_input = ch_noddi_input
+        ch_noddi_input = ch_noddi_custom_subj
+            .mix( ch_noddi_custom )
+            .mix( ch_noddi_computed )
             .map{ meta, dwi, bval, bvec, b0_mask, para, iso ->
                 [meta, dwi, bval, bvec, b0_mask, [], para, iso] }
 
@@ -111,7 +200,9 @@ workflow RECONST_FW_NODDI {
     }
 
     if (params.run_freewater) {
-        ch_freewater_input = ch_freewater_input
+        ch_freewater_input = ch_freewater_custom_subj
+            .mix( ch_freewater_custom )
+            .mix( ch_freewater_computed )
             .map{ meta, dwi, bval, bvec, b0_mask, para, iso, perp_min, perp_max ->
                 [meta, dwi, bval, bvec, b0_mask, [], para, iso, perp_min, perp_max] }
 
@@ -137,8 +228,8 @@ workflow RECONST_FW_NODDI {
     emit:
     // NODDI
     noddi_dir           = params.run_noddi ? RECONST_NODDI.out.dir : Channel.empty()
-    noddi_fwf           = params.run_noddi ? RECONST_NODDI.out.fwf : Channel.empty()
-    noddi_ndi           = params.run_noddi ? RECONST_NODDI.out.ndi : Channel.empty()
+    noddi_isovf         = params.run_noddi ? RECONST_NODDI.out.isovf : Channel.empty()
+    noddi_icvf          = params.run_noddi ? RECONST_NODDI.out.icvf : Channel.empty()
     noddi_ecvf          = params.run_noddi ? RECONST_NODDI.out.ecvf : Channel.empty()
     noddi_odi           = params.run_noddi ? RECONST_NODDI.out.odi : Channel.empty()
 
@@ -146,7 +237,7 @@ workflow RECONST_FW_NODDI {
     fw_dwi              = params.run_freewater ? RECONST_FREEWATER.out.dwi_fw_corrected : Channel.empty()
     fw_dir              = params.run_freewater ? RECONST_FREEWATER.out.dir : Channel.empty()
     fw_fibervolume      = params.run_freewater ? RECONST_FREEWATER.out.fibervolume : Channel.empty()
-    fw_fw               = params.run_freewater ? RECONST_FREEWATER.out.fw : Channel.empty()
+    fw_fwf              = params.run_freewater ? RECONST_FREEWATER.out.fwf : Channel.empty()
     fw_nrmse            = params.run_freewater ? RECONST_FREEWATER.out.nrmse : Channel.empty()
 
     fw_dti_tensor       = params.run_freewater ? FW_CORRECTED_DTIMETRICS.out.tensor : Channel.empty()
@@ -165,4 +256,3 @@ workflow RECONST_FW_NODDI {
 
     versions = ch_versions
 }
-

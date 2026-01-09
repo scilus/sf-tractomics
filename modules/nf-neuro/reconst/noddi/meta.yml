@@ -87,34 +87,34 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. `[ id:'test', single_end:false ]`
-      - "*__fit_dir.nii.gz":
+      - "*__dir.nii.gz":
           type: file
           description: Nifti file main direction.
-          pattern: "*__fit_dir.{nii,nii.gz}"
+          pattern: "*__dir.{nii,nii.gz}"
           ontologies:
             - edam: http://edamontology.org/format_4001 # NIFTI format
-  fwf:
+  isovf:
     - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. `[ id:'test', single_end:false ]`
-      - "*__fit_FWF.nii.gz":
+      - "*__isovf.nii.gz":
           type: file
-          description: Nifti file for Free Water Fraction.
-          pattern: "*__fit_FWF.{nii,nii.gz}"
+          description: Nifti file for isotropic volume fraction (e.g. Free Water Fraction (FWF)).
+          pattern: "*__isovf.{nii,nii.gz}"
           ontologies:
             - edam: http://edamontology.org/format_4001 # NIFTI format
-  ndi:
+  icvf:
     - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. `[ id:'test', single_end:false ]`
-      - "*__fit_NDI.nii.gz":
+      - "*__icvf.nii.gz":
           type: file
-          description: Nifti file for Neurite Density Index
-          pattern: "*__fit_NDI.{nii,nii.gz}"
+          description: Nifti file for Intra-Cellular Volume Fraction (e.g. Neurite Density Index (NDI)).
+          pattern: "*__icvf.{nii,nii.gz}"
           ontologies:
             - edam: http://edamontology.org/format_4001 # NIFTI format
   ecvf:
@@ -123,10 +123,10 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. `[ id:'test', single_end:false ]`
-      - "*__fit_ECVF.nii.gz":
+      - "*__ecvf.nii.gz":
           type: file
           description: Nifti file for Extra-Compartment Volume Fraction.
-          pattern: "*__fit_ECVF.{nii,nii.gz}"
+          pattern: "*__ecvf.{nii,nii.gz}"
           ontologies:
             - edam: http://edamontology.org/format_4001 # NIFTI format
   odi:
@@ -135,10 +135,10 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. `[ id:'test', single_end:false ]`
-      - "*__fit_ODI.nii.gz":
+      - "*__odi.nii.gz":
           type: file
           description: Nifti file for Orientation Dispersion Index.
-          pattern: "*__fit_ODI.{nii,nii.gz}"
+          pattern: "*__odi.{nii,nii.gz}"
           ontologies:
             - edam: http://edamontology.org/format_4001 # NIFTI format
   kernels:
