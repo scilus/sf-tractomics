@@ -21,6 +21,7 @@ include { REGISTRATION_ANTSAPPLYTRANSFORMS as TRANSFORM_ATLAS_BUNDLES } from '..
 include { STATS_METRICSINROI     } from '../modules/nf-neuro/stats/metricsinroi/main'
 include { ATLAS_ROIMETRICS       } from '../subworkflows/nf-neuro/atlas_roimetrics/main'
 include { TRACTOMETRY            } from '../subworkflows/nf-neuro/tractometry/main'
+include { OUTPUT_TEMPLATE_SPACE  } from '../subworkflows/nf-neuro/output_template_space/main'
 include { mergeCovariatesIntoMeta } from '../subworkflows/local/utils_nfcore_sf-tractomics_pipeline/main'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -244,6 +245,16 @@ workflow SF_TRACTOMICS {
                 keepHeader: true
             )
         ch_global_multiqc_files = ch_global_multiqc_files.mix(ch_tractometry_mqc)
+    }
+
+    if ( params.run_output_template_space ) {
+        OUTPUT_TEMPLATE_SPACE( TRACTOFLOW.out.t1,
+                               ch_input_metrics,
+                               channel.empty(),
+                               channel.empty(),
+                               ch_bundle_seg,
+                               channel.empty())
+        ch_versions = ch_versions.mix(OUTPUT_TEMPLATE_SPACE.out.versions)
     }
 
     //
