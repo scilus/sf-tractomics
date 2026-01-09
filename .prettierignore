@@ -10,4 +10,9 @@ testing/
 testing*
 *.pyc
 bin/
+.nf-test/
 ro-crate-metadata.json
+modules/nf-core/
+modules/nf-neuro/
+subworkflows/nf-core/
+subworkflows/nf-neuro/
