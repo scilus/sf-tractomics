@@ -186,15 +186,15 @@ workflow SF_TRACTOMICS {
         // Add FW/NODDI metrics to the volume
         // ROI extraction.
         ch_input_metrics = ch_input_metrics
-            .join(RECONST_FW_NODDI.out.fw_fw)
+            .join(RECONST_FW_NODDI.out.fw_fwf)
             .join(RECONST_FW_NODDI.out.fw_dti_fa)
             .join(RECONST_FW_NODDI.out.fw_dti_md)
             .join(RECONST_FW_NODDI.out.fw_dti_rd)
             .join(RECONST_FW_NODDI.out.fw_dti_ad)
-            .join(RECONST_FW_NODDI.out.noddi_ndi)
-            .join(RECONST_FW_NODDI.out.noddi_fwf)
-            .join(RECONST_FW_NODDI.out.noddi_odi)
+            .join(RECONST_FW_NODDI.out.noddi_isovf)
+            .join(RECONST_FW_NODDI.out.noddi_icvf)
             .join(RECONST_FW_NODDI.out.noddi_ecvf)
+            .join(RECONST_FW_NODDI.out.noddi_odi)
     }
 
     ch_input_metrics = ch_input_metrics.map {tuple ->
