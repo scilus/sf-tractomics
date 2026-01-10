@@ -72,7 +72,7 @@
                     },
                     "bundle/stats": {
                         "branch": "main",
-                        "git_sha": "5a24a97f39279bebe20d53b57bb7217d16a52452",
+                        "git_sha": "6ba75286a86c1ec82a91040c626b4571e92578a3",
                         "installed_by": ["tractometry"]
                     },
                     "bundle/uniformize": {
@@ -162,7 +162,7 @@
                     },
                     "reconst/freewater": {
                         "branch": "main",
-                        "git_sha": "0eef6f86bca0cad0c9144161467b104a0e95eec1",
+                        "git_sha": "4fb30bc14d52f5e0a36c10de60ff81e5c6343053",
                         "installed_by": ["modules", "reconst_fw_noddi"]
                     },
                     "reconst/frf": {
@@ -182,7 +182,7 @@
                     },
                     "reconst/noddi": {
                         "branch": "main",
-                        "git_sha": "27c194efef0eeff128d6cc70833f8e707bd72817",
+                        "git_sha": "4fb30bc14d52f5e0a36c10de60ff81e5c6343053",
                         "installed_by": ["modules", "reconst_fw_noddi"]
                     },
                     "reconst/qball": {
@@ -242,17 +242,17 @@
                     },
                     "stats/metricsinroi": {
                         "branch": "main",
-                        "git_sha": "50808b498e4da28c4e068ee12c6d6ca89342efa5",
+                        "git_sha": "74ea070ee8a274498474c613934385e1b182b4f2",
                         "installed_by": ["atlas_roimetrics", "modules"]
                     },
                     "tracking/localtracking": {
                         "branch": "main",
-                        "git_sha": "2e214a7c8e447a2304cf882d69740795bc1574a6",
+                        "git_sha": "ec4f04fd25e3167ba495094925027248722c1aad",
                         "installed_by": ["tractoflow"]
                     },
                     "tracking/pfttracking": {
                         "branch": "main",
-                        "git_sha": "63dc80c43cdca798a5f11cd5124da35337a94ac5",
+                        "git_sha": "ec4f04fd25e3167ba495094925027248722c1aad",
                         "installed_by": ["tractoflow"]
                     },
                     "tractogram/math": {
@@ -321,7 +321,7 @@
                     },
                     "reconst_fw_noddi": {
                         "branch": "main",
-                        "git_sha": "cf3c47a430239aab4371da03399ebf99499a85bf",
+                        "git_sha": "4fb30bc14d52f5e0a36c10de60ff81e5c6343053",
                         "installed_by": ["subworkflows"]
                     },
                     "registration": {
@@ -336,7 +336,7 @@
                     },
                     "tractoflow": {
                         "branch": "main",
-                        "git_sha": "b9a147a1075d1431189341976ee673ff31900603",
+                        "git_sha": "df805e364f660a98d05d90b63cb2f39f815055b6",
                         "installed_by": ["subworkflows"]
                     },
                     "tractometry": {

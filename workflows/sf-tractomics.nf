@@ -166,28 +166,35 @@ workflow SF_TRACTOMICS {
     // Run RECONST/NODDI & RECONST/FREEWATER
     //
     if (params.run_noddi || params.run_freewater) {
+        // TODO: support subject-specific diffusivity options
         RECONST_FW_NODDI(
             TRACTOFLOW.out.dwi,
             TRACTOFLOW.out.b0_mask,
             TRACTOFLOW.out.dti_fa
                 .join(TRACTOFLOW.out.dti_ad)
                 .join(TRACTOFLOW.out.dti_rd)
-                .join(TRACTOFLOW.out.dti_md)
+                .join(TRACTOFLOW.out.dti_md),
+            [
+                para_diff: params.para_diff ? channel.value(params.para_diff) : channel.empty(),
+                iso_diff: params.iso_diff ? channel.value(params.iso_diff) : channel.empty(),
+                perp_diff_min: params.perp_diff_min ? channel.value(params.perp_diff_min) : channel.empty(),
+                perp_diff_max: params.perp_diff_max ? channel.value(params.perp_diff_max) : channel.empty()
+            ]
         )
         ch_versions = ch_versions.mix(RECONST_FW_NODDI.out.versions)
 
         // Add FW/NODDI metrics to the volume
         // ROI extraction.
         ch_input_metrics = ch_input_metrics
-            .join(RECONST_FW_NODDI.out.fw_fw)
+            .join(RECONST_FW_NODDI.out.fw_fwf)
             .join(RECONST_FW_NODDI.out.fw_dti_fa)
             .join(RECONST_FW_NODDI.out.fw_dti_md)
             .join(RECONST_FW_NODDI.out.fw_dti_rd)
             .join(RECONST_FW_NODDI.out.fw_dti_ad)
-            .join(RECONST_FW_NODDI.out.noddi_ndi)
-            .join(RECONST_FW_NODDI.out.noddi_fwf)
-            .join(RECONST_FW_NODDI.out.noddi_odi)
+            .join(RECONST_FW_NODDI.out.noddi_isovf)
+            .join(RECONST_FW_NODDI.out.noddi_icvf)
             .join(RECONST_FW_NODDI.out.noddi_ecvf)
+            .join(RECONST_FW_NODDI.out.noddi_odi)
     }
 
     ch_input_metrics = ch_input_metrics.map {tuple ->
