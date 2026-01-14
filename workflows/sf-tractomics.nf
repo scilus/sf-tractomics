@@ -16,12 +16,13 @@ include { ATLAS_IIT              } from '../subworkflows/nf-neuro/atlas_iit/main
 include { RECONST_SHSIGNAL       } from '../modules/nf-neuro/reconst/shsignal'
 include { RECONST_FW_NODDI       } from '../subworkflows/nf-neuro/reconst_fw_noddi/main'
 include { BUNDLE_SEG             } from '../subworkflows/nf-neuro/bundle_seg/main' addParams(run_easyreg: false)
-include { REGISTRATION_ANTS as REGISTER_ATLAS_B0 } from '../modules/nf-neuro/registration/ants/main'
-include { REGISTRATION_ANTSAPPLYTRANSFORMS as TRANSFORM_ATLAS_BUNDLES } from '../modules/nf-neuro/registration/antsapplytransforms/main.nf'
 include { STATS_METRICSINROI     } from '../modules/nf-neuro/stats/metricsinroi/main'
 include { ATLAS_ROIMETRICS       } from '../subworkflows/nf-neuro/atlas_roimetrics/main'
 include { TRACTOMETRY            } from '../subworkflows/nf-neuro/tractometry/main'
+include { REGISTRATION_ANTSAPPLYTRANSFORMS as REGISTRATION_METRICS_TO_ORIG } from '../modules/nf-neuro/registration/antsapplytransforms/main'
+include { REGISTRATION_TRACTOGRAM as REGISTRATION_TRACTOGRAM_TO_ORIG } from '../modules/nf-neuro/registration/tractogram/main'
 include { mergeCovariatesIntoMeta } from '../subworkflows/local/utils_nfcore_sf-tractomics_pipeline/main'
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     RUN MAIN WORKFLOW
@@ -244,6 +245,17 @@ workflow SF_TRACTOMICS {
                 keepHeader: true
             )
         ch_global_multiqc_files = ch_global_multiqc_files.mix(ch_tractometry_mqc)
+    }
+
+    if ( params.run_output_orig_space ) {
+        REGISTRATION_METRICS_TO_ORIG(ch_input_metrics
+            .join(TRACTOFLOW.out.t1_native)
+            .join(TRACTOFLOW.out.diffusion_to_anatomical)
+        )
+        REGISTRATION_TRACTOGRAM_TO_ORIG(TRACTOFLOW.out.t1_native
+            .join(TRACTOFLOW.out.diffusion_to_anatomical)
+            .join(ch_bundle_seg)
+        )
     }
 
     //
