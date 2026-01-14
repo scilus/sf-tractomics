@@ -17,8 +17,8 @@ nextflow_pipeline {
         then {
             // stable_name: All files + folders in ${params.outdir}/ with a stable name
             def stable_name = getAllFilesFromDir(params.outdir, relative: true, includeDir: true, ignoreFile: 'tests/.nftignore')
-            // stable_path: All files in ${params.outdir}/ with stable content
 
+            // stable_path: All files in ${params.outdir}/ with stable content
             // We comment the following line as the output files are not stable wrt to their checksums.
             // Full and exact reproducibility is not yet achieved to allow this.
             // def stable_path = getAllFilesFromDir(params.outdir, ignoreFile: 'tests/.nftignore')
