@@ -341,7 +341,7 @@
                     },
                     "tractometry": {
                         "branch": "main",
-                        "git_sha": "cf3c47a430239aab4371da03399ebf99499a85bf",
+                        "git_sha": "0451030c38cb4b7b1eec3d48695627be2df367b2",
                         "installed_by": ["subworkflows"]
                     }
                 }
