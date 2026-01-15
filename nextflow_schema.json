@@ -920,11 +920,6 @@
                 "frf_average_from_data": {
                     "type": "boolean",
                     "hidden": true
-                },
-                "run_pft": {
-                    "type": "boolean",
-                    "hidden": true,
-                    "default": true
                 }
             }
         },
