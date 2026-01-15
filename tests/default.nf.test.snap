@@ -30,7 +30,7 @@
                     "fsl": 6.0
                 },
                 "TRACKING_LOCALTRACKING": {
-                    "scilpy": "2.2.0s"
+                    "scilpy": "2.2.0"
                 },
                 "TRACKING_PFTTRACKING": {
                     "scilpy": "2.2.0"
@@ -101,6 +101,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-14T17:49:56.287519213"
+        "timestamp": "2026-01-15T12:12:10.333452464"
     }
 }
