@@ -247,7 +247,7 @@
                     },
                     "tracking/localtracking": {
                         "branch": "main",
-                        "git_sha": "ec4f04fd25e3167ba495094925027248722c1aad",
+                        "git_sha": "059f38ae6cea1628bd71653073b91d15b28fe4c8",
                         "installed_by": ["tractoflow"]
                     },
                     "tracking/pfttracking": {
@@ -336,7 +336,7 @@
                     },
                     "tractoflow": {
                         "branch": "main",
-                        "git_sha": "df805e364f660a98d05d90b63cb2f39f815055b6",
+                        "git_sha": "059f38ae6cea1628bd71653073b91d15b28fe4c8",
                         "installed_by": ["subworkflows"]
                     },
                     "tractometry": {
