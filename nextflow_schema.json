@@ -1,6 +1,6 @@
 {
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "$id": "https://raw.githubusercontent.com/scilus/sf-tractomics/master/nextflow_schema.json",
+    "$id": "https://raw.githubusercontent.com/scilus/sf-tractomics/main/nextflow_schema.json",
     "title": "scilus/sf-tractomics pipeline parameters",
     "description": "Human diffusion MRI processing and tractography",
     "type": "object",
@@ -105,6 +105,28 @@
                     "type": "string",
                     "description": "Path to the participants.tsv file.",
                     "help_text": "Path to the participants.tsv file. If this is not specified, the participants.tsv file will be fetched automatically if the input is a BIDS directory, otherwise no additional covariates will be used."
+                },
+                "participant_label": {
+                    "type": "string",
+                    "description": "Comma-separated list of participant labels include in the processing. If specified, only these participants will be processed (unless excluded by 'exclude_participant_label').",
+                    "help_text": "Comma-separated list of participant labels include in the processing. If specified, only these participants will be processed (unless excluded by 'exclude_participant_label')."
+                },
+                "exclude_participant_label": {
+                    "type": "string",
+                    "description": "Comma-separated list of prefixes to exclude from the processing. If specified, participants with labels starting with any of these prefixes will be excluded from processing.",
+                    "help_text": "Comma-separated list of prefixes to exclude from the processing. If specified, participants with labels starting with any of these prefixes will be excluded from processing."
+                },
+                "help": {
+                    "type": ["boolean", "string"],
+                    "description": "Display the help message."
+                },
+                "help_full": {
+                    "type": "boolean",
+                    "description": "Display the full detailed help message."
+                },
+                "show_hidden": {
+                    "type": "boolean",
+                    "description": "Display hidden parameters in the help message (only works when --help or --help_full are provided)."
                 }
             }
         },
@@ -1108,15 +1130,10 @@
         }
     ],
     "properties": {
-        "participant_label": {
+        "hook_url": {
             "type": "string",
-            "description": "Comma-separated list of participant labels include in the processing. If specified, only these participants will be processed (unless excluded by 'exclude_participant_label').",
-            "help_text": "Comma-separated list of participant labels include in the processing. If specified, only these participants will be processed (unless excluded by 'exclude_participant_label')."
-        },
-        "exclude_participant_label": {
-            "type": "string",
-            "description": "Comma-separated list of prefixes to exclude from the processing. If specified, participants with labels starting with any of these prefixes will be excluded from processing.",
-            "help_text": "Comma-separated list of prefixes to exclude from the processing. If specified, participants with labels starting with any of these prefixes will be excluded from processing."
+            "description": "Hook URL to notify a web server e.g. Microsoft Teams and Slack ",
+            "help_text": "Hook URL to notify a web server e.g. Microsoft Teams and Slack "
         }
     }
 }
