@@ -16,6 +16,7 @@ workflow HARMONIZATION {
         error "HARMONIZATION workflow requires both 'ch_moving_site' and 'ch_reference_site' inputs to be provided."
     }
 
+    // Format the input stats files
     FORMAT_INPUT_REFERENCE(ch_reference_site)
     ch_versions = ch_versions.mix(FORMAT_INPUT_REFERENCE.out.versions)
     ch_reference_metrics = FORMAT_INPUT_REFERENCE.out.raw_files
@@ -34,8 +35,9 @@ workflow HARMONIZATION {
             [ reference_entry, moving_entry ]
         }
 
+    // Run the harmonization
     HARMONIZATION_CLINICALCOMBAT(ch_grouped_metrics)
-    ch_versions = ch_versions.mix(HARMONIZATION_CLINICALCOMBAT.out.versions)
+    ch_versions = ch_versions.mix(HARMONIZATION_CLINICALCOMBAT.out.versions.first())
 
     // Group by site
     ch_harmonized_files = HARMONIZATION_CLINICALCOMBAT.out.harmonizedsite
@@ -44,14 +46,11 @@ workflow HARMONIZATION {
         .map { _site, files -> files }
 
     // Combine/format the output harmonized metrics into a MultiQC friendly TSV format
-    ch_harmonized_files.view()
     FORMAT_OUTPUT(ch_harmonized_files)
     ch_versions = ch_versions.mix(FORMAT_OUTPUT.out.versions)
 
-    // FORMAT_OUTPUT.out.raw_files.view()
-
     emit:
-    harmonized_metrics   = FORMAT_OUTPUT.out.raw_files   // channel: [ harmonizedsite1.harmonized.tsv, harmonizedsite2.harmonized.tsv, ... ]
+    harmonized_metrics   = FORMAT_OUTPUT.out.harmonized_files
     figures              = HARMONIZATION_CLINICALCOMBAT.out.figures
     model                = HARMONIZATION_CLINICALCOMBAT.out.model
     qc_reports           = HARMONIZATION_CLINICALCOMBAT.out.bdqc

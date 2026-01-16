@@ -98,6 +98,10 @@ process HARMONIZATION_FORMATSTATS {
     def inversepy = inverse ? "True" : "False"
     def covariatespy = "[" + covariates.collect { "\"${it}\"" }.join(", ") + "]"
 
+    // Extract the stub_sitename from the input files
+    // this is to avoid file name collisions when stubbing
+    def stub_sitename = tabular_files[0].getName().split("\\.")[0]
+
     """
     #!/usr/bin/env python
 
@@ -105,12 +109,12 @@ process HARMONIZATION_FORMATSTATS {
     import platform
 
     if ${inversepy}:
-        with open("stubsite.harmonized.tsv", "w") as f:
+        with open("${stub_sitename}.harmonized.tsv", "w") as f:
             pass
     else:
-        with open("subsite.metric1.raw.csv", "w") as f:
+        with open("${stub_sitename}.metric1.raw.csv", "w") as f:
             pass
-        with open("subsite.metric2.raw.csv", "w") as f:
+        with open("${stub_sitename}.metric2.raw.csv", "w") as f:
             pass
 
     # Write versions file (this is in python)
