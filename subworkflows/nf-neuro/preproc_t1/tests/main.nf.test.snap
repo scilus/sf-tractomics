@@ -126,8 +126,8 @@
                     ]
                 ],
                 "versions": [
+                    "versions.yml:md5,267b945ffbbf2032dad3ff1fde6e4e83",
                     "versions.yml:md5,7aad91b5043d2dc8e8fc69ffbbe6f657",
-                    "versions.yml:md5,7b12b08cbd571fb269061dbae81584bc",
                     "versions.yml:md5,9d7a3e397fd20bc0d4b8b46d62060806",
                     "versions.yml:md5,b539f60cb48d0e92cd7dcf2f403d3ea9",
                     "versions.yml:md5,edd3c88d7ff0ed68c873953116ed3cb0",
@@ -137,9 +137,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-28T03:11:55.594616377"
+        "timestamp": "2026-01-16T15:01:41.705190895"
     },
     "preproc_t1_antsbet": {
         "content": [
