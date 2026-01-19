@@ -64,10 +64,6 @@ process REGISTRATION_TRACTOGRAM {
         bname=\$(basename \${tractogram} .\${ext} | sed 's/${prefix}_\\+//')
         name=${prefix}_\${bname}${suffix}.\${ext}
 
-        echo "Original tractogram: \$tractogram"
-        echo "base name: \$bname"
-        echo "output name: \$name"
-
         if [[ \$ext == "h5" ]]; then
 
             scil_tractogram_apply_transform_to_hdf5 \$tractogram \

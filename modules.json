@@ -232,7 +232,7 @@
                     },
                     "registration/tractogram": {
                         "branch": "main",
-                        "git_sha": "d5eb15b16ebf16c5f86edd06f782afc8ac711a1c",
+                        "git_sha": "fd53d1090fe037c0c270531808068ac75a9c6237",
                         "installed_by": ["modules", "output_template_space"]
                     },
                     "segmentation/fastseg": {
