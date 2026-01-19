@@ -39,6 +39,29 @@ input:
         Structure: [ val(meta), path(fa), path(ad), path(rd), path(md) ]
       pattern: "*.nii.gz"
       mandatory: false
+  - diffusivities:
+      type: Map
+      description: |
+        The input channel containing custom diffusivity priors to use for NODDI
+        and FreeWater models. If not provided, the diffusivity priors will be
+        computed automatically. Can be subject-bound (i.e. different values per
+        subject), a single-value for all subjects, or empty to compute them
+        automatically. IMPORTANT: all priors must be provided the same way,
+        meaning that if one prior is subject-bound, all others must be subject-bound
+        as well (same for single-value or empty).
+        Structure: [
+          para_diff: channel.empty(),     // Example of empty to compute automatically
+          iso_diff: channel.value(0.003), // Example of single-value for all subjects
+          perp_diff_min: channel.of(      // Example of subject-bound values
+            tuple([ id:'subj1' ], 0.0001),
+            tuple([ id:'subj2' ], 0.00015)
+          ),
+          perp_diff_max: channel.of(
+            tuple([ id:'subj1' ], 0.0007),
+            tuple([ id:'subj2' ], 0.00065)
+          )
+        ]
+      mandatory: false
 args:
   - run_noddi:
       type: boolean
@@ -50,28 +73,6 @@ args:
       default: false
       description: |
         Whether to run the FreeWater correction.
-  - para_diff:
-      type: float
-      default: null
-      description: |
-        Custom parallel diffusivity prior to use for NODDI and FreeWater models.
-  - iso_diff:
-      type: float
-      default: null
-      description: |
-        Custom isotropic diffusivity prior to use for NODDI and FreeWater models.
-  - perp_diff_min:
-      type: float
-      default: null
-      description: |
-        Minimum perpendicular diffusivity prior to use for NODDI and FreeWater
-        models when computing diffusivity priors automatically.
-  - perp_diff_max:
-      type: float
-      default: null
-      description: |
-        Maximum perpendicular diffusivity prior to use for NODDI and FreeWater
-        models when computing diffusivity priors automatically.
   - average_diff_priors:
       type: boolean
       default: false
@@ -86,33 +87,33 @@ output:
         Structure: [ val(meta), path(dir) ]
       pattern: "*__fit_dir.nii.gz"
       mandatory: false
-  - noddi_fwf:
+  - noddi_isovf:
       type: file
       description: |
-        Nifti file for Free Water Fraction.
-        Structure: [ val(meta), path(fwf) ]
-      pattern: "*__fit_FWF.nii.gz"
+        Nifti file for isotropic volume fraction.
+        Structure: [ val(meta), path(isovf) ]
+      pattern: "*__isovf.nii.gz"
       mandatory: false
-  - noddi_ndi:
+  - noddi_icvf:
       type: file
       description: |
-        Nifti file for Neurite Density Index.
-        Structure: [ val(meta), path(ndi) ]
-      pattern: "*__fit_NDI.nii.gz"
+        Nifti file for intracellular volume fraction.
+        Structure: [ val(meta), path(icvf) ]
+      pattern: "*__icvf.nii.gz"
       mandatory: false
   - noddi_ecvf:
       type: file
       description: |
         Nifti file for Extra-Cellular Volume Fraction.
         Structure: [ val(meta), path(ecvf) ]
-      pattern: "*__fit_ECVF.nii.gz"
+      pattern: "*__ecvf.nii.gz"
       mandatory: false
   - noddi_odi:
       type: file
       description: |
         Nifti file for Orientation Dispersion Index.
         Structure: [ val(meta), path(odi) ]
-      pattern: "*__fit_ODI.nii.gz"
+      pattern: "*__odi.nii.gz"
       mandatory: false
   - fw_dwi:
       type: file
@@ -133,21 +134,21 @@ output:
       description: |
         Free Water corrected fiber volume Nifti file.
         Structure: [ val(meta), path(fw_fibvolume) ]
-      pattern: "*__FiberVolume.nii.gz"
+      pattern: "*__fibervolume.nii.gz"
       mandatory: false
-  - fw_fw:
+  - fw_fwf:
       type: file
       description: |
         Free Water corrected Free Water Fraction Nifti file.
-        Structure: [ val(meta), path(fw_fw) ]
-      pattern: "*__FW.nii.gz"
+        Structure: [ val(meta), path(fw_fwf) ]
+      pattern: "*__fwf.nii.gz"
       mandatory: false
   - fw_nrmse:
       type: file
       description: |
         Free Water correction NRMSE Nifti file.
         Structure: [ val(meta), path(fw_nrmse) ]
-      pattern: "*__NRMSE.nii.gz"
+      pattern: "*__nrmse.nii.gz"
       mandatory: false
   - fw_dti_tensor:
       type: file

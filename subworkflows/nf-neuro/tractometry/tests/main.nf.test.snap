@@ -2,6 +2,16 @@
     "tractometry_with_centroids": {
         "content": [
             {
+                "bundles": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test__test__AF_L_labels_uniformized.trk",
+                        "test__test__AF_R_labels_uniformized.trk"
+                    ]
+                ],
                 "endpoints_head": [
                     [
                         {
@@ -184,13 +194,23 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.4"
+            "nextflow": "25.04.8"
         },
-        "timestamp": "2025-11-25T09:24:03.974057324"
+        "timestamp": "2026-01-11T21:14:51.020148"
     },
     "tractometry_without_centroids": {
         "content": [
             {
+                "bundles": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test__test__AF_L_labels_uniformized.trk",
+                        "test__test__AF_R_labels_uniformized.trk"
+                    ]
+                ],
                 "endpoints_head": [
                     [
                         {
@@ -374,8 +394,8 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.4"
+            "nextflow": "25.04.8"
         },
-        "timestamp": "2025-11-25T09:25:32.002452439"
+        "timestamp": "2026-01-11T21:18:29.415234"
     }
 }

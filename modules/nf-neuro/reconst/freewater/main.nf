@@ -11,9 +11,9 @@ process RECONST_FREEWATER {
     output:
         tuple val(meta), path("*__dwi_fw_corrected.nii.gz")  , emit: dwi_fw_corrected, optional: true
         tuple val(meta), path("*__dir.nii.gz")               , emit: dir, optional: true
-        tuple val(meta), path("*__FiberVolume.nii.gz")       , emit: fibervolume, optional: true
-        tuple val(meta), path("*__FW.nii.gz")                , emit: fw, optional: true
-        tuple val(meta), path("*__NRMSE.nii.gz")             , emit: nrmse, optional: true
+        tuple val(meta), path("*__fibervolume.nii.gz")       , emit: fibervolume, optional: true
+        tuple val(meta), path("*__fwf.nii.gz")               , emit: fwf, optional: true
+        tuple val(meta), path("*__nrmse.nii.gz")             , emit: nrmse, optional: true
         path("kernels")                                      , emit: kernels, optional: true
         path "versions.yml"                                  , emit: versions
 
@@ -48,9 +48,9 @@ process RECONST_FREEWATER {
     if [ -z "${compute_only}" ]; then
         mv results/DWI_corrected.nii.gz ${prefix}__dwi_fw_corrected.nii.gz
         mv results/fit_dir.nii.gz ${prefix}__dir.nii.gz
-        mv results/fit_FiberVolume.nii.gz ${prefix}__FiberVolume.nii.gz
-        mv results/fit_FW.nii.gz ${prefix}__FW.nii.gz
-        mv results/fit_NRMSE.nii.gz ${prefix}__NRMSE.nii.gz
+        mv results/fit_FiberVolume.nii.gz ${prefix}__fibervolume.nii.gz
+        mv results/fit_FW.nii.gz ${prefix}__fwf.nii.gz
+        mv results/fit_NRMSE.nii.gz ${prefix}__nrmse.nii.gz
 
         rm -rf results
     fi
@@ -68,10 +68,10 @@ process RECONST_FREEWATER {
     scil_freewater_maps -h
     mkdir kernels
     touch "${prefix}__dwi_fw_corrected.nii.gz"
-    touch "${prefix}__FIT_dir.nii.gz"
-    touch "${prefix}__FIT_FiberVolume.nii.gz"
-    touch "${prefix}__FIT_FW.nii.gz"
-    touch "${prefix}__FIT_nrmse.nii.gz"
+    touch "${prefix}__dir.nii.gz"
+    touch "${prefix}__fibervolume.nii.gz"
+    touch "${prefix}__fwf.nii.gz"
+    touch "${prefix}__nrmse.nii.gz"
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

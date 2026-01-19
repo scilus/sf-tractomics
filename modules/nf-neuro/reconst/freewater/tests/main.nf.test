@@ -17,7 +17,7 @@ nextflow_process {
                 script "../../../../../subworkflows/nf-neuro/load_test_data/main.nf"
                 process {
                     """
-                    input[0] = Channel.from( [ "commit_amico.zip" ] )
+                    input[0] = channel.from( [ "commit_amico.zip" ] )
                     input[1] = "test.load-test-data"
                     """
                 }
@@ -56,7 +56,7 @@ nextflow_process {
                     file(process.out.dwi_fw_corrected.get(0).get(1)).name,
                     niftiMD5SUM(process.out.dir.get(0).get(1), 1),
                     niftiMD5SUM(process.out.fibervolume.get(0).get(1), 1),
-                    niftiMD5SUM(process.out.fw.get(0).get(1), 1),
+                    niftiMD5SUM(process.out.fwf.get(0).get(1), 1),
                     niftiMD5SUM(process.out.nrmse.get(0).get(1), 1)
                 ).match() }
             )
@@ -95,7 +95,7 @@ nextflow_process {
                     file(process.out.dwi_fw_corrected.get(0).get(1)).name,
                     niftiMD5SUM(process.out.dir.get(0).get(1), 1),
                     niftiMD5SUM(process.out.fibervolume.get(0).get(1), 1),
-                    niftiMD5SUM(process.out.fw.get(0).get(1), 1),
+                    niftiMD5SUM(process.out.fwf.get(0).get(1), 1),
                     niftiMD5SUM(process.out.nrmse.get(0).get(1), 1)
                 ).match() }
             )

@@ -17,6 +17,8 @@ include { UTILS_NFCORE_PIPELINE     } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipeline'
 include { IO_BIDS                   } from '../../nf-neuro/io_bids/main'
 include { IO_SAFECASTINPUTS         } from '../../../modules/local/io/safecastinputs'
+include { imNotification            } from '../../nf-core/utils_nfcore_pipeline'
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     SUBWORKFLOW TO INITIALISE PIPELINE
@@ -32,11 +34,14 @@ workflow PIPELINE_INITIALISATION {
     nextflow_cli_args //   array: List of positional nextflow CLI args
     outdir            //  string: The output directory where the results will be saved
     input             //  string: Path to input samplesheet
+    help              // boolean: Display help message and exit
+    help_full         // boolean: Show the full help message
+    show_hidden       // boolean: Show hidden parameters in the help message
 
     main:
 
-    ch_versions = Channel.empty()
-    ch_samplesheet = Channel.empty()
+    ch_versions = channel.empty()
+    ch_samplesheet = channel.empty()
 
     //
     // Print version and exit if required and dump pipeline parameters to JSON file
@@ -52,16 +57,43 @@ workflow PIPELINE_INITIALISATION {
     //
     // Validate parameters and generate parameter summary to stdout
     //
+    command = "nextflow run ${workflow.manifest.name} -profile <docker/singularity/.../institute> --input samplesheet.csv --outdir <OUTDIR>"
+    before_text = """
+-\033[2m----------------------------------------------------------------------------------\033[0m-
+   \033[0;32m _.--'"'.\033[0m
+  \033[0;32m(  ( (   )\033[0m
+  \033[0;33m(o)_    ) )\033[0m
+  \033[0;32m   (o)_.'\033[0m
+  \033[0;32m    )/\033[0m
+
+ \033[0;34m  __  ___       ___  __   __   __  ___  __   __       __   __   \033[0m
+ \033[0;34m (__  |__  ___   |  |__) |__| |     |  |  | |\\/| |   /    (__   \033[0m
+ \033[0;34m ___) |          |  |  \\ |  | |__   |  |__| |  | |   \\__  ___)  \033[0m
+
+ \033[0;35m  scilus/sf-tractomics ${workflow.manifest.version}\033[0m
+-\033[2m----------------------------------------------------------------------------------\033[0m-
+    """
+    after_text = """${workflow.manifest.doi ? "\n* The pipeline\n" : ""}${workflow.manifest.doi.tokenize(",").collect { "    https://doi.org/${it.trim().replace('https://doi.org/','')}"}.join("\n")}${workflow.manifest.doi ? "\n" : ""}
+    * The nf-neuro project
+        https://scilus.github.io/nf-neuro
+
+    * The nf-core framework
+        https://doi.org/10.1038/s41587-020-0439-x
+
+    * Software dependencies
+        https://github.com/scilus/sf-tractomics/blob/master/CITATIONS.md
+    """
+
     UTILS_NFSCHEMA_PLUGIN (
         workflow,
         validate_params,
         null,
-        false,
-        false,
-        false,
-        "",
-        "",
-        ""
+        help,
+        help_full,
+        show_hidden,
+        before_text,
+        after_text,
+        command
     )
 
     //
@@ -82,19 +114,19 @@ workflow PIPELINE_INITIALISATION {
         //
         if (file(params.input).isDirectory()) {
             IO_BIDS(
-                Channel.fromPath(params.input),
-                Channel.value(params.fsbids ?: []),
-                Channel.value(params.bidsignore ?: [])
+                channel.fromPath(params.input),
+                channel.value(params.fsbids ?: []),
+                channel.value(params.bidsignore ?: [])
             )
             ch_samplesheet = [
                 t1: IO_BIDS.out.ch_t1,
                 wmparc: IO_BIDS.out.ch_wmparc,
                 aparc_aseg: IO_BIDS.out.ch_aparc_aseg,
                 dwi_bval_bvec: IO_BIDS.out.ch_dwi_bval_bvec,
-                b0: Channel.empty(),
+                b0: channel.empty(),
                 rev_dwi_bval_bvec: IO_BIDS.out.ch_rev_dwi_bval_bvec,
                 rev_b0: IO_BIDS.out.ch_rev_b0,
-                lesion: Channel.empty()
+                lesion: channel.empty()
             ]
 
             if (params.participants_tsv) {
@@ -163,6 +195,57 @@ workflow PIPELINE_INITIALISATION {
     // function, which can be used to merge the covariates into the samplesheet's multimap
     // on the fly, when needed (which should be done only when the inputs requires those fields).
     ch_covariates = parseParticipantsTsv(participants_tsv_path, ch_samplesheet.t1)
+
+    def participants_to_include = []
+    def participants_to_exclude = []
+
+    if (params.participant_label) {
+        participants_to_include = params.participant_label.split(",").collect { item -> item.trim() }
+        log.info "Including participants: ${participants_to_include.join(", ")}"
+    }
+
+    if (params.exclude_participant_label) {
+        participants_to_exclude = params.exclude_participant_label.split(",").collect { item -> item.trim() }
+        log.info "Excluding participants: ${participants_to_exclude.join(", ")}"
+    }
+
+    if (participants_to_include || participants_to_exclude) {
+        ch_samplesheet = ch_samplesheet.collectEntries { key, value ->
+            def filtered = value.filter { item ->
+                def meta = item[0]
+
+                // The user can provide a list of subjects to include or to exclude, separated by commas
+                // in the same format as the prefix (i.e. sub-XX_ses-XX_run-XX). The implementation
+                // allows the user to provide a list of subjects of different scopes to run.
+                // For example, if the user provides:
+                // sub-01, then all sessions and runs of sub-01 will be processed.
+                // sub-01_ses-01, then all runs of sub-01_ses-01 will be processed.
+                // sub-01_ses-01_run-01, then only sub-01_ses-01_run-01 will be processed.
+
+                def sid = [meta.id].findAll { x -> x }.join("_")
+                def sid_ses = [meta.id, meta.session].findAll { x -> x }.join("_")
+                def sid_run = [meta.id, meta.session, meta.run].findAll { x -> x }.join("_")
+
+                def is_included = sid in participants_to_include ||
+                    sid_ses in participants_to_include ||
+                    sid_run in participants_to_include
+
+                def is_excluded = sid in participants_to_exclude ||
+                    sid_ses in participants_to_exclude ||
+                    sid_run in participants_to_exclude
+
+                // If inclusion list is provided, only keep the participant if in that list
+                // and not in the exclusion list.
+                if (participants_to_include) {
+                    return is_included && !is_excluded
+                }
+                // If we only have an exclusion list, filter out participants in that list
+                return !is_excluded
+            }
+
+            return [key, filtered]
+        }
+    }
 
     emit:
     t1 = ch_samplesheet.t1
@@ -268,6 +351,7 @@ workflow PIPELINE_COMPLETION {
     plaintext_email // boolean: Send plain-text email instead of HTML
     outdir          //    path: Path to output directory where results will be published
     monochrome_logs // boolean: Disable ANSI colour codes in log output
+    hook_url        //  string: hook URL for notifications
     multiqc_report  //  string: Path to MultiQC report
 
     main:
@@ -291,6 +375,9 @@ workflow PIPELINE_COMPLETION {
         }
 
         completionSummary(monochrome_logs)
+        if (hook_url) {
+            imNotification(summary_params, hook_url)
+        }
     }
 
     workflow.onError {
@@ -374,4 +461,3 @@ def methodsDescriptionText(mqc_methods_yaml) {
 
     return description_html.toString()
 }
-
