@@ -60,7 +60,9 @@
                 "sub-test-1/anat/sub-test-1_space-dwi_desc-preproc_T1w.nii.gz",
                 "sub-test-1/dwi",
                 "sub-test-1/dwi/sub-test-1_desc-brain_mask.nii.gz",
+                "sub-test-1/dwi/sub-test-1_desc-ensemble_tractogram.trk",
                 "sub-test-1/dwi/sub-test-1_desc-local_tractogram.trk",
+                "sub-test-1/dwi/sub-test-1_desc-pft_tractogram.trk",
                 "sub-test-1/dwi/sub-test-1_desc-preproc_b0.nii.gz",
                 "sub-test-1/dwi/sub-test-1_desc-preproc_dwi.bval",
                 "sub-test-1/dwi/sub-test-1_desc-preproc_dwi.bvec",
@@ -101,6 +103,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-15T12:12:10.333452464"
+        "timestamp": "2026-01-19T13:39:08.406792281"
     }
 }
