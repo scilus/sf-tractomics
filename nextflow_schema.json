@@ -1076,7 +1076,7 @@
                 }
             }
         },
-        "Output template space": {
+        "output_template_space": {
             "title": "Output to Template Options",
             "type": "object",
             "fa_icon": "fas fa-brain",
@@ -1175,6 +1175,9 @@
         },
         {
             "$ref": "#/$defs/atlas_iit"
+        },
+        {
+            "$ref": "#/$defs/output_template_space"
         }
     ],
     "properties": {
