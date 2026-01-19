@@ -2,14 +2,14 @@
     "tracking - localtracking - stub-run": {
         "content": [
             [
-                "versions.yml:md5,57f53115d05b0b9fe954ae1617ae2014"
+                "versions.yml:md5,78970d61ffd26ee69c4dda97a2ddcead"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "25.04.7"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-22T22:41:55.481286285"
+        "timestamp": "2026-01-14T17:53:02.840574365"
     },
     "tracking - localtracking - wm": {
         "content": [
