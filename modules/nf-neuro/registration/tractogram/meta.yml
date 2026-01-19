@@ -67,37 +67,33 @@ input:
         description: |
           Groovy Map containing sample information
           e.g. `[ id:'test', single_end:false ]`
-    - anat:
-        type: file
-        description: FA nifti format as anatomical image
-        pattern: "*.{nii,nii.gz}"
-        mandatory: true
-        ontologies:
-          - edam: http://edamontology.org/format_4001 # NIFTI format
-    - affine:
-        type: file
-        description: ANTs affine transform
-        pattern: "*.mat"
-        mandatory: true
-        ontologies: []
-    - tractogram:
+    - tractograms:
         type: file
         description: Tractogram or list of tractograms to register
         pattern: "*.{trk,tck,h5}"
         mandatory: true
         ontologies: []
-    - reference:
+    - trk_reference:
         type: file
         description: Reference anatomy for tck/vtk/fib/dpy file support (.nii or .nii.gz)
           (optional)
         pattern: "*.{tck,vtk,fib,dpy}"
         mandatory: false
         ontologies: []
-    - deformation:
+    - reference:
         type: file
-        description: Path to the file containing a deformation field (optional)
+        description: Reference anatomy for registration (.nii or .nii.gz)
         pattern: "*.{nii,nii.gz}"
-        mandatory: false
+        mandatory: true
+        ontologies:
+          - edam: http://edamontology.org/format_4001 # NIFTI format
+    - transformations:
+        type: list
+        description: |
+          Transformation file(s) - can be one or two files. Deformation field must be
+          .nii.gz format. Affine transform must be .mat or .txt format.
+        pattern: "*.{mat,txt,nii.gz}"
+        mandatory: true
         ontologies:
           - edam: http://edamontology.org/format_4001 # NIFTI format
 output:

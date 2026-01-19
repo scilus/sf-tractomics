@@ -248,12 +248,13 @@ workflow SF_TRACTOMICS {
     }
 
     if ( params.run_output_template_space ) {
-        OUTPUT_TEMPLATE_SPACE( TRACTOFLOW.out.t1,
-                               ch_input_metrics,
-                               channel.empty(),
-                               channel.empty(),
-                               ch_bundle_seg,
-                               channel.empty())
+        OUTPUT_TEMPLATE_SPACE(
+            TRACTOFLOW.out.t1,
+            ch_input_metrics,
+            channel.empty(),
+            channel.empty(),
+            ch_bundle_seg,
+            channel.empty())
         ch_versions = ch_versions.mix(OUTPUT_TEMPLATE_SPACE.out.versions)
     }
 
