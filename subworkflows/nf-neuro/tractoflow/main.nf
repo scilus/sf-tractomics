@@ -147,8 +147,8 @@ workflow TRACTOFLOW {
         //
         ANATOMICAL_SEGMENTATION(
             T1_REGISTRATION.out.image_warped,
-            TRANSFORM_WMPARC.out.warped_image
-                .join(TRANSFORM_APARC_ASEG.out.warped_image),
+            TRANSFORM_APARC_ASEG.out.warped_image
+                .join(TRANSFORM_WMPARC.out.warped_image),
             TRANSFORM_LESION_MASK.out.warped_image,
             channel.empty()
         )
