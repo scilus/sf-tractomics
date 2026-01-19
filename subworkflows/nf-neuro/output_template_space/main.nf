@@ -188,11 +188,9 @@ workflow OUTPUT_TEMPLATE_SPACE {
     // ** Apply the transformation to the tractograms ** //
     ch_tractograms_to_transform = ch_trk_files
         .join(REGISTRATION.out.image_warped)
-        .join(REGISTRATION.out.backward_affine)
-        .join(REGISTRATION.out.backward_warp, remainder: true)
-        .filter{ it.size() > 4 }  // Ensure that we have a warp (non-linear) transform
-        .map{ meta, trk, reference, affine, warp ->
-            [meta, trk, [], reference, affine, warp ?: []]
+        .join(REGISTRATION.out.forward_tractogram_transform)
+        .map{ meta, trk, reference, transfo ->
+            [meta, trk, [], reference, transfo]
         }
 
     REGISTRATION_TRACTOGRAM ( ch_tractograms_to_transform )
