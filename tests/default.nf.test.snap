@@ -1,5 +1,5 @@
 {
-    "-profile test": {
+    "-profile test,full_pipeline": {
         "content": [
             {
                 "BUNDLE_CENTROID": {
@@ -214,112 +214,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-19T15:14:32.090982615"
-    },
-    "-profile test,full_pipeline": {
-        "content": [
-            {
-                "DENOISE_DWI": {
-                    "mrtrix": "3.0.5"
-                },
-                "DENOISING_NLMEANS": {
-                    "scilpy": "2.2.0"
-                },
-                "RECONST_DTIMETRICS": {
-                    "scilpy": "2.2.0",
-                    "mrtrix": "3.0.7",
-                    "imagemagick": "6.9.12"
-                },
-                "RECONST_FODF": {
-                    "scilpy": "2.2.0"
-                },
-                "RECONST_FRF": {
-                    "scilpy": "2.2.0"
-                },
-                "REGISTRATION_ANATTODWI": {
-                    "ants": "2.6.2",
-                    "imagemagick": "6.9.12-98",
-                    "mrtrix": "3.0.7",
-                    "scilpy": "2.2.0"
-                },
-                "SEGMENTATION_FASTSEG": {
-                    "scilpy": "2.2.0",
-                    "fsl": 6.0
-                },
-                "TRACKING_LOCALTRACKING": {
-                    "scilpy": "2.2.0"
-                },
-                "TRACKING_PFTTRACKING": {
-                    "scilpy": "2.2.0"
-                },
-                "Workflow": {
-                    "scilus/sf-tractomics": "v1.0dev"
-                }
-            },
-            [
-                "multiqc",
-                "multiqc/global_multiqc_data",
-                "multiqc/global_multiqc_plots",
-                "multiqc/global_multiqc_report.html",
-                "pipeline_info",
-                "sub-test-1",
-                "sub-test-1/anat",
-                "sub-test-1/anat/sub-test-1_T1w.nii.gz",
-                "sub-test-1/anat/sub-test-1_desc-brain_mask.nii.gz",
-                "sub-test-1/anat/sub-test-1_label-CSF_desc-fastseg_mask.nii.gz",
-                "sub-test-1/anat/sub-test-1_label-CSF_desc-fastseg_probseg.nii.gz",
-                "sub-test-1/anat/sub-test-1_label-GM_desc-fastseg_mask.nii.gz",
-                "sub-test-1/anat/sub-test-1_label-GM_desc-fastseg_probseg.nii.gz",
-                "sub-test-1/anat/sub-test-1_label-WM_desc-fastseg_mask.nii.gz",
-                "sub-test-1/anat/sub-test-1_label-WM_desc-fastseg_probseg.nii.gz",
-                "sub-test-1/anat/sub-test-1_space-T1w_desc-brain_mask.nii.gz",
-                "sub-test-1/anat/sub-test-1_space-T1w_desc-preproc_T1w.nii.gz",
-                "sub-test-1/anat/sub-test-1_space-dwi_desc-preproc_T1w.nii.gz",
-                "sub-test-1/dwi",
-                "sub-test-1/dwi/sub-test-1_desc-brain_mask.nii.gz",
-                "sub-test-1/dwi/sub-test-1_desc-ensemble_tractogram.trk",
-                "sub-test-1/dwi/sub-test-1_desc-local_tractogram.trk",
-                "sub-test-1/dwi/sub-test-1_desc-pft_tractogram.trk",
-                "sub-test-1/dwi/sub-test-1_desc-preproc_b0.nii.gz",
-                "sub-test-1/dwi/sub-test-1_desc-preproc_dwi.bval",
-                "sub-test-1/dwi/sub-test-1_desc-preproc_dwi.bvec",
-                "sub-test-1/dwi/sub-test-1_desc-preproc_dwi.nii.gz",
-                "sub-test-1/dwi/sub-test-1_frf.txt",
-                "sub-test-1/dwi/sub-test-1_model-csd_param-afdmax_dwimap.nii.gz",
-                "sub-test-1/dwi/sub-test-1_model-csd_param-afdsum_dwimap.nii.gz",
-                "sub-test-1/dwi/sub-test-1_model-csd_param-afdtotal_dwimap.nii.gz",
-                "sub-test-1/dwi/sub-test-1_model-csd_param-csfsh_dwimap.nii.gz",
-                "sub-test-1/dwi/sub-test-1_model-csd_param-gmsh_dwimap.nii.gz",
-                "sub-test-1/dwi/sub-test-1_model-csd_param-nufo_dwimap.nii.gz",
-                "sub-test-1/dwi/sub-test-1_model-csd_param-peaks_dwimap.nii.gz",
-                "sub-test-1/dwi/sub-test-1_model-csd_param-sh_dwimap.nii.gz",
-                "sub-test-1/dwi/sub-test-1_model-csd_param-wmsh_dwimap.nii.gz",
-                "sub-test-1/dwi/sub-test-1_model-tensor_param-ad_dwimap.nii.gz",
-                "sub-test-1/dwi/sub-test-1_model-tensor_param-fa_dwimap.nii.gz",
-                "sub-test-1/dwi/sub-test-1_model-tensor_param-ga_dwimap.nii.gz",
-                "sub-test-1/dwi/sub-test-1_model-tensor_param-md_dwimap.nii.gz",
-                "sub-test-1/dwi/sub-test-1_model-tensor_param-mode_dwimap.nii.gz",
-                "sub-test-1/dwi/sub-test-1_model-tensor_param-rd_dwimap.nii.gz",
-                "sub-test-1/dwi/sub-test-1_model-tensor_param-rgb_dwimap.nii.gz",
-                "sub-test-1/dwi/sub-test-1_model-tensor_param-tensor_dwimap.nii.gz",
-                "sub-test-1/dwi/sub-test-1_space-DWI_label-seeding_desc-local_mask.nii.gz",
-                "sub-test-1/dwi/sub-test-1_space-DWI_label-seeding_desc-pft_mask.nii.gz",
-                "sub-test-1/dwi/sub-test-1_space-DWI_label-tracking_desc-local_mask.nii.gz",
-                "sub-test-1/multiqc",
-                "sub-test-1/multiqc/sub-test-1_multiqc_data",
-                "sub-test-1/multiqc/sub-test-1_multiqc_plots",
-                "sub-test-1/multiqc/sub-test-1_multiqc_report.html",
-                "sub-test-1/xfm",
-                "sub-test-1/xfm/sub-test-1_from-T1w_to-dwi_mode-image_desc-affine_xfm.mat",
-                "sub-test-1/xfm/sub-test-1_from-T1w_to-dwi_mode-image_desc-warp_xfm.nii.gz",
-                "sub-test-1/xfm/sub-test-1_from-dwi_to-T1w_mode-image_desc-affine_xfm.mat",
-                "sub-test-1/xfm/sub-test-1_from-dwi_to-T1w_mode-image_desc-warp_xfm.nii.gz"
-            ]
-        ],
-        "meta": {
-            "nf-test": "0.9.3",
-            "nextflow": "25.10.2"
-        },
-        "timestamp": "2026-01-19T14:23:11.056184506"
+        "timestamp": "2026-01-20T16:23:14.23901801"
     }
 }

@@ -21,7 +21,7 @@ include { REGISTRATION_ANTSAPPLYTRANSFORMS as TRANSFORM_ATLAS_BUNDLES } from '..
 include { STATS_METRICSINROI     } from '../modules/nf-neuro/stats/metricsinroi/main'
 include { ATLAS_ROIMETRICS       } from '../subworkflows/nf-neuro/atlas_roimetrics/main'
 include { TRACTOMETRY            } from '../subworkflows/nf-neuro/tractometry/main'
-include { OUTPUT_TEMPLATE_SPACE  } from '../subworkflows/nf-neuro/output_template_space/main'
+include { OUTPUT_TEMPLATE_SPACE  } from '../subworkflows/nf-neuro/output_template_space/main' addParams(run_easyreg: false, run_synthmorph: false)
 include { mergeCovariatesIntoMeta } from '../subworkflows/local/utils_nfcore_sf-tractomics_pipeline/main'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
