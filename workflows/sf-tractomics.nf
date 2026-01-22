@@ -21,7 +21,7 @@ include { REGISTRATION_ANTSAPPLYTRANSFORMS as TRANSFORM_ATLAS_BUNDLES } from '..
 include { STATS_METRICSINROI     } from '../modules/nf-neuro/stats/metricsinroi/main'
 include { ATLAS_ROIMETRICS       } from '../subworkflows/nf-neuro/atlas_roimetrics/main'
 include { TRACTOMETRY            } from '../subworkflows/nf-neuro/tractometry/main'
-include { OUTPUT_TEMPLATE_SPACE  } from '../subworkflows/nf-neuro/output_template_space/main' addParams(run_easyreg: false, run_synthmorph: false)
+include { OUTPUT_TEMPLATE_SPACE  } from '../subworkflows/nf-neuro/output_template_space/main'
 include { mergeCovariatesIntoMeta } from '../subworkflows/local/utils_nfcore_sf-tractomics_pipeline/main'
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -254,7 +254,20 @@ workflow SF_TRACTOMICS {
         ch_global_multiqc_files = ch_global_multiqc_files.mix(ch_tractometry_mqc)
     }
 
-    if ( params.run_output_template_space ) {
+    // Validate output_space parameter and extract template
+    if ( params.output_space ) {
+        def spaces = params.output_space.split(',').collect{ it.trim() }
+        if ( spaces.size() == 2 && spaces.every{ it != 'orig_t1' } ) {
+            error "Invalid output_space: when providing two output spaces, at least one must be 'orig_t1'. Got: ${params.output_space}"
+        }
+        // Extract the template that is not orig_t1 and set it to params.template
+        def non_orig_t1 = spaces.find{ it != 'orig_t1' }
+        if ( non_orig_t1 ) {
+            params.template = non_orig_t1
+        }
+    }
+
+    if ( params.template ) {
         OUTPUT_TEMPLATE_SPACE(
             TRACTOFLOW.out.t1,
             ch_input_metrics,

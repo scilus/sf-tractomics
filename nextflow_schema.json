@@ -79,6 +79,13 @@
                     "fa_icon": "fas fa-folder-open",
                     "help_text": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure."
                 },
+                "output_space": {
+                    "type": ["string"],
+                    "default": null,
+                    "description": "If set, the results will be outputted in the specified template space using TemplateFlow or orig_t1.",
+                    "fa_icon": "fas fa-map",
+                    "help_text": "You can specify a specific template space and/or orig_t1 if you want to register everything in the original T1 space (e.g MNI152Lin,orig_t1)."
+                },
                 "clean_output": {
                     "type": "boolean",
                     "default": true,
@@ -937,9 +944,25 @@
                     "type": "string",
                     "description": "Path to the BundleSeg atlas directory.",
                     "help_text": "Path to the BundleSeg atlas directory. If not set, the default bundle_seg atlas will automatically downloaded."
+                }
+            }
+        },
+        "registration_options": {
+            "title": "Registration options",
+            "type": "object",
+            "description": "Define the registration tools to be used in the pipeline.",
+            "default": "",
+            "help_text": "Define the registration tools to be used in the pipeline.",
+            "properties": {
+                "run_easyreg": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Run freesurfer EasyReg any-to-any modality registration.",
+                    "help_text": "Needs freesurfer license."
                 },
                 "run_synthmorph": {
                     "type": "boolean",
+                    "default": false,
                     "description": "Use SynthMorph for registration instead of ANTs for BundleSeg. (Requires Freesurfer license)",
                     "help_text": "Use SynthMorph for registration instead of ANTs for BundleSeg. (Requires Freesurfer license)"
                 }
@@ -1083,9 +1106,6 @@
             "description": "Options for outputting to specific template space.",
             "help_text": "These options are used to configure the output to template space steps in the pipeline (e.g., template selection, resolution, etc.).",
             "properties": {
-                "run_output_template_space": {
-                    "type": "boolean"
-                },
                 "template": {
                     "type": "string",
                     "description": "Template space to output to. The available template are the ones supported by TemplateFlow.",
