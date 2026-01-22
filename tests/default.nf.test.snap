@@ -28,6 +28,12 @@
                     "mrtrix": "3.0.7",
                     "imagemagick": "6.9.12"
                 },
+                "MASK_T1W": {
+                    "mrtrix": "3.0.5"
+                },
+                "MASK_T2W": {
+                    "mrtrix": "3.0.5"
+                },
                 "RECONST_DTIMETRICS": {
                     "scilpy": "2.2.0",
                     "mrtrix": "3.0.7",
@@ -66,6 +72,10 @@
                     "mrtrix": "3.0.7",
                     "scilpy": "2.2.0"
                 },
+                "REGISTRATION_TRACTOGRAM": {
+                    "ants": "2.6.2",
+                    "scilpy": "2.2.1"
+                },
                 "SEGMENTATION_FASTSEG": {
                     "scilpy": "2.2.0",
                     "fsl": 6.0
@@ -87,6 +97,16 @@
                     "scilpy": "2.2.1"
                 },
                 "TRANSFORM_ATLAS_BUNDLES": {
+                    "ants": "2.6.2",
+                    "imagemagick": "6.9.12-98",
+                    "mrtrix": "3.0.7",
+                    "scilpy": "2.2.0"
+                },
+                "UTILS_TEMPLATEFLOW": {
+                    "templateflow": "24.2.2",
+                    "python": "3.13.2"
+                },
+                "WARPIMAGES": {
                     "ants": "2.6.2",
                     "imagemagick": "6.9.12-98",
                     "mrtrix": "3.0.7",
@@ -122,6 +142,7 @@
                 "sub-test-1/dwi",
                 "sub-test-1/dwi/bundles",
                 "sub-test-1/dwi/bundles/sub-test-1_AF_L.trk",
+                "sub-test-1/dwi/bundles/sub-test-1_space-MNI152Lin_tract-ArcuateFasciculus_hemi-left_track-sdstream_tractogram.trk",
                 "sub-test-1/dwi/sub-test-1_atlas-iit_desc-roi_stats.tsv",
                 "sub-test-1/dwi/sub-test-1_desc-brain_mask.nii.gz",
                 "sub-test-1/dwi/sub-test-1_desc-ensemble_tractogram.trk",
@@ -167,6 +188,17 @@
                 "sub-test-1/dwi/sub-test-1_space-DWI_label-seeding_desc-local_mask.nii.gz",
                 "sub-test-1/dwi/sub-test-1_space-DWI_label-seeding_desc-pft_mask.nii.gz",
                 "sub-test-1/dwi/sub-test-1_space-DWI_label-tracking_desc-local_mask.nii.gz",
+                "sub-test-1/dwi/sub-test-1_space-MNI152Lin_model-csd_param-afdmax_dwimap.nii.gz",
+                "sub-test-1/dwi/sub-test-1_space-MNI152Lin_model-csd_param-afdsum_dwimap.nii.gz",
+                "sub-test-1/dwi/sub-test-1_space-MNI152Lin_model-csd_param-afdtotal_dwimap.nii.gz",
+                "sub-test-1/dwi/sub-test-1_space-MNI152Lin_model-tensor_param-ad_desc-fwc_dwimap.nii.gz",
+                "sub-test-1/dwi/sub-test-1_space-MNI152Lin_model-tensor_param-ad_dwimap.nii.gz",
+                "sub-test-1/dwi/sub-test-1_space-MNI152Lin_model-tensor_param-fa_desc-fwc_dwimap.nii.gz",
+                "sub-test-1/dwi/sub-test-1_space-MNI152Lin_model-tensor_param-fa_dwimap.nii.gz",
+                "sub-test-1/dwi/sub-test-1_space-MNI152Lin_model-tensor_param-md_desc-fwc_dwimap.nii.gz",
+                "sub-test-1/dwi/sub-test-1_space-MNI152Lin_model-tensor_param-md_dwimap.nii.gz",
+                "sub-test-1/dwi/sub-test-1_space-MNI152Lin_model-tensor_param-rd_desc-fwc_dwimap.nii.gz",
+                "sub-test-1/dwi/sub-test-1_space-MNI152Lin_model-tensor_param-rd_dwimap.nii.gz",
                 "sub-test-1/multiqc",
                 "sub-test-1/multiqc/sub-test-1_multiqc_data",
                 "sub-test-1/multiqc/sub-test-1_multiqc_plots",
@@ -182,6 +214,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-22T15:09:14.461681211"
+        "timestamp": "2026-01-22T16:21:45.201661762"
     }
 }

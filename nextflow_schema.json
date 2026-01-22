@@ -79,13 +79,6 @@
                     "fa_icon": "fas fa-folder-open",
                     "help_text": "The output directory where the results will be saved. You have to use absolute paths to storage on Cloud infrastructure."
                 },
-                "output_space": {
-                    "type": ["string"],
-                    "default": null,
-                    "description": "If set, the results will be outputted in the specified template space using TemplateFlow or orig_t1.",
-                    "fa_icon": "fas fa-map",
-                    "help_text": "You can specify a specific template space and/or orig_t1 if you want to register everything in the original T1 space (e.g MNI152Lin,orig_t1)."
-                },
                 "clean_output": {
                     "type": "boolean",
                     "default": true,
@@ -1106,6 +1099,13 @@
             "description": "Options for outputting to specific template space.",
             "help_text": "These options are used to configure the output to template space steps in the pipeline (e.g., template selection, resolution, etc.).",
             "properties": {
+                "output_template_space": {
+                    "type": "boolean",
+                    "default": null,
+                    "description": "If set, the results will be outputted in the specified template space using TemplateFlow.",
+                    "fa_icon": "fas fa-map",
+                    "help_text": "Please see their documentation for an exhaustive list (https://www.templateflow.org/browse/)"
+                },
                 "template": {
                     "type": "string",
                     "description": "Template space to output to. The available template are the ones supported by TemplateFlow.",

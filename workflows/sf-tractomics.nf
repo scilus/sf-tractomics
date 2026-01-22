@@ -254,20 +254,7 @@ workflow SF_TRACTOMICS {
         ch_global_multiqc_files = ch_global_multiqc_files.mix(ch_tractometry_mqc)
     }
 
-    // Validate output_space parameter and extract template
-    if ( params.output_space ) {
-        def spaces = params.output_space.split(',').collect{ it.trim() }
-        if ( spaces.size() == 2 && spaces.every{ it != 'orig_t1' } ) {
-            error "Invalid output_space: when providing two output spaces, at least one must be 'orig_t1'. Got: ${params.output_space}"
-        }
-        // Extract the template that is not orig_t1 and set it to params.template
-        def non_orig_t1 = spaces.find{ it != 'orig_t1' }
-        if ( non_orig_t1 ) {
-            params.template = non_orig_t1
-        }
-    }
-
-    if ( params.template ) {
+    if ( params.output_template_space ) {
         OUTPUT_TEMPLATE_SPACE(
             TRACTOFLOW.out.t1,
             ch_input_metrics,
