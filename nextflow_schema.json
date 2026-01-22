@@ -1119,7 +1119,6 @@
                     "description": "Resolution of the template space.",
                     "help_text": "Typically 1 or 2 (mm).",
                     "fa_icon": "fas fa-brain",
-                    "default": 1,
                     "hidden": false
                 },
                 "templateflow_cohort": {
