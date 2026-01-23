@@ -5,11 +5,7 @@ process REGISTRATION_TRACTOGRAM {
     container "scilus/scilus:2.2.1"
 
     input:
-<<<<<<< HEAD
-    tuple val(meta), path(anat), path(affine), path(tractogram), path(reference), path(deformation)
-=======
     tuple val(meta), path(tractograms, arity: '1..*'), path(trk_reference), path(reference), path(transformations, arity: '1..2')
->>>>>>> dev
 
     output:
     tuple val(meta), path("*.{trk,tck,h5}") , emit: tractogram
@@ -21,13 +17,7 @@ process REGISTRATION_TRACTOGRAM {
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
     def suffix = task.ext.suffix ? "_${task.ext.suffix}" : ""
-<<<<<<< HEAD
-    reference = "$reference" ? "--reference $reference" : ""
-    def in_deformation = "$deformation" ? "--in_deformation $deformation" : ""
-
-=======
     trk_reference = "$trk_reference" ? "--reference $trk_reference" : ""
->>>>>>> dev
     def inverse = task.ext.inverse ? "--inverse" : ""
     def reverse_operation = task.ext.reverse_operation ? "--reverse_operation" : ""
 
