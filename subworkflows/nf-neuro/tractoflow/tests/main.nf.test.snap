@@ -891,13 +891,13 @@
                 ],
                 "versions": [
                     "versions.yml:md5,0db65009e955d16a3cf997ed4401166d",
-                    "versions.yml:md5,21aeeda82df6de4b5bdd1c6bb9930eb0",
                     "versions.yml:md5,46756f8a550da8585f854b45afd1036d",
                     "versions.yml:md5,5011203328febedfa9c5af5684bcc20c",
                     "versions.yml:md5,6f86cbe9b96fbefff47fe66fcb287678",
                     "versions.yml:md5,7cabc91ec64b5e824e9b8f60d7dcf930",
                     "versions.yml:md5,91bb720c5b6b219ae9d7e0f671592381",
                     "versions.yml:md5,955e704dfd97848e196333d0cecf0451",
+                    "versions.yml:md5,9e57ce57d94bb8a202d6c8bdd5623869",
                     "versions.yml:md5,ee0cb6ae187add67175c9997ef1a5fd1"
                 ],
                 "volume_fraction": [
@@ -936,8 +936,8 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-20T19:48:40.515358"
+        "timestamp": "2026-01-14T17:54:31.868521381"
     }
 }

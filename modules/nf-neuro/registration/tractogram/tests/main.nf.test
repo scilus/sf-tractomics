@@ -18,7 +18,7 @@ nextflow_process {
             script "../../../../../subworkflows/nf-neuro/load_test_data/main.nf"
             process {
                 """
-                input[0] = Channel.from( [ "bundles.zip", "connectivity.zip" ] )
+                input[0] = channel.from( [ "bundles.zip", "connectivity.zip" ] )
                 input[1] = "test.load-test-data"
                 """
             }
@@ -37,11 +37,10 @@ nextflow_process {
                 input[0] = ch_split_test_data.bundles.map{
                     test_data_directory -> [
                         [ id:'test', single_end:false ], // meta map
-                        file("\${test_data_directory}/bundle_all_1mm.nii.gz", checkIfExists: true),
-                        file("\${test_data_directory}/affine.txt", checkIfExists: true),
                         file("\${test_data_directory}/fibercup_atlas/subj_1/*.trk", checkIfExists: true),
                         [],
-                        []
+                        file("\${test_data_directory}/bundle_all_1mm.nii.gz", checkIfExists: true),
+                        [file("\${test_data_directory}/affine.txt", checkIfExists: true)]
                     ]
                 }
                 """
@@ -69,11 +68,10 @@ nextflow_process {
                 input[0] = ch_split_test_data.bundles.map{
                     test_data_directory -> [
                         [ id:'test', single_end:false ], // meta map
-                        file("\${test_data_directory}/bundle_all_1mm.nii.gz", checkIfExists: true),
-                        file("\${test_data_directory}/affine.txt", checkIfExists: true),
                         file("\${test_data_directory}/fibercup_atlas/subj_1/bundle_2.trk", checkIfExists: true),
                         [],
-                        []
+                        file("\${test_data_directory}/bundle_all_1mm.nii.gz", checkIfExists: true),
+                        [file("\${test_data_directory}/affine.txt", checkIfExists: true)]
                     ]
                 }
                 """
@@ -101,11 +99,10 @@ nextflow_process {
                 input[0] = ch_split_test_data.bundles.map{
                     test_data_directory -> [
                         [ id:'test', single_end:false ], // meta map
-                        file("\${test_data_directory}/bundle_all_1mm.nii.gz", checkIfExists: true),
-                        file("\${test_data_directory}/affine.txt", checkIfExists: true),
                         file("\${test_data_directory}/fibercup_atlas/subj_1/bundle_2.trk", checkIfExists: true),
                         [],
-                        []
+                        file("\${test_data_directory}/bundle_all_1mm.nii.gz", checkIfExists: true),
+                        [file("\${test_data_directory}/affine.txt", checkIfExists: true)]
                     ]
                 }
                 """
@@ -132,11 +129,10 @@ nextflow_process {
                 input[0] = ch_split_test_data.connectivity.map{
                     test_data_directory -> [
                         [ id:'test', single_end:false ], // meta map
-                        file("\${test_data_directory}/afd_max.nii.gz", checkIfExists: true),
-                        file("\${test_data_directory}/affine.txt", checkIfExists: true),
                         file("\${test_data_directory}/decompose.h5", checkIfExists: true),
                         [],
-                        []
+                        file("\${test_data_directory}/afd_max.nii.gz", checkIfExists: true),
+                        [file("\${test_data_directory}/affine.txt", checkIfExists: true)]
                     ]
                 }
                 """
@@ -166,11 +162,10 @@ nextflow_process {
                 input[0] = ch_split_test_data.bundles.map{
                     test_data_directory -> [
                         [ id:'test', single_end:false ], // meta map
-                        file("\${test_data_directory}/bundle_all_1mm.nii.gz", checkIfExists: true),
-                        file("\${test_data_directory}/affine.txt", checkIfExists: true),
-                        file("\${test_data_directory}/fibercup_atlas/subj_1/bundle_2.trk", checkIfExists: true),
+                        [file("\${test_data_directory}/fibercup_atlas/subj_1/bundle_2.trk", checkIfExists: true)],
                         [],
-                        []
+                        file("\${test_data_directory}/bundle_all_1mm.nii.gz", checkIfExists: true),
+                        [file("\${test_data_directory}/affine.txt", checkIfExists: true)],
                     ]
                 }
                 """

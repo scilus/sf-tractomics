@@ -30,9 +30,15 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
+<<<<<<< HEAD
             "nextflow": "25.04.8"
         },
         "timestamp": "2025-11-04T14:34:06.22084"
+=======
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-01-12T18:00:15.373767321"
+>>>>>>> dev
     },
     "registration - tractogram_bundles": {
         "content": [
@@ -81,9 +87,15 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
+<<<<<<< HEAD
             "nextflow": "25.04.8"
         },
         "timestamp": "2025-11-04T14:33:39.539039"
+=======
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-01-12T17:59:47.677588349"
+>>>>>>> dev
     },
     "registration - tractogram - stub-run": {
         "content": [
@@ -93,9 +105,15 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
+<<<<<<< HEAD
             "nextflow": "25.04.8"
         },
         "timestamp": "2025-11-04T14:34:23.077478"
+=======
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-01-10T22:43:36.606529162"
+>>>>>>> dev
     },
     "registration - tractogram - hdf5": {
         "content": [
@@ -128,9 +146,15 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
+<<<<<<< HEAD
             "nextflow": "25.04.8"
         },
         "timestamp": "2025-11-04T15:09:06.891509"
+=======
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-01-10T22:43:24.289166244"
+>>>>>>> dev
     },
     "registration - tractogram - custom suffix": {
         "content": [
@@ -163,8 +187,14 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
+<<<<<<< HEAD
             "nextflow": "25.04.8"
         },
         "timestamp": "2025-11-04T14:33:54.127544"
+=======
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-01-12T18:00:03.386892492"
+>>>>>>> dev
     }
 }

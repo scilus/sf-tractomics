@@ -78,17 +78,17 @@ process TRACKING_PFTTRACKING {
             ${prefix}__pft_seeding_mask.nii.gz --data_type uint8 -f
     fi
 
-    pft_step="$pft_step"
+    pft_step_size="$pft_step"
     if [[ -z "$pft_step" ]] && [[ -n "$pft_step_pct" ]]; then
         pixdim=\$(scil_header_print_info $wm --keys pixdim | tr -d '[]' | awk '{for(i=2;i<=4;i++) if(\$i>0 && (\$i<min || min=="")) min=\$i} END {print min}')
-        pft_step=\$(awk -v pixdim="\$pixdim" -v pct="$pft_step_pct" 'BEGIN {printf "--step %.6f", pixdim * pct / 100}')
+        pft_step_size=\$(awk -v pixdim="\$pixdim" -v pct="$pft_step_pct" 'BEGIN {printf "--step %.6f", pixdim * pct / 100}')
     fi
 
     scil_tracking_pft $fodf ${prefix}__pft_seeding_mask.nii.gz \
         ${prefix}__map_include.nii.gz ${prefix}__map_exclude.nii.gz \
         ${prefix}__pft_tracking.trk \
         $pft_algo $pft_seeding_type $pft_nbr_seeds \
-        $pft_random_seed $pft_step $pft_theta \
+        $pft_random_seed \$pft_step_size $pft_theta \
         $pft_sfthres $pft_sfthres_init $pft_min_len $pft_max_len \
         $pft_particles $pft_back $pft_front $compress $basis -f
 
@@ -104,7 +104,7 @@ process TRACKING_PFTTRACKING {
     "random_seed": $task.ext.pft_random_seed,
     "is_compress": "${task.ext.pft_compress_streamlines}",
     "compress_value": $task.ext.pft_compress_value,
-    "step": \${pft_step/--step /},
+    "step": \${pft_step_size/--step /},
     "theta": $task.ext.pft_theta,
     "sfthres": $task.ext.pft_sfthres,
     "sfthres_init": $task.ext.pft_sfthres_init,

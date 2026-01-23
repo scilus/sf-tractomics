@@ -17,6 +17,8 @@ include { UTILS_NFCORE_PIPELINE     } from '../../nf-core/utils_nfcore_pipeline'
 include { UTILS_NEXTFLOW_PIPELINE   } from '../../nf-core/utils_nextflow_pipeline'
 include { IO_BIDS                   } from '../../nf-neuro/io_bids/main'
 include { IO_SAFECASTINPUTS         } from '../../../modules/local/io/safecastinputs'
+include { imNotification            } from '../../nf-core/utils_nfcore_pipeline'
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     SUBWORKFLOW TO INITIALISE PIPELINE
@@ -32,11 +34,14 @@ workflow PIPELINE_INITIALISATION {
     nextflow_cli_args //   array: List of positional nextflow CLI args
     outdir            //  string: The output directory where the results will be saved
     input             //  string: Path to input samplesheet
+    help              // boolean: Display help message and exit
+    help_full         // boolean: Show the full help message
+    show_hidden       // boolean: Show hidden parameters in the help message
 
     main:
 
-    ch_versions = Channel.empty()
-    ch_samplesheet = Channel.empty()
+    ch_versions = channel.empty()
+    ch_samplesheet = channel.empty()
 
     //
     // Print version and exit if required and dump pipeline parameters to JSON file
@@ -52,16 +57,43 @@ workflow PIPELINE_INITIALISATION {
     //
     // Validate parameters and generate parameter summary to stdout
     //
+    command = "nextflow run ${workflow.manifest.name} -profile <docker/singularity/.../institute> --input samplesheet.csv --outdir <OUTDIR>"
+    before_text = """
+-\033[2m----------------------------------------------------------------------------------\033[0m-
+   \033[0;32m _.--'"'.\033[0m
+  \033[0;32m(  ( (   )\033[0m
+  \033[0;33m(o)_    ) )\033[0m
+  \033[0;32m   (o)_.'\033[0m
+  \033[0;32m    )/\033[0m
+
+ \033[0;34m  __  ___       ___  __   __   __  ___  __   __       __   __   \033[0m
+ \033[0;34m (__  |__  ___   |  |__) |__| |     |  |  | |\\/| |   /    (__   \033[0m
+ \033[0;34m ___) |          |  |  \\ |  | |__   |  |__| |  | |   \\__  ___)  \033[0m
+
+ \033[0;35m  scilus/sf-tractomics ${workflow.manifest.version}\033[0m
+-\033[2m----------------------------------------------------------------------------------\033[0m-
+    """
+    after_text = """${workflow.manifest.doi ? "\n* The pipeline\n" : ""}${workflow.manifest.doi.tokenize(",").collect { "    https://doi.org/${it.trim().replace('https://doi.org/','')}"}.join("\n")}${workflow.manifest.doi ? "\n" : ""}
+    * The nf-neuro project
+        https://scilus.github.io/nf-neuro
+
+    * The nf-core framework
+        https://doi.org/10.1038/s41587-020-0439-x
+
+    * Software dependencies
+        https://github.com/scilus/sf-tractomics/blob/master/CITATIONS.md
+    """
+
     UTILS_NFSCHEMA_PLUGIN (
         workflow,
         validate_params,
         null,
-        false,
-        false,
-        false,
-        "",
-        "",
-        ""
+        help,
+        help_full,
+        show_hidden,
+        before_text,
+        after_text,
+        command
     )
 
     //
@@ -82,19 +114,19 @@ workflow PIPELINE_INITIALISATION {
         //
         if (file(params.input).isDirectory()) {
             IO_BIDS(
-                Channel.fromPath(params.input),
-                Channel.value(params.fsbids ?: []),
-                Channel.value(params.bidsignore ?: [])
+                channel.fromPath(params.input),
+                channel.value(params.fsbids ?: []),
+                channel.value(params.bidsignore ?: [])
             )
             ch_samplesheet = [
                 t1: IO_BIDS.out.ch_t1,
                 wmparc: IO_BIDS.out.ch_wmparc,
                 aparc_aseg: IO_BIDS.out.ch_aparc_aseg,
                 dwi_bval_bvec: IO_BIDS.out.ch_dwi_bval_bvec,
-                b0: Channel.empty(),
+                b0: channel.empty(),
                 rev_dwi_bval_bvec: IO_BIDS.out.ch_rev_dwi_bval_bvec,
                 rev_b0: IO_BIDS.out.ch_rev_b0,
-                lesion: Channel.empty()
+                lesion: channel.empty()
             ]
 
             if (params.participants_tsv) {
@@ -289,11 +321,16 @@ def mergeCovariatesIntoMeta(ch_src, ch_covariates) {
         return ch_src
     }
 
-    def ch = ch_src.join(ch_covariates, by: 0)
+    def ch = ch_src.join(ch_covariates, by: 0, remainder: true)
         .map { item ->
             def original_meta = item[0]
             def content = item[1..-2]
             def covariates = item[-1]
+
+            if ( !covariates ) {
+                // No covariates to merge
+                return [original_meta] + content
+            }
             // Merge original meta with covariates without overwriting existing fields
             def merged_meta = original_meta.clone()
             covariates.each { k, v ->
@@ -319,6 +356,7 @@ workflow PIPELINE_COMPLETION {
     plaintext_email // boolean: Send plain-text email instead of HTML
     outdir          //    path: Path to output directory where results will be published
     monochrome_logs // boolean: Disable ANSI colour codes in log output
+    hook_url        //  string: hook URL for notifications
     multiqc_report  //  string: Path to MultiQC report
 
     main:
@@ -342,6 +380,9 @@ workflow PIPELINE_COMPLETION {
         }
 
         completionSummary(monochrome_logs)
+        if (hook_url) {
+            imNotification(summary_params, hook_url)
+        }
     }
 
     workflow.onError {
@@ -425,4 +466,3 @@ def methodsDescriptionText(mqc_methods_yaml) {
 
     return description_html.toString()
 }
-

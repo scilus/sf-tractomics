@@ -11,3 +11,5 @@ node_modules/
 venv/
 .venv/
 *.nosync/
+.nf-test/
+.nf-test.log

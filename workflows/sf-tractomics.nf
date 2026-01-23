@@ -21,6 +21,7 @@ include { ATLAS_ROIMETRICS       } from '../subworkflows/nf-neuro/atlas_roimetri
 include { TRACTOMETRY            } from '../subworkflows/nf-neuro/tractometry/main'
 include { REGISTRATION_ANTSAPPLYTRANSFORMS as REGISTRATION_METRICS_TO_ORIG } from '../modules/nf-neuro/registration/antsapplytransforms/main'
 include { REGISTRATION_TRACTOGRAM as REGISTRATION_TRACTOGRAM_TO_ORIG } from '../modules/nf-neuro/registration/tractogram/main'
+include { OUTPUT_TEMPLATE_SPACE  } from '../subworkflows/nf-neuro/output_template_space/main'
 include { mergeCovariatesIntoMeta } from '../subworkflows/local/utils_nfcore_sf-tractomics_pipeline/main'
 
 /*
@@ -42,20 +43,20 @@ workflow SF_TRACTOMICS {
     ch_covariates
     main:
 
-    ch_versions = Channel.empty()
-    ch_sub_multiqc_files = Channel.empty()
-    ch_global_multiqc_files = Channel.empty()
-    ch_topup_config = Channel.empty()
-    ch_bet_template = Channel.empty()
-    ch_bet_probability = Channel.empty()
+    ch_versions = channel.empty()
+    ch_sub_multiqc_files = channel.empty()
+    ch_global_multiqc_files = channel.empty()
+    ch_topup_config = channel.empty()
+    ch_bet_template = channel.empty()
+    ch_bet_probability = channel.empty()
 
     /* Load topup config if provided */
     if ( params.config_topup ) {
         if ( file(params.config_topup).exists()) {
-            ch_topup_config = Channel.fromPath(params.config_topup, checkIfExists: true)
+            ch_topup_config = channel.fromPath(params.config_topup, checkIfExists: true)
         }
         else {
-            ch_topup_config = Channel.value( params.config_topup )
+            ch_topup_config = channel.value( params.config_topup )
         }
     }
 
@@ -63,9 +64,9 @@ workflow SF_TRACTOMICS {
     template_directory = file(params.template_t1 ?: "$projectDir/assets/templates/mni_152_sym_09c/t1")
     if (template_directory.exists() && template_directory.isDirectory()){
         ch_bet_template = ch_t1.map{ it[0] }
-            .combine(Channel.fromPath(template_directory / "t1_template.nii.gz"))
+            .combine(channel.fromPath(template_directory / "t1_template.nii.gz"))
         ch_bet_probability = ch_t1.map{ it[0] }
-            .combine(Channel.fromPath(template_directory / "t1_brain_probability_map.nii.gz"))
+            .combine(channel.fromPath(template_directory / "t1_brain_probability_map.nii.gz"))
     }
     else {
         error "A T1w template is required for brain extraction. Provide its directory with params.template_t1."
@@ -97,7 +98,7 @@ workflow SF_TRACTOMICS {
     //
     // Ensemble tracking
     //
-    ch_input_tracking_qc = Channel.empty()
+    ch_input_tracking_qc = channel.empty()
     if (params.run_local_tracking && params.run_pft_tracking) {
         ch_tractogram_math_input = TRACTOFLOW.out.pft_tractogram
             .join(TRACTOFLOW.out.local_tractogram)
@@ -134,7 +135,7 @@ workflow SF_TRACTOMICS {
     //
     // Run BundleSeg
     //
-    ch_bundle_seg = Channel.empty()
+    ch_bundle_seg = channel.empty()
     if (params.run_bundle_seg) {
         ch_input_bundle_seg = TRACTOFLOW.out.pft_tractogram
             .mix(TRACTOFLOW.out.local_tractogram)
@@ -144,7 +145,7 @@ workflow SF_TRACTOMICS {
             TRACTOFLOW.out.pft_tractogram
                 .mix(TRACTOFLOW.out.local_tractogram)
                 .groupTuple(),
-            Channel.empty()
+            channel.empty()
         )
 
         ch_versions = ch_versions.mix(BUNDLE_SEG.out.versions)
@@ -167,28 +168,35 @@ workflow SF_TRACTOMICS {
     // Run RECONST/NODDI & RECONST/FREEWATER
     //
     if (params.run_noddi || params.run_freewater) {
+        // TODO: support subject-specific diffusivity options
         RECONST_FW_NODDI(
             TRACTOFLOW.out.dwi,
             TRACTOFLOW.out.b0_mask,
             TRACTOFLOW.out.dti_fa
                 .join(TRACTOFLOW.out.dti_ad)
                 .join(TRACTOFLOW.out.dti_rd)
-                .join(TRACTOFLOW.out.dti_md)
+                .join(TRACTOFLOW.out.dti_md),
+            [
+                para_diff: params.para_diff ? channel.value(params.para_diff) : channel.empty(),
+                iso_diff: params.iso_diff ? channel.value(params.iso_diff) : channel.empty(),
+                perp_diff_min: params.perp_diff_min ? channel.value(params.perp_diff_min) : channel.empty(),
+                perp_diff_max: params.perp_diff_max ? channel.value(params.perp_diff_max) : channel.empty()
+            ]
         )
         ch_versions = ch_versions.mix(RECONST_FW_NODDI.out.versions)
 
         // Add FW/NODDI metrics to the volume
         // ROI extraction.
         ch_input_metrics = ch_input_metrics
-            .join(RECONST_FW_NODDI.out.fw_fw)
+            .join(RECONST_FW_NODDI.out.fw_fwf)
             .join(RECONST_FW_NODDI.out.fw_dti_fa)
             .join(RECONST_FW_NODDI.out.fw_dti_md)
             .join(RECONST_FW_NODDI.out.fw_dti_rd)
             .join(RECONST_FW_NODDI.out.fw_dti_ad)
-            .join(RECONST_FW_NODDI.out.noddi_ndi)
-            .join(RECONST_FW_NODDI.out.noddi_fwf)
-            .join(RECONST_FW_NODDI.out.noddi_odi)
+            .join(RECONST_FW_NODDI.out.noddi_isovf)
+            .join(RECONST_FW_NODDI.out.noddi_icvf)
             .join(RECONST_FW_NODDI.out.noddi_ecvf)
+            .join(RECONST_FW_NODDI.out.noddi_odi)
     }
 
     ch_input_metrics = ch_input_metrics.map {tuple ->
@@ -230,9 +238,9 @@ workflow SF_TRACTOMICS {
     if ( params.run_tractometry ) {
         TRACTOMETRY(
             mergeCovariatesIntoMeta(ch_bundle_seg, ch_covariates),
-            Channel.empty(),
+            channel.empty(),
             mergeCovariatesIntoMeta(ch_input_metrics, ch_covariates),
-            Channel.empty(),
+            channel.empty(),
             mergeCovariatesIntoMeta(TRACTOFLOW.out.fodf, ch_covariates))
         ch_versions = ch_versions.mix(TRACTOMETRY.out.versions)
 
@@ -247,7 +255,7 @@ workflow SF_TRACTOMICS {
         ch_global_multiqc_files = ch_global_multiqc_files.mix(ch_tractometry_mqc)
     }
 
-    if ( params.run_output_orig_space ) {
+    if ( params.output_orig_space ) {
         REGISTRATION_METRICS_TO_ORIG(ch_input_metrics
             .join(TRACTOFLOW.out.t1_native)
             .join(TRACTOFLOW.out.diffusion_to_anatomical)
@@ -258,10 +266,39 @@ workflow SF_TRACTOMICS {
         )
     }
 
+    if ( params.output_template_space ) {
+        OUTPUT_TEMPLATE_SPACE(
+            TRACTOFLOW.out.t1,
+            ch_input_metrics,
+            channel.empty(),
+            channel.empty(),
+            ch_bundle_seg,
+            channel.empty())
+        ch_versions = ch_versions.mix(OUTPUT_TEMPLATE_SPACE.out.versions)
+    }
+
     //
     // Collate and save software versions
     //
-    softwareVersionsToYAML(ch_versions)
+    def topic_versions = channel.topic("versions")
+        .distinct()
+        .branch { entry ->
+            versions_file: entry instanceof Path
+            versions_tuple: true
+        }
+
+    def topic_versions_string = topic_versions.versions_tuple
+        .map { process, tool, version ->
+            [ process[process.lastIndexOf(':')+1..-1], "  ${tool}: ${version}" ]
+        }
+        .groupTuple(by:0)
+        .map { process, tool_versions ->
+            tool_versions.unique().sort()
+            "${process}:\n${tool_versions.join('\n')}"
+        }
+
+    softwareVersionsToYAML(ch_versions.mix(topic_versions.versions_file))
+        .mix(topic_versions_string)
         .collectFile(
             storeDir: "${params.outdir}/pipeline_info",
             name:  'sf-tractomics_software_'  + 'mqc_'  + 'versions.yml',
@@ -269,32 +306,31 @@ workflow SF_TRACTOMICS {
             newLine: true
         ).set { ch_collated_versions }
 
-
     //
     // MODULE: MultiQC
     //
-    ch_multiqc_files = Channel.empty() // To store versions, methods description, etc.
+    ch_multiqc_files = channel.empty() // To store versions, methods description, etc.
 
-    ch_multiqc_config_subject = Channel.fromPath(
+    ch_multiqc_config_subject = channel.fromPath(
         "$projectDir/assets/multiqc_config.yml", checkIfExists: true)
-    ch_multiqc_config_global = Channel.fromPath(
+    ch_multiqc_config_global = channel.fromPath(
         "$projectDir/assets/multiqc_config_global.yml", checkIfExists: true)
     ch_multiqc_custom_config = params.multiqc_config ?
-        Channel.fromPath(params.multiqc_config, checkIfExists: true) :
-        Channel.empty()
+        channel.fromPath(params.multiqc_config, checkIfExists: true) :
+        channel.empty()
     ch_multiqc_logo          = params.multiqc_logo ?
-        Channel.fromPath(params.multiqc_logo, checkIfExists: true) :
-        Channel.fromPath("$projectDir/assets/sf-tractomics-multiqc-logo.png", checkIfExists: true)
+        channel.fromPath(params.multiqc_logo, checkIfExists: true) :
+        channel.fromPath("$projectDir/assets/sf-tractomics-multiqc-logo.png", checkIfExists: true)
 
     summary_params      = paramsSummaryMap(
         workflow, parameters_schema: "nextflow_schema.json")
-    ch_workflow_summary = Channel.value(paramsSummaryMultiqc(summary_params))
+    ch_workflow_summary = channel.value(paramsSummaryMultiqc(summary_params))
     ch_multiqc_files = ch_multiqc_files.mix(
         ch_workflow_summary.collectFile(name: 'workflow_summary_mqc.yaml'))
     ch_multiqc_custom_methods_description = params.multiqc_methods_description ?
         file(params.multiqc_methods_description, checkIfExists: true) :
         file("$projectDir/assets/methods_description_template.yml", checkIfExists: true)
-    ch_methods_description                = Channel.value(
+    ch_methods_description                = channel.value(
         methodsDescriptionText(ch_multiqc_custom_methods_description))
 
     ch_multiqc_files = ch_multiqc_files.mix(ch_collated_versions)
@@ -333,7 +369,7 @@ workflow SF_TRACTOMICS {
 
     // Global multiqc
     MULTIQC_GLOBAL (
-        Channel.of([meta:[id: 'global'], qc_images: []]),
+        channel.of([meta:[id: 'global'], qc_images: []]),
         ch_global_multiqc_files.collect(),
         ch_multiqc_config_global.toList(),
         ch_multiqc_custom_config.toList(),
@@ -347,7 +383,6 @@ workflow SF_TRACTOMICS {
     versions       = ch_versions                 // channel: [ path(versions.yml) ]
 
 }
-
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     THE END
