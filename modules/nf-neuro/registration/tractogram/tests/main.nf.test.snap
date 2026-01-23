@@ -1,0 +1,170 @@
+{
+    "registration - tractogram - keep invalid": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_bundle_2.trk:md5,824bcbf796cbce3e1c93e39d1c98dcf9"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,a003daf3d91685ed2ab3f7611dba1130"
+                ],
+                "tractogram": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_bundle_2.trk:md5,824bcbf796cbce3e1c93e39d1c98dcf9"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,a003daf3d91685ed2ab3f7611dba1130"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-01-12T18:00:15.373767321"
+    },
+    "registration - tractogram_bundles": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test_bundle_0.trk:md5,6e14cc02b66d12d5dde0a0701918385a",
+                            "test_bundle_1.trk:md5,ef5a759144ab7e8d2f5abf30a463a152",
+                            "test_bundle_2.trk:md5,824bcbf796cbce3e1c93e39d1c98dcf9",
+                            "test_bundle_3.trk:md5,8877161b9aebaa6b12a4d7a8f8410407",
+                            "test_bundle_4.trk:md5,6c8658b946154896952ca89e88fcf29f",
+                            "test_bundle_5.trk:md5,fa058f93d9bfe4bed2ff027e9acd5682",
+                            "test_bundle_6.trk:md5,125e50561b4b0c5fd8ee23867c28bc51"
+                        ]
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,a003daf3d91685ed2ab3f7611dba1130"
+                ],
+                "tractogram": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        [
+                            "test_bundle_0.trk:md5,6e14cc02b66d12d5dde0a0701918385a",
+                            "test_bundle_1.trk:md5,ef5a759144ab7e8d2f5abf30a463a152",
+                            "test_bundle_2.trk:md5,824bcbf796cbce3e1c93e39d1c98dcf9",
+                            "test_bundle_3.trk:md5,8877161b9aebaa6b12a4d7a8f8410407",
+                            "test_bundle_4.trk:md5,6c8658b946154896952ca89e88fcf29f",
+                            "test_bundle_5.trk:md5,fa058f93d9bfe4bed2ff027e9acd5682",
+                            "test_bundle_6.trk:md5,125e50561b4b0c5fd8ee23867c28bc51"
+                        ]
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,a003daf3d91685ed2ab3f7611dba1130"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-01-12T17:59:47.677588349"
+    },
+    "registration - tractogram - stub-run": {
+        "content": [
+            [
+                "versions.yml:md5,a003daf3d91685ed2ab3f7611dba1130"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-01-10T22:43:36.606529162"
+    },
+    "registration - tractogram - hdf5": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_decompose.h5:md5,4281717e6f39d075512537a39aeec9e2"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,a003daf3d91685ed2ab3f7611dba1130"
+                ],
+                "tractogram": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_decompose.h5:md5,4281717e6f39d075512537a39aeec9e2"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,a003daf3d91685ed2ab3f7611dba1130"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-01-10T22:43:24.289166244"
+    },
+    "registration - tractogram - custom suffix": {
+        "content": [
+            {
+                "0": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_bundle_2_mni.trk:md5,824bcbf796cbce3e1c93e39d1c98dcf9"
+                    ]
+                ],
+                "1": [
+                    "versions.yml:md5,a003daf3d91685ed2ab3f7611dba1130"
+                ],
+                "tractogram": [
+                    [
+                        {
+                            "id": "test",
+                            "single_end": false
+                        },
+                        "test_bundle_2_mni.trk:md5,824bcbf796cbce3e1c93e39d1c98dcf9"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,a003daf3d91685ed2ab3f7611dba1130"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-01-12T18:00:03.386892492"
+    }
+}

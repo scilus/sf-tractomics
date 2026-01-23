@@ -43,7 +43,7 @@
                     "betcrop/fslbetcrop": {
                         "branch": "main",
                         "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
-                        "installed_by": ["preproc_dwi", "topup_eddy"]
+                        "installed_by": ["output_template_space", "preproc_dwi", "topup_eddy"]
                     },
                     "betcrop/synthstrip": {
                         "branch": "main",
@@ -89,6 +89,11 @@
                         "branch": "main",
                         "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
                         "installed_by": ["preproc_t1"]
+                    },
+                    "image/applymask": {
+                        "branch": "main",
+                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "installed_by": ["modules", "output_template_space"]
                     },
                     "image/cropvolume": {
                         "branch": "main",
@@ -208,7 +213,7 @@
                     "registration/antsapplytransforms": {
                         "branch": "main",
                         "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
-                        "installed_by": ["atlas_roimetrics", "tractoflow"]
+                        "installed_by": ["atlas_roimetrics", "output_template_space", "tractoflow"]
                     },
                     "registration/convert": {
                         "branch": "main",
@@ -224,6 +229,11 @@
                         "branch": "main",
                         "git_sha": "9479d507a11b2cfafcaf836c476272bc63a96376",
                         "installed_by": ["registration"]
+                    },
+                    "registration/tractogram": {
+                        "branch": "main",
+                        "git_sha": "fd53d1090fe037c0c270531808068ac75a9c6237",
+                        "installed_by": ["modules", "output_template_space"]
                     },
                     "segmentation/fastseg": {
                         "branch": "main",
@@ -274,6 +284,11 @@
                         "branch": "main",
                         "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
                         "installed_by": ["preproc_dwi", "topup_eddy"]
+                    },
+                    "utils/templateflow": {
+                        "branch": "main",
+                        "git_sha": "a099e92db07e0493e878ef445f398b69055c24a9",
+                        "installed_by": ["modules", "output_template_space"]
                     }
                 }
             },
@@ -309,6 +324,11 @@
                         "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
                         "installed_by": ["subworkflows"]
                     },
+                    "output_template_space": {
+                        "branch": "main",
+                        "git_sha": "9e867315e83b0b0fb08d653d5eea9ce76398c38d",
+                        "installed_by": ["subworkflows"]
+                    },
                     "preproc_dwi": {
                         "branch": "main",
                         "git_sha": "9479d507a11b2cfafcaf836c476272bc63a96376",
@@ -327,7 +347,7 @@
                     "registration": {
                         "branch": "main",
                         "git_sha": "9479d507a11b2cfafcaf836c476272bc63a96376",
-                        "installed_by": ["bundle_seg", "tractoflow"]
+                        "installed_by": ["bundle_seg", "output_template_space", "tractoflow"]
                     },
                     "topup_eddy": {
                         "branch": "main",
