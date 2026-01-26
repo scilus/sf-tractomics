@@ -88,6 +88,7 @@ workflow SF_TRACTOMICS {
         ch_topup_config,
         ch_bet_template,
         ch_bet_probability,
+        channel.empty(),
         ch_lesion
             .filter{ it[1] }
     )
@@ -260,9 +261,12 @@ workflow SF_TRACTOMICS {
             .join(TRACTOFLOW.out.t1_native)
             .join(TRACTOFLOW.out.diffusion_to_anatomical)
         )
-        REGISTRATION_TRACTOGRAM_TO_ORIG(TRACTOFLOW.out.t1_native
+
+        REGISTRATION_TRACTOGRAM_TO_ORIG(
+            ch_bundle_seg
+            .join(TRACTOFLOW.out.t1_native)
             .join(TRACTOFLOW.out.diffusion_to_anatomical)
-            .join(ch_bundle_seg)
+            .map{ meta, bundle, t1, transfo -> [meta, bundle, [], t1, transfo] }
         )
     }
 
