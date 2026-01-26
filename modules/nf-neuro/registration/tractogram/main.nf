@@ -16,7 +16,7 @@ process REGISTRATION_TRACTOGRAM {
 
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def suffix = task.ext.suffix ? "_${task.ext.suffix}" : ""
+    def suffix = task.ext.suffix ?: "warped"
     trk_reference = "$trk_reference" ? "--reference $trk_reference" : ""
     def inverse = task.ext.inverse ? "--inverse" : ""
     def reverse_operation = task.ext.reverse_operation ? "--reverse_operation" : ""
@@ -62,7 +62,7 @@ process REGISTRATION_TRACTOGRAM {
     for tractogram in ${tractograms}; do
         ext=\${tractogram#*.}
         bname=\$(basename \${tractogram} .\${ext} | sed 's/${prefix}_\\+//')
-        name=${prefix}_\${bname}${suffix}.\${ext}
+        name=${prefix}_\${bname}_${suffix}.\${ext}
 
         if [[ \$ext == "h5" ]]; then
 
@@ -111,7 +111,7 @@ process REGISTRATION_TRACTOGRAM {
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def suffix = task.ext.suffix ? "_${task.ext.suffix}" : ""
+    def suffix = task.ext.suffix ?: "warped"
     """
     scil_tractogram_apply_transform -h
     scil_tractogram_remove_invalid -h
@@ -119,7 +119,7 @@ process REGISTRATION_TRACTOGRAM {
     for tractogram in ${tractograms}; do
         ext=\${tractogram#*.}
         bname=\$(basename \${tractogram} .\${ext} | sed 's/${prefix}_\\+//')
-        name=${prefix}_\${bname}${suffix}.\${ext}
+        name=${prefix}_\${bname}_${suffix}.\${ext}
         touch \$name
     done
 

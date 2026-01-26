@@ -48,6 +48,7 @@ nextflow_workflow {
                 pft_number_of_particles = 4
                 lt_seeding_strategy = "nt"
                 lt_number_of_seeds = 4000
+                preproc_dwi_run_synthstrip = true
             }
             workflow {
                 """
@@ -85,7 +86,8 @@ nextflow_workflow {
                         [ id:'test' ],
                         file("\${test_data_directory}/t1_brain_probability_map.nii.gz")
                     ]}
-                input[10] = channel.empty()
+                input[10] = channel.from("https://surfer.nmr.mgh.harvard.edu/docs/synthstrip/requirements/synthstrip.1.pt")
+                input[11] = channel.empty()
                 """
             }
         }
@@ -156,6 +158,7 @@ nextflow_workflow {
                         file("\${test_data_directory}/t1_brain_probability_map.nii.gz")
                     ]}
                 input[10] = channel.empty()
+                input[11] = channel.empty()
                 """
             }
         }

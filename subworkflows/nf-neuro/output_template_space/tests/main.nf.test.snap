@@ -31,9 +31,9 @@
                         {
                             "id": "test"
                         },
-                        "test_IFGWM.trk",
-                        "test_IFGWM_color.trk",
-                        "test_IFGWM_uni.trk"
+                        "test_IFGWM_color_warped.trk",
+                        "test_IFGWM_uni_warped.trk",
+                        "test_IFGWM_warped.trk"
                     ]
                 ],
                 "ch_t1w_tpl": [
@@ -75,9 +75,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.6"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-17T07:04:00.06299976"
+        "timestamp": "2026-01-23T17:13:23.006171379"
     },
     "Template MNI152NLin2009aAsym - using synthmorph registration": {
         "content": [
@@ -111,9 +111,9 @@
                         {
                             "id": "test"
                         },
-                        "test_IFGWM.trk",
-                        "test_IFGWM_color.trk",
-                        "test_IFGWM_uni.trk"
+                        "test_IFGWM_color_warped.trk",
+                        "test_IFGWM_uni_warped.trk",
+                        "test_IFGWM_warped.trk"
                     ]
                 ],
                 "ch_t1w_tpl": [
@@ -152,7 +152,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-19T17:30:37.205422989"
+        "timestamp": "2026-01-23T17:13:43.380937304"
     },
     "Template MNI152NLin2009cAsym - local templates": {
         "content": [
@@ -186,9 +186,9 @@
                         {
                             "id": "test"
                         },
-                        "test_IFGWM.trk",
-                        "test_IFGWM_color.trk",
-                        "test_IFGWM_uni.trk"
+                        "test_IFGWM_color_warped.trk",
+                        "test_IFGWM_uni_warped.trk",
+                        "test_IFGWM_warped.trk"
                     ]
                 ],
                 "ch_t1w_tpl": [
@@ -232,6 +232,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-10T22:29:39.068320692"
+        "timestamp": "2026-01-23T17:12:48.237620499"
     }
 }

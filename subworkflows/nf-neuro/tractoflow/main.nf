@@ -32,17 +32,18 @@ def group_frf ( label, ch_frf ) {
 
 workflow TRACTOFLOW {
     take:
-        ch_dwi              // channel : [required] meta, dwi, bval, bvec
-        ch_t1               // channel : [required] meta, t1
-        ch_sbref            // channel : [optional] meta, sbref
-        ch_rev_dwi          // channel : [optional] meta, rev_dwi, rev_bval, rev_bvec
-        ch_rev_sbref        // channel : [optional] meta, rev_sbref
-        ch_wmparc           // channel : [optional] meta, wmparc
-        ch_aparc_aseg       // channel : [optional] meta, aparc_aseg
-        ch_topup_config     // channel : [optional] topup_config
-        ch_bet_template     // channel : [optional] meta, bet_template
-        ch_bet_probability  // channel : [optional] meta, bet_probability
-        ch_lesion_mask      // channel : [optional] meta, lesion_mask
+        ch_dwi                  // channel : [required] meta, dwi, bval, bvec
+        ch_t1                   // channel : [required] meta, t1
+        ch_sbref                // channel : [optional] meta, sbref
+        ch_rev_dwi              // channel : [optional] meta, rev_dwi, rev_bval, rev_bvec
+        ch_rev_sbref            // channel : [optional] meta, rev_sbref
+        ch_wmparc               // channel : [optional] meta, wmparc
+        ch_aparc_aseg           // channel : [optional] meta, aparc_aseg
+        ch_topup_config         // channel : [optional] topup_config
+        ch_bet_template         // channel : [optional] meta, bet_template
+        ch_bet_probability      // channel : [optional] meta, bet_probability
+        ch_synthstrip_weights   // channel : [optional] meta, weights or weights
+        ch_lesion_mask          // channel : [optional] meta, lesion_mask
     main:
 
         ch_versions = channel.empty()
@@ -59,6 +60,7 @@ workflow TRACTOFLOW {
             ch_rev_dwi,
             ch_sbref,
             ch_rev_sbref,
+            ch_synthstrip_weights,
             ch_topup_config
         )
         ch_versions = ch_versions.mix(PREPROC_DWI.out.versions.first())
