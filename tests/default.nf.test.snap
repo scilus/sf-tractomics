@@ -143,6 +143,7 @@
                 "sub-test-1/dwi/bundles",
                 "sub-test-1/dwi/bundles/sub-test-1_AF_L.trk",
                 "sub-test-1/dwi/bundles/sub-test-1_space-MNI152Lin_tract-ArcuateFasciculus_hemi-left_track-sdstream_tractogram.trk",
+                "sub-test-1/dwi/bundles/sub-test-1_space-orig_tract-ArcuateFasciculus_hemi-left_track-sdstream_tractogram.trk",
                 "sub-test-1/dwi/sub-test-1_atlas-iit_desc-roi_stats.tsv",
                 "sub-test-1/dwi/sub-test-1_desc-brain_mask.nii.gz",
                 "sub-test-1/dwi/sub-test-1_desc-ensemble_tractogram.trk",
@@ -199,6 +200,13 @@
                 "sub-test-1/dwi/sub-test-1_space-MNI152Lin_model-tensor_param-md_dwimap.nii.gz",
                 "sub-test-1/dwi/sub-test-1_space-MNI152Lin_model-tensor_param-rd_desc-fwc_dwimap.nii.gz",
                 "sub-test-1/dwi/sub-test-1_space-MNI152Lin_model-tensor_param-rd_dwimap.nii.gz",
+                "sub-test-1/dwi/sub-test-1_space-orig_model-csd_param-afdmax_dwimap.nii.gz",
+                "sub-test-1/dwi/sub-test-1_space-orig_model-csd_param-afdsum_dwimap.nii.gz",
+                "sub-test-1/dwi/sub-test-1_space-orig_model-csd_param-afdtotal_dwimap.nii.gz",
+                "sub-test-1/dwi/sub-test-1_space-orig_model-tensor_param-ad_dwimap.nii.gz",
+                "sub-test-1/dwi/sub-test-1_space-orig_model-tensor_param-fa_dwimap.nii.gz",
+                "sub-test-1/dwi/sub-test-1_space-orig_model-tensor_param-md_dwimap.nii.gz",
+                "sub-test-1/dwi/sub-test-1_space-orig_model-tensor_param-rd_dwimap.nii.gz",
                 "sub-test-1/multiqc",
                 "sub-test-1/multiqc/sub-test-1_multiqc_data",
                 "sub-test-1/multiqc/sub-test-1_multiqc_plots",
@@ -214,6 +222,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-22T16:21:45.201661762"
+        "timestamp": "2026-01-26T16:39:09.534042201"
     }
 }
