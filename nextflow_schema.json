@@ -1193,7 +1193,7 @@
             "$ref": "#/$defs/atlas_iit"
         },
         {
-            "$ref": "#/$defs/output_template_space"
+            "$ref": "#/$defs/output_space"
         }
     ],
     "properties": {
