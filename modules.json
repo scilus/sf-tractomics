@@ -48,7 +48,7 @@
                     "betcrop/synthstrip": {
                         "branch": "main",
                         "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
-                        "installed_by": ["_", "c", "d", "e", "i", "o", "p", "preproc_t1", "r", "w"]
+                        "installed_by": ["preproc_t1"]
                     },
                     "bundle/centroid": {
                         "branch": "main",
@@ -93,29 +93,17 @@
                     "image/applymask": {
                         "branch": "main",
                         "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
-                        "installed_by": [
-                            "_",
-                            "c",
-                            "d",
-                            "e",
-                            "i",
-                            "modules",
-                            "o",
-                            "output_template_space",
-                            "p",
-                            "r",
-                            "w"
-                        ]
+                        "installed_by": ["modules", "output_template_space"]
                     },
                     "image/convert": {
                         "branch": "main",
                         "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
-                        "installed_by": ["_", "c", "d", "e", "i", "o", "p", "r", "w"]
+                        "installed_by": ["preproc_dwi"]
                     },
                     "image/cropvolume": {
                         "branch": "main",
                         "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
-                        "installed_by": ["_", "c", "d", "e", "i", "o", "p", "preproc_t1", "r", "w"]
+                        "installed_by": ["preproc_t1"]
                     },
                     "image/math": {
                         "branch": "main",
@@ -125,7 +113,7 @@
                     "image/powderaverage": {
                         "branch": "main",
                         "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
-                        "installed_by": ["_", "c", "d", "e", "i", "o", "p", "r", "w"]
+                        "installed_by": ["preproc_dwi"]
                     },
                     "image/resample": {
                         "branch": "main",
