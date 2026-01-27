@@ -9,6 +9,7 @@ lint:
     - .github/workflows/awsfulltest.yml
     - conf/igenomes.config
     - conf/igenomes_ignored.config
+    - modules.json
   files_unchanged:
     - CODE_OF_CONDUCT.md
     - assets/nf-core-sf-tractomics_logo_light.png
