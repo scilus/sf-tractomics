@@ -48,7 +48,7 @@
                     "betcrop/synthstrip": {
                         "branch": "main",
                         "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
-                        "installed_by": ["preproc_t1"]
+                        "installed_by": ["preproc_t1", "preproc_dwi"]
                     },
                     "bundle/centroid": {
                         "branch": "main",

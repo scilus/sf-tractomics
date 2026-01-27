@@ -9,7 +9,6 @@ lint:
     - .github/workflows/awsfulltest.yml
     - conf/igenomes.config
     - conf/igenomes_ignored.config
-    - modules.json
   files_unchanged:
     - CODE_OF_CONDUCT.md
     - assets/nf-core-sf-tractomics_logo_light.png
@@ -27,6 +26,7 @@ lint:
   schema_description: false
   schema_lint: false
   schema_params: false
+  nfcore_components: false
 nf_core_version: 3.5.1
 repository_type: pipeline
 template:
