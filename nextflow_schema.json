@@ -1092,13 +1092,20 @@
                 }
             }
         },
-        "output_template_space": {
-            "title": "Output to Template Options",
+        "output_space": {
+            "title": "Output to different spaces options",
             "type": "object",
             "fa_icon": "fas fa-brain",
-            "description": "Options for outputting to specific template space.",
-            "help_text": "These options are used to configure the output to template space steps in the pipeline (e.g., template selection, resolution, etc.).",
+            "description": "Options for outputting to specific spaces.",
+            "help_text": "These options are used to configure the output to different spaces.",
             "properties": {
+                "output_orig_space": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "If set, the results will be outputted in the T1 orig space.",
+                    "fa_icon": "fas fa-map",
+                    "help_text": "Images, masks, labels will be outputted in the T1 orig space."
+                },
                 "output_template_space": {
                     "type": "boolean",
                     "default": false,
