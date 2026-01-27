@@ -264,9 +264,9 @@ workflow SF_TRACTOMICS {
 
         REGISTRATION_TRACTOGRAM_TO_ORIG(
             ch_bundle_seg
-            .join(TRACTOFLOW.out.t1_native)
-            .join(TRACTOFLOW.out.diffusion_to_anatomical)
-            .map{ meta, bundle, t1, transfo -> [meta, bundle, [], t1, transfo] }
+                .join(TRACTOFLOW.out.t1_native)
+                .join(TRACTOFLOW.out.diffusion_to_anatomical)
+                .map{ meta, bundle, t1, transfo -> [meta, bundle, [], t1, transfo] }
         )
     }
 
