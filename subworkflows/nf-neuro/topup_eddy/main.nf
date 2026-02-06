@@ -23,6 +23,8 @@ workflow TOPUP_EDDY {
         ch_topup_fieldcoeff = channel.empty()
         ch_topup_movpart = channel.empty()
         ch_b0_corrected = channel.empty()
+        ch_b0_mask = channel.empty()
+
         if (params.topup_eddy_run_topup) {
             // ** Create channel for TOPUP ** //
             // Result : [ meta, dwi, bval, bvec, b0 | [], rev-dwi | [], rev-bval | [], rev-bvec | [], rev-b0 | [] ]
@@ -53,7 +55,6 @@ workflow TOPUP_EDDY {
             ch_topup_movpart = PREPROC_TOPUP.out.topup_movpart
             ch_b0_corrected = PREPROC_TOPUP.out.topup_corrected_b0s
         }
-
 
         if (params.topup_eddy_run_eddy) {
             // ** Create channel for EDDY ** //
@@ -96,13 +97,6 @@ workflow TOPUP_EDDY {
                 .join(PREPROC_EDDY.out.bval_corrected)
                 .join(PREPROC_EDDY.out.bvec_corrected)
             ch_b0_mask = PREPROC_EDDY.out.b0_mask
-        }
-        else {
-            // Compute bet mask on b0, since Eddy did not do it
-            BETCROP_FSLBETCROP(ch_b0_corrected.map{ it + [[], []] })
-            ch_versions = ch_versions.mix(BETCROP_FSLBETCROP.out.versions.first())
-
-            ch_b0_mask = BETCROP_FSLBETCROP.out.mask
         }
 
         ch_output_dwi = ch_dwi

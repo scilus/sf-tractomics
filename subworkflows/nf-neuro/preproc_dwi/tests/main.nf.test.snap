@@ -50,22 +50,6 @@
                         "test_dwi_cropped_bbox.pkl"
                     ]
                 ],
-                "dwi_n4": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test__image_n4.nii.gz"
-                    ]
-                ],
-                "dwi_topup_eddy": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test__dwi_corrected.nii.gz"
-                    ]
-                ],
                 "mqc": [
                     [
                         {
@@ -112,7 +96,7 @@
                     "versions.yml:md5,76b89b06b38b2148b5af5d388d333763",
                     "versions.yml:md5,83bb1f168d146ca8d303c24584044f9f",
                     "versions.yml:md5,a585ae0f02b31e59f3f641836f5cb608",
-                    "versions.yml:md5,ab6778bdec2e37aef4b182b20e24c3b8",
+                    "versions.yml:md5,c6674ec69abd660014fba145790ec070",
                     "versions.yml:md5,c7da6834a9868efe7d6878ae023a6782",
                     "versions.yml:md5,c9f89e6a31f3d2add46a0350e9ff799b",
                     "versions.yml:md5,d1da6ec93d46e17eff56d0e7f9dc085d",
@@ -123,9 +107,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-16T09:14:45.768199"
+        "timestamp": "2026-02-05T22:18:20.502502877"
     },
     "preproc_dwi - AP DWI | PA sbref": {
         "content": [
@@ -178,22 +162,6 @@
                         "test__image_boundingBox.pkl"
                     ]
                 ],
-                "dwi_n4": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test__image_n4.nii.gz"
-                    ]
-                ],
-                "dwi_topup_eddy": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test__dwi_corrected.nii.gz"
-                    ]
-                ],
                 "mqc": [
                     [
                         {
@@ -227,7 +195,7 @@
                     "versions.yml:md5,3efc92963bc72284def5a9aeff469919",
                     "versions.yml:md5,6775dffbd2264e526ccdfde32db655b9",
                     "versions.yml:md5,a585ae0f02b31e59f3f641836f5cb608",
-                    "versions.yml:md5,ab6778bdec2e37aef4b182b20e24c3b8",
+                    "versions.yml:md5,c6674ec69abd660014fba145790ec070",
                     "versions.yml:md5,c7da6834a9868efe7d6878ae023a6782",
                     "versions.yml:md5,dd4515fa7d32a40e94927fddf215ef18",
                     "versions.yml:md5,fcf20744f2d2ea2b1a57d549d53c8ee6"
@@ -236,9 +204,9 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-20T19:34:44.064385"
+        "timestamp": "2026-02-05T22:15:50.585412508"
     },
     "preproc_dwi - AP DWI | PA DWI": {
         "content": [
@@ -291,22 +259,6 @@
                         "test_dwi_cropped_bbox.pkl"
                     ]
                 ],
-                "dwi_n4": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test__image_n4.nii.gz"
-                    ]
-                ],
-                "dwi_topup_eddy": [
-                    [
-                        {
-                            "id": "test"
-                        },
-                        "test__dwi_corrected.nii.gz"
-                    ]
-                ],
                 "mqc": [
                     [
                         {
@@ -353,7 +305,7 @@
                     "versions.yml:md5,76b89b06b38b2148b5af5d388d333763",
                     "versions.yml:md5,83bb1f168d146ca8d303c24584044f9f",
                     "versions.yml:md5,a585ae0f02b31e59f3f641836f5cb608",
-                    "versions.yml:md5,ab6778bdec2e37aef4b182b20e24c3b8",
+                    "versions.yml:md5,c6674ec69abd660014fba145790ec070",
                     "versions.yml:md5,c7da6834a9868efe7d6878ae023a6782",
                     "versions.yml:md5,c9f89e6a31f3d2add46a0350e9ff799b",
                     "versions.yml:md5,d1da6ec93d46e17eff56d0e7f9dc085d",
@@ -364,8 +316,74 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-16T09:12:55.935427"
+        "timestamp": "2026-02-05T22:16:59.844303539"
+    },
+    "preproc_dwi - AP DWI | skip steps": {
+        "content": [
+            {
+                "b0": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_b0.nii.gz"
+                    ]
+                ],
+                "b0_mask": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_resampled.nii.gz"
+                    ]
+                ],
+                "bval": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "sub-01_dir-AP_dwi.bval"
+                    ]
+                ],
+                "bvec": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "sub-01_dir-AP_dwi.bvec"
+                    ]
+                ],
+                "dwi": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test_resampled.nii.gz"
+                    ]
+                ],
+                "dwi_bounding_box": [
+                    [
+                        {
+                            "id": "test"
+                        },
+                        "test__image_boundingBox.pkl"
+                    ]
+                ],
+                "versions": [
+                    "versions.yml:md5,034b6d262d1e0e45c673d3ac1756e22f",
+                    "versions.yml:md5,3efc92963bc72284def5a9aeff469919",
+                    "versions.yml:md5,a585ae0f02b31e59f3f641836f5cb608",
+                    "versions.yml:md5,c6674ec69abd660014fba145790ec070",
+                    "versions.yml:md5,c7da6834a9868efe7d6878ae023a6782"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-02-05T23:33:51.782441298"
     }
 }

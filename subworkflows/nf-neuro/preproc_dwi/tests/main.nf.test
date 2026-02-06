@@ -40,6 +40,47 @@ nextflow_workflow {
         }
     }
 
+    test("preproc_dwi - AP DWI | skip steps") {
+        config "./nextflow_skipsteps.config"
+        when {
+            workflow {
+                """
+                input[0] = LOAD_DATA.out.test_data_directory.map{
+                    test_data_directory -> [
+                        [ id:'test' ],
+                        file("\${test_data_directory}/sub-01_dir-AP_dwi.nii.gz"),
+                        file("\${test_data_directory}/sub-01_dir-AP_dwi.bval"),
+                        file("\${test_data_directory}/sub-01_dir-AP_dwi.bvec")
+                    ]}
+                input[1] = channel.from( [] )
+                input[2] = channel.from( [] )
+                input[3] = channel.from( [] )
+                input[4] = channel.empty()
+                input[5] = channel.from( [] )
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out
+                        .findAll{ channel -> !channel.key.isInteger() && channel.value  }
+                        .collectEntries{ channel ->
+                            [(channel.key): ["versions"].contains(channel.key)
+                                ? channel.value
+                                : channel.value.collect{ subject ->
+                                    [ subject[0] ] + subject[1..-1].flatten().collect{ entry -> entry
+                                        ? file(entry).name
+                                        : "" }
+                            } ]
+                        }
+                ).match() }
+            )
+        }
+    }
+
     test("preproc_dwi - AP DWI | PA sbref") {
 
         when {
@@ -131,7 +172,6 @@ nextflow_workflow {
             )
         }
     }
-
 
     test("preproc_dwi - AP DWI+sbref | PA DWI+sbref") {
         config "./nextflow_synthstrip.config"
