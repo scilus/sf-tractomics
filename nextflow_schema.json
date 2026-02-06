@@ -873,6 +873,11 @@
                     "type": "boolean",
                     "hidden": true
                 },
+                "preproc_dwi_keep_dwi_unbet": {
+                    "type": "boolean",
+                    "hidden": true,
+                    "default": false
+                },
                 "preproc_dwi_run_synthstrip": {
                     "type": "boolean",
                     "hidden": true
@@ -917,6 +922,11 @@
                     "default": true
                 },
                 "preproc_dwi_run_resampling": {
+                    "type": "boolean",
+                    "hidden": true,
+                    "default": true
+                },
+                "preproc_dwi_run_normalize": {
                     "type": "boolean",
                     "hidden": true,
                     "default": true
