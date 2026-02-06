@@ -11,6 +11,10 @@ nextflow_workflow {
     tag "subworkflows/topup_eddy"
     tag "image/cropvolume"
     tag "betcrop/fslbetcrop"
+    tag "betcrop/synthstrip"
+    tag "image/powderaverage"
+    tag "image/applymask"
+    tag "image/convert"
     tag "denoising/mppca"
     tag "preproc/gibbs"
     tag "image/resample"
@@ -55,7 +59,8 @@ nextflow_workflow {
                         [ id:'test' ],
                         file("\${test_data_directory}/sub-01_dir-PA_sbref.nii.gz")
                     ]}
-                input[4] = channel.from( [] )
+                input[4] = channel.empty()
+                input[5] = channel.from( [] )
                 """
             }
         }
@@ -81,7 +86,7 @@ nextflow_workflow {
     }
 
     test("preproc_dwi - AP DWI | PA DWI") {
-
+        config "./nextflow_synthstrip.config"
         when {
             workflow {
                 """
@@ -101,7 +106,8 @@ nextflow_workflow {
                     ]}
                 input[2] = channel.from( [] )
                 input[3] = channel.from( [] )
-                input[4] = channel.from( [] )
+                input[4] = channel.from("https://surfer.nmr.mgh.harvard.edu/docs/synthstrip/requirements/synthstrip.1.pt")
+                input[5] = channel.from( [] )
                 """
             }
         }
@@ -128,7 +134,7 @@ nextflow_workflow {
 
 
     test("preproc_dwi - AP DWI+sbref | PA DWI+sbref") {
-
+        config "./nextflow_synthstrip.config"
         when {
             workflow {
                 """
@@ -156,7 +162,9 @@ nextflow_workflow {
                         [ id:'test' ],
                         file("\${test_data_directory}/sub-01_dir-PA_sbref.nii.gz")
                     ]}
-                input[4] = channel.from( [] )
+                input[4] = channel.from("https://surfer.nmr.mgh.harvard.edu/docs/synthstrip/requirements/synthstrip.1.pt")
+                    .map{ weights -> [ [ id:'test' ], weights ] }
+                input[5] = channel.from( [] )
                 """
             }
         }

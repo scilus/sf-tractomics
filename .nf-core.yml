@@ -26,6 +26,7 @@ lint:
   schema_description: false
   schema_lint: false
   schema_params: false
+  nfcore_components: false
 nf_core_version: 3.5.1
 repository_type: pipeline
 template:

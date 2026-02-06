@@ -17,7 +17,7 @@ process REGISTRATION_ANTSAPPLYTRANSFORMS {
 
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def suffix = "_${task.ext.suffix ?: "warped"}"
+    def suffix = task.ext.suffix ?: "warped"
     def suffix_qc = task.ext.suffix_qc ? "_${task.ext.suffix_qc}" : ""
 
     def dimensionality = "-d ${task.ext.dimensionality ?: 3}"
@@ -39,7 +39,7 @@ process REGISTRATION_ANTSAPPLYTRANSFORMS {
         antsApplyTransforms $dimensionality \
             -i \$image \
             -r $reference \
-            -o ${prefix}_\${bname}${suffix}.nii.gz \
+            -o ${prefix}_\${bname}_${suffix}.nii.gz \
             $interpolation \
             ${transformations.collect{ t -> "-t $t" }.join(" ")} \
             $output_dtype \
@@ -49,7 +49,7 @@ process REGISTRATION_ANTSAPPLYTRANSFORMS {
         ### ** QC ** ###
         if $run_qc; then
             ln -sf $reference reference.nii.gz
-            extract_dim=\$(mrinfo ${prefix}_\${bname}${suffix}.nii.gz -size)
+            extract_dim=\$(mrinfo ${prefix}_\${bname}_${suffix}.nii.gz -size)
             read sagittal_dim coronal_dim axial_dim <<< "\${extract_dim}"
 
             # Get the middle slice
@@ -61,7 +61,7 @@ process REGISTRATION_ANTSAPPLYTRANSFORMS {
             viz_params="--display_slice_number --display_lr --size 256 256"
 
             # Iterate over images.
-            for image in reference \${bname}${suffix}; do
+            for image in reference \${bname}_${suffix}; do
                 mrconvert *\${image}.nii.gz *\${image}_viz.nii.gz -stride -1,2,3 -force
                 scil_viz_volume_screenshot *\${image}_viz.nii.gz \${image}_coronal.png \
                     --slices \$coronal_dim --axis coronal \$viz_params
@@ -87,7 +87,7 @@ process REGISTRATION_ANTSAPPLYTRANSFORMS {
 
             # Create GIF.
             convert -delay 10 -loop 0 -morph 10 \
-                \${bname}${suffix}_mosaic.png reference_mosaic.png \${bname}${suffix}_mosaic.png \
+                \${bname}_${suffix}_mosaic.png reference_mosaic.png \${bname}_${suffix}_mosaic.png \
                 ${prefix}_\${bname}${suffix_qc}_registration_antsapplytransforms_mqc.gif
 
             # Clean up.
@@ -107,7 +107,7 @@ process REGISTRATION_ANTSAPPLYTRANSFORMS {
 
     stub:
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def suffix = "_${task.ext.suffix ?: "warped"}"
+    def suffix = task.ext.suffix ?: "warped"
     def suffix_qc = task.ext.suffix_qc ? "_${task.ext.suffix_qc}" : ""
     def run_qc = task.ext.run_qc as Boolean || false
 
@@ -120,7 +120,7 @@ process REGISTRATION_ANTSAPPLYTRANSFORMS {
         ext=\${image#*.}
         bname=\$(basename \${image} .\${ext})
 
-        touch ${prefix}_\${bname}${suffix}.nii.gz
+        touch ${prefix}_\${bname}_${suffix}.nii.gz
 
         if $run_qc; then
             touch ${prefix}_\${bname}${suffix_qc}_registration_antsapplytransforms_mqc.gif

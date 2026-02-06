@@ -32,7 +32,7 @@ description: |
       The Gibbs artifact removal is performed in the original spatial resolution and
       running the algorithm on gibbs-free images does not lead to data degradation.
 
-  3. Brain Extraction (bet, FSL)
+  3. Brain Extraction (bet, FSL or SynthStrip)
 
       Extract brain mask from the b0 image and applied to the whole DWI.
       This brain extraction is required to remove the skull and prepare the DWI to the T1 Registration.
@@ -79,6 +79,10 @@ keywords:
 components:
   - image/cropvolume
   - betcrop/fslbetcrop
+  - betcrop/synthstrip
+  - image/powderaverage
+  - image/applymask
+  - image/convert
   - denoising/mppca
   - image/resample
   - preproc/n4
@@ -114,6 +118,13 @@ input:
         The input channel containing the reverse b0 file. This input is optional.
         Structure: [ val(meta), path(rev_b0) ]
       pattern: "*.{nii,nii.gz}"
+      mandatory: false
+  - ch_synthstrip_weights:
+      type: file
+      description: |
+        The input channel containing the SynthStrip model weights for brain extraction. This input is optional.
+        Structure: [ val(meta), path(synthstrip_weights) ] or [ path(synthstrip_weights) ]
+      pattern: "*.{pt}"
       mandatory: false
   - ch_config_topup:
       type: file

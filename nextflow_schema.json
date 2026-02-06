@@ -165,8 +165,13 @@
                 },
                 "run_gibbs_correction": {
                     "type": "boolean",
-                    "description": "RRun Gibbs correction.",
-                    "help_text": "RRun Gibbs correction."
+                    "description": "Run Gibbs correction.",
+                    "help_text": "Run Gibbs correction."
+                },
+                "run_synthstrip_dwi": {
+                    "type": "boolean",
+                    "description": "Run Synthstrip for BET DWI.",
+                    "help_text": "Run Synthstrip for BET DWI."
                 },
                 "run_topup": {
                     "type": "boolean",
@@ -868,6 +873,10 @@
                     "type": "boolean",
                     "hidden": true
                 },
+                "preproc_dwi_run_synthstrip": {
+                    "type": "boolean",
+                    "hidden": true
+                },
                 "topup_eddy_run_topup": {
                     "type": "boolean",
                     "hidden": true,
@@ -937,6 +946,20 @@
                     "type": "string",
                     "description": "Path to the BundleSeg atlas directory.",
                     "help_text": "Path to the BundleSeg atlas directory. If not set, the default bundle_seg atlas will automatically downloaded."
+                }
+            }
+        },
+        "registration_options": {
+            "title": "Registration options",
+            "type": "object",
+            "description": "Define the registration tools to be used in the pipeline.",
+            "default": "",
+            "help_text": "Define the registration tools to be used in the pipeline.",
+            "properties": {
+                "run_easyreg": {
+                    "type": "boolean",
+                    "description": "Run freesurfer EasyReg any-to-any modality registration.",
+                    "help_text": "Needs freesurfer license."
                 },
                 "run_synthmorph": {
                     "type": "boolean",
@@ -1089,6 +1112,57 @@
                 }
             },
             "help_text": "Parameters to configure the harmonization subworkflow."
+        },
+        "output_space": {
+            "title": "Output to different spaces options",
+            "type": "object",
+            "fa_icon": "fas fa-brain",
+            "description": "Options for outputting to specific spaces.",
+            "help_text": "These options are used to configure the output to different spaces.",
+            "properties": {
+                "output_orig_space": {
+                    "type": "boolean",
+                    "description": "If set, the results will be outputted in the T1 orig space.",
+                    "fa_icon": "fas fa-map",
+                    "help_text": "Images, masks, labels will be outputted in the T1 orig space."
+                },
+                "output_template_space": {
+                    "type": "boolean",
+                    "description": "If set, the results will be outputted in the specified template space using TemplateFlow.",
+                    "fa_icon": "fas fa-map",
+                    "help_text": "Please see their documentation for an exhaustive list (https://www.templateflow.org/browse/)"
+                },
+                "template": {
+                    "type": "string",
+                    "description": "Template space to output to. The available template are the ones supported by TemplateFlow.",
+                    "help_text": "Please see their documentation for an exhaustive list (https://www.templateflow.org/browse/)",
+                    "fa_icon": "fas fa-brain",
+                    "default": null,
+                    "hidden": false
+                },
+                "templateflow_res": {
+                    "type": "integer",
+                    "description": "Resolution of the template space.",
+                    "help_text": "Typically 1 or 2 (mm).",
+                    "fa_icon": "fas fa-brain",
+                    "hidden": false
+                },
+                "templateflow_cohort": {
+                    "type": "integer",
+                    "description": "Cohort to use for the template space (not required for most template, but if it is, simply provide the cohort's number).",
+                    "help_text": "Please see their documentation for an exhaustive list (https://www.templateflow.org/browse/)",
+                    "fa_icon": "fas fa-brain",
+                    "hidden": false
+                },
+                "templateflow_home": {
+                    "type": "string",
+                    "description": "Path to the TemplateFlow home directory where templates will be downloaded.",
+                    "help_text": "If you are running the pipeline without internet access, this needs to point to a folder containing predownloaded templates.",
+                    "fa_icon": "fas fa-brain",
+                    "default": "./templateflow",
+                    "hidden": false
+                }
+            }
         }
     },
     "allOf": [
@@ -1126,6 +1200,9 @@
             "$ref": "#/$defs/bundleseg_options"
         },
         {
+            "$ref": "#/$defs/registration_options"
+        },
+        {
             "$ref": "#/$defs/tractometry_options"
         },
         {
@@ -1139,6 +1216,9 @@
         },
         {
             "$ref": "#/$defs/harmonization"
+        },
+        {
+            "$ref": "#/$defs/output_space"
         }
     ],
     "properties": {
@@ -1146,6 +1226,9 @@
             "type": "string",
             "description": "Hook URL to notify a web server e.g. Microsoft Teams and Slack ",
             "help_text": "Hook URL to notify a web server e.g. Microsoft Teams and Slack "
+        },
+        "use_template_t2w": {
+            "type": "boolean"
         }
     }
 }

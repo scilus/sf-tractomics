@@ -321,11 +321,16 @@ def mergeCovariatesIntoMeta(ch_src, ch_covariates) {
         return ch_src
     }
 
-    def ch = ch_src.join(ch_covariates, by: 0)
+    def ch = ch_src.join(ch_covariates, by: 0, remainder: true)
         .map { item ->
             def original_meta = item[0]
             def content = item[1..-2]
             def covariates = item[-1]
+
+            if ( !covariates ) {
+                // No covariates to merge
+                return [original_meta] + content
+            }
             // Merge original meta with covariates without overwriting existing fields
             def merged_meta = original_meta.clone()
             covariates.each { k, v ->
