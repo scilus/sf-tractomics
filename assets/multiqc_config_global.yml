@@ -68,3 +68,7 @@ tractometry:
 
 metricsinroi:
   iqr_multiplier: 1.5
+
+harmonization:
+  metrics: ["fa", "md", "rd"]
+  bundles: []

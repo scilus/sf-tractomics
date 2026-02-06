@@ -238,11 +238,14 @@ workflow SF_TRACTOMICS {
                     def dest_name = ref_file.name.endsWith('.reference.tsv') ? ref_file.name : ref_file.name.replaceAll(/\.tsv$/, '.reference.tsv')
                     def dest_file = file("${workflow.workDir}/${dest_name}")
 
-                    java.nio.file.Files.copy(
-                        ref_file,
-                        dest_file,
-                        java.nio.file.StandardCopyOption.REPLACE_EXISTING
-                    )
+                    if (!dest_file.exists()) {
+                        java.nio.file.Files.copy(
+                            ref_file,
+                            dest_file,
+                            java.nio.file.StandardCopyOption.REPLACE_EXISTING
+                        )
+                    }
+
                     return dest_file
                 }
 
@@ -252,6 +255,7 @@ workflow SF_TRACTOMICS {
             )
             ch_versions = ch_versions.mix(HARMONIZATION.out.versions)
             ch_global_multiqc_files = ch_global_multiqc_files.mix(
+                ch_harmonization_reference,
                 HARMONIZATION.out.harmonized_stats,
                 HARMONIZATION.out.qc_plot_data_json,
                 HARMONIZATION.out.qc_reports
