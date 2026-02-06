@@ -156,6 +156,12 @@
                     "description": "Run dwi denoising.",
                     "help_text": "Run dwi denoising."
                 },
+                "run_dwi_normalize": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Run dwi intensity normalization.",
+                    "help_text": "Run dwi intensity normalization."
+                },
                 "extent": {
                     "type": "integer",
                     "default": 7,
@@ -172,6 +178,18 @@
                     "type": "boolean",
                     "description": "Run Synthstrip for BET DWI.",
                     "help_text": "Run Synthstrip for BET DWI."
+                },
+                "keep_dwi_unbet": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Keep DWI before brain extraction.",
+                    "help_text": "Keep DWI before brain extraction."
+                },
+                "run_n4_dwi": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Run N4 bias field correction on DWI.",
+                    "help_text": "Run N4 bias field correction on DWI."
                 },
                 "run_topup": {
                     "type": "boolean",
