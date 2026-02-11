@@ -1,0 +1,168 @@
+name: "harmonization_clinicalcombat"
+description: ComBAT harmonization of clinical MRI data. It's a ComBAT
+  implementations for adapting sites to a reference site along with ready-to-run
+  scripts to prepare datasets, fit a model, apply the harmonization and analyze
+  the outputs. Two harmonization methods are available pairwise (linear) and
+  clinic (non-linear).
+keywords:
+  - Harmonization
+  - Pairwise
+  - Clinical
+  - ComBAT
+tools:
+  - "clinical-ComBAT":
+      description: "Method for harmonizing MRI data across different sites."
+      homepage: "https://github.com/scil-vital/clinical-ComBAT"
+      doi: "10.48550/arXiv.2511.04871"
+      identifier: ""
+args:
+  - method:
+      type: string
+      description: Harmonization strategy to use clinic (non-linear) or pairwise
+        (linear)
+      default: clinic
+  - bundles:
+      type: list
+      description: |
+        List of bundles subset used to plot. By default all bundles
+        in the csv input file were used to compute model harmonization.
+      default: all
+  - limit_age_range:
+      type: boolean
+      description: Drop reference subjects outside the moving age range.
+      default: disabled
+  - ignore_sex:
+      type: boolean
+      description: |
+        Remove sex variable when estimating the model.
+        If all subjects have the same value, it will be automatically applied.
+      default: disabled
+  - ignore_handedness:
+      type: boolean
+      description: |
+        Remove handedness variable when estimating the model.
+        If all subjects have the same value, it will be automatically applied.
+      default: disabled
+  - no_empiral_bayes:
+      type: boolean
+      description: |
+        Ignore the empirical Bayesian estimate
+      default: disabled
+  - regul_ref:
+      type: integer
+      description: |
+        Ridge penalty applied to reference regression.
+        Parameter use for clinic method only.
+      default: 0
+  - regul_mov:
+      type: string
+      description: |
+        Moving site penalty or auto-tuning.
+        Parameter use for clinic method only.
+      default: -1
+  - degree:
+      type: integer
+      description: |
+        Polynomial degree used for age.
+        It depends on method used (1 for pairwise, 2 for clinic)
+      default: None
+      choices: "1,2"
+  - nu:
+      type: integer
+      description: |
+        Variance hyperparameter for the moving site.
+        Parameter use for clinic method only.
+      default: 5
+  - tau:
+      type: integer
+      description: |
+        Covariate hyperparameter for the moving site.
+        Parameter use for clinic method only.
+      default: 2
+  - degree_qc:
+      type: integer
+      description: QC model degree override (0 reuses the harmonization degree).
+      default: 0
+input:
+  - - ref_site:
+        type: file
+        description: |
+          CSV for Reference site data for one metric, all bundles and subjects.
+          Must include sid,site,bundle,metric,mean,age,sex,handedness,disease.
+          The Disease column must include at least the label HC.
+        pattern: "*.{csv,csv.gz}"
+        ontologies:
+          - edam: http://edamontology.org/format_3752 # CSV
+    - move_site:
+        type: file
+        description: |
+          CSV for Moving site data for one metric, all bundles and subjects.
+          Must include sid,site,bundle,metric,mean,age,sex,handedness,disease.
+          The Disease column must include at least the label HC.
+        pattern: "*.{csv,csv.gz}"
+        ontologies:
+          - edam: http://edamontology.org/format_3752 # CSV
+output:
+  model:
+    - "*.model.csv":
+        type: file
+        description: Harmonization fitted model.
+        pattern: "*.model.csv"
+        ontologies:
+          - edam: http://edamontology.org/format_3752
+  harmonizedsite:
+    - "*.harmonized.csv.gz":
+        type: file
+        description: Harmonized moving site data.
+        pattern: "*.harmonized.csv.gz"
+        ontologies:
+          - edam: http://edamontology.org/format_3752 # CSV
+  bdqc:
+    - "*bhattacharrya.txt":
+        type: file
+        description: |
+          Bhattacharrya distance QC reports for harmonized data.
+          This file contains the Bhattacharrya distance between the reference
+          and moving site distributions (one file for pre-harmonization and one for
+          post-harmonization). Lower values indicate better alignment between the
+          two distributions. The first column indicates the number of HC subjects
+          used to compute the distance. Other columns correspond to the bundles.
+          The first row contains the bundle names and the second row contains
+          the count (of HC subjects) or the Bhattacharrya distances.
+        pattern: "*bhattacharrya.txt"
+  figures:
+    - "*.png":
+        type: file
+        description: Figures generated to visualize harmonization results.
+        pattern: "*.png"
+  plot_data_json:
+    - "*.json":
+        type: file
+        description: |
+          JSON files used to properly plot the harmonization results in a downstream MultiQC report.
+          These files contain the regression curves and the percentiles computed before and after
+          harmonization for all bundles of a given metric. The files have the following structure:
+          {
+            "bundle_name_1": {
+              "metric1": {
+                "plot_1": { ... },
+                "plot_2": { ... },
+              },
+            "bundle_name_2": {
+              "metric1": {
+                "plot_1": { ... },
+                "plot_2": { ... },
+              }
+          }
+        pattern: "*.json"
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: versions.yml
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+authors:
+  - "@manonedde"
+maintainers:
+  - "@scilus"

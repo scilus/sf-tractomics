@@ -958,13 +958,11 @@
             "properties": {
                 "run_easyreg": {
                     "type": "boolean",
-                    "default": false,
                     "description": "Run freesurfer EasyReg any-to-any modality registration.",
                     "help_text": "Needs freesurfer license."
                 },
                 "run_synthmorph": {
                     "type": "boolean",
-                    "default": false,
                     "description": "Use SynthMorph for registration instead of ANTs for BundleSeg. (Requires Freesurfer license)",
                     "help_text": "Use SynthMorph for registration instead of ANTs for BundleSeg. (Requires Freesurfer license)"
                 }
@@ -1063,7 +1061,7 @@
             }
         },
         "atlas_roimetrics": {
-            "title": "",
+            "title": "Atlas-based ROI metrics options",
             "type": "object",
             "description": "Define the behaviour of the atlas_roimetrics subworkflow.",
             "default": "",
@@ -1101,6 +1099,20 @@
                 }
             }
         },
+        "harmonization": {
+            "title": "Harmonization options",
+            "type": "object",
+            "description": "Parameters to configure the harmonization subworkflow.",
+            "default": "",
+            "properties": {
+                "harmonization_reference": {
+                    "type": "string",
+                    "description": "TSV file of the reference site used to harmonize the current site (e.g. the output TSV from stats/metrics in roi).",
+                    "help_text": "TSV file of the reference site used to harmonize the current site (e.g. the output TSV from stats/metrics in roi)."
+                }
+            },
+            "help_text": "Parameters to configure the harmonization subworkflow."
+        },
         "output_space": {
             "title": "Output to different spaces options",
             "type": "object",
@@ -1110,14 +1122,12 @@
             "properties": {
                 "output_orig_space": {
                     "type": "boolean",
-                    "default": false,
                     "description": "If set, the results will be outputted in the T1 orig space.",
                     "fa_icon": "fas fa-map",
                     "help_text": "Images, masks, labels will be outputted in the T1 orig space."
                 },
                 "output_template_space": {
                     "type": "boolean",
-                    "default": false,
                     "description": "If set, the results will be outputted in the specified template space using TemplateFlow.",
                     "fa_icon": "fas fa-map",
                     "help_text": "Please see their documentation for an exhaustive list (https://www.templateflow.org/browse/)"
@@ -1190,6 +1200,9 @@
             "$ref": "#/$defs/bundleseg_options"
         },
         {
+            "$ref": "#/$defs/registration_options"
+        },
+        {
             "$ref": "#/$defs/tractometry_options"
         },
         {
@@ -1202,6 +1215,9 @@
             "$ref": "#/$defs/atlas_iit"
         },
         {
+            "$ref": "#/$defs/harmonization"
+        },
+        {
             "$ref": "#/$defs/output_space"
         }
     ],
@@ -1210,6 +1226,9 @@
             "type": "string",
             "description": "Hook URL to notify a web server e.g. Microsoft Teams and Slack ",
             "help_text": "Hook URL to notify a web server e.g. Microsoft Teams and Slack "
+        },
+        "use_template_t2w": {
+            "type": "boolean"
         }
     }
 }

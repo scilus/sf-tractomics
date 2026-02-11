@@ -1,0 +1,38 @@
+{
+    "harmonization - combat2stats - normal input": {
+        "content": [
+            {
+                "0": [
+                    "CamCANmodified.harmonized.tsv:md5,fd2116a1f351d57f5cb384819d88396b"
+                ],
+                "1": [
+                    "versions.yml:md5,9d2508f98b033de9c3b31ca0c0eb6f86"
+                ],
+                "stats_for_mqc": [
+                    "CamCANmodified.harmonized.tsv:md5,fd2116a1f351d57f5cb384819d88396b"
+                ],
+                "versions": [
+                    "versions.yml:md5,9d2508f98b033de9c3b31ca0c0eb6f86"
+                ]
+            }
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-01-21T00:01:59.807766858"
+    },
+    "harmonization - combat2stats - stub-run": {
+        "content": [
+            "CamCANmodified.harmonized.tsv",
+            [
+                "versions.yml:md5,9d2508f98b033de9c3b31ca0c0eb6f86"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-01-21T00:02:03.255176256"
+    }
+}

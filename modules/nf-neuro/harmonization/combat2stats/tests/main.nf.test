@@ -1,0 +1,72 @@
+nextflow_process {
+
+    name "Test Process HARMONIZATION_COMBAT2STATS"
+    script "../main.nf"
+    process "HARMONIZATION_COMBAT2STATS"
+    tag "modules"
+    tag "modules_nfneuro"
+    tag "harmonization"
+    tag "harmonization/combat2stats"
+
+    tag "subworkflows/load_test_data"
+
+    setup {
+        run("LOAD_TEST_DATA", alias: "LOAD_DATA") {
+            script "../../../../../subworkflows/nf-neuro/load_test_data/main.nf"
+            process {
+                """
+                input[0] = Channel.from( [ "harmonization.zip" ] )
+                input[1] = "test.load-test-data"
+                """
+            }
+        }
+    }
+
+    test("harmonization - combat2stats - normal input") {
+        when {
+            process {
+                """
+                input[0] = LOAD_DATA.out.test_data_directory.map{
+                    test_data_directory -> [
+                        file("\${test_data_directory}/CamCANmodified.ad.clinic.harmonized.csv.gz"),
+                        file("\${test_data_directory}/CamCANmodified.adt.clinic.harmonized.csv.gz")
+                    ]
+                }
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(process.out).match() }
+            )
+        }
+    }
+
+    test("harmonization - combat2stats - stub-run") {
+        tag "stub"
+        options "-stub-run"
+        when {
+            process {
+                """
+                input[0] = LOAD_DATA.out.test_data_directory.map{
+                    test_data_directory -> [
+                        file("\${test_data_directory}/CamCANmodified.ad.clinic.harmonized.csv.gz"),
+                        file("\${test_data_directory}/CamCANmodified.adt.clinic.harmonized.csv.gz")
+                    ]
+                }
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert process.success },
+                { assert snapshot(
+                    file(process.out.stats_for_mqc.get(0)).name,
+                    process.out.versions).match() }
+            )
+        }
+    }
+}

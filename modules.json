@@ -90,10 +90,25 @@
                         "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
                         "installed_by": ["preproc_t1"]
                     },
+                    "harmonization/clinicalcombat": {
+                        "branch": "main",
+                        "git_sha": "43d0739c2920cc414373454a3f30c553e426bada",
+                        "installed_by": ["harmonization"]
+                    },
+                    "harmonization/combat2stats": {
+                        "branch": "main",
+                        "git_sha": "23a78e8573d9ca364182f014ffb14dd5e77fdab6",
+                        "installed_by": ["harmonization"]
+                    },
+                    "harmonization/stats2combat": {
+                        "branch": "main",
+                        "git_sha": "23a78e8573d9ca364182f014ffb14dd5e77fdab6",
+                        "installed_by": ["harmonization"]
+                    },
                     "image/applymask": {
                         "branch": "main",
                         "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
-                        "installed_by": ["modules", "output_template_space"]
+                        "installed_by": ["modules", "output_template_space", "preproc_dwi"]
                     },
                     "image/convert": {
                         "branch": "main",
@@ -103,7 +118,7 @@
                     "image/cropvolume": {
                         "branch": "main",
                         "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
-                        "installed_by": ["preproc_t1"]
+                        "installed_by": ["preproc_t1", "preproc_dwi"]
                     },
                     "image/math": {
                         "branch": "main",
@@ -152,7 +167,7 @@
                     },
                     "qc/multiqc": {
                         "branch": "main",
-                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "git_sha": "43d0739c2920cc414373454a3f30c553e426bada",
                         "installed_by": ["modules"]
                     },
                     "qc/tractogram": {
@@ -322,6 +337,11 @@
                     "bundle_seg": {
                         "branch": "main",
                         "git_sha": "9479d507a11b2cfafcaf836c476272bc63a96376",
+                        "installed_by": ["subworkflows"]
+                    },
+                    "harmonization": {
+                        "branch": "main",
+                        "git_sha": "dea16055bc554a2624ddd9c5ee4fa75f72db3b20",
                         "installed_by": ["subworkflows"]
                     },
                     "io_bids": {

@@ -118,9 +118,8 @@
             },
             [
                 "metrics",
-                "metrics/aggregated_atlas-iit_label-mean_desc-roi_stats.tsv",
-                "metrics/aggregated_atlas-iit_label-std_desc-roi_stats.tsv",
                 "metrics/bundles_mean_stats.tsv",
+                "metrics/space-native_atlas-iit_label-mean_desc-roi_stats.tsv",
                 "multiqc",
                 "multiqc/global_multiqc_data",
                 "multiqc/global_multiqc_plots",
@@ -222,6 +221,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-26T16:39:09.534042201"
+        "timestamp": "2026-02-06T16:50:14.429130199"
     }
 }

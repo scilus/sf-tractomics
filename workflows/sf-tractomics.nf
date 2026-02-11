@@ -22,6 +22,7 @@ include { TRACTOMETRY            } from '../subworkflows/nf-neuro/tractometry/ma
 include { REGISTRATION_ANTSAPPLYTRANSFORMS as REGISTRATION_METRICS_TO_ORIG } from '../modules/nf-neuro/registration/antsapplytransforms/main'
 include { REGISTRATION_TRACTOGRAM as REGISTRATION_TRACTOGRAM_TO_ORIG } from '../modules/nf-neuro/registration/tractogram/main'
 include { OUTPUT_TEMPLATE_SPACE  } from '../subworkflows/nf-neuro/output_template_space/main'
+include { HARMONIZATION          } from '../subworkflows/nf-neuro/harmonization/main'
 include { mergeCovariatesIntoMeta } from '../subworkflows/local/utils_nfcore_sf-tractomics_pipeline/main'
 
 /*
@@ -222,18 +223,40 @@ workflow SF_TRACTOMICS {
             .map{ _meta, stats_tab -> stats_tab }
             .collectFile(
                 storeDir: "${params.outdir}/metrics/",
-                name: "aggregated_atlas-iit_label-mean_desc-roi_stats.tsv",
+                name: "space-native_atlas-iit_label-mean_desc-roi_stats.tsv",
                 skip: 1,
                 keepHeader: true)
         ch_global_multiqc_files = ch_global_multiqc_files.mix(ch_collection_mean_input)
 
-        ch_collection_std_input = ATLAS_ROIMETRICS.out.stats_tab_std
-            .map{ _meta, stats_tab -> stats_tab }
-            .collectFile(
-                storeDir: "${params.outdir}/metrics/",
-                name: "aggregated_atlas-iit_label-std_desc-roi_stats.tsv",
-                skip: 1,
-                keepHeader: true)
+
+        if (params.harmonization_reference) {
+            // The QC expects the harmonization reference to have the following pattern: *.reference.tsv
+            // So we copy the file in the workflow workdir with the expected name pattern. If the file
+            // already has the expected name pattern, this step will simply create a copy of the file.
+            ch_harmonization_reference = channel.fromPath(params.harmonization_reference, checkIfExists: true)
+                .map{ ref_file ->
+                    def dest_name = ref_file.name.endsWith('.reference.tsv') ? ref_file.name : ref_file.name.replaceAll(/\.tsv$/, '.reference.tsv')
+                    def dest_file = file("${workflow.workDir}/${dest_name}")
+
+                    if (!dest_file.exists()) {
+                        ref_file.copyTo(dest_file)
+                    }
+
+                    return dest_file
+                }
+
+            HARMONIZATION(
+                ch_harmonization_reference,
+                ch_collection_mean_input
+            )
+            ch_versions = ch_versions.mix(HARMONIZATION.out.versions)
+            ch_global_multiqc_files = ch_global_multiqc_files.mix(
+                ch_harmonization_reference,
+                HARMONIZATION.out.harmonized_stats,
+                HARMONIZATION.out.qc_plot_data_json,
+                HARMONIZATION.out.qc_reports
+            )
+        }
     }
 
     if ( params.run_tractometry ) {

@@ -1,0 +1,31 @@
+{
+    "harmonization - subworkflow": {
+        "content": [
+            "CamCAN_11subs_ad_adt_CamCANmodified_11subs_ad_adt.harmonized.tsv",
+            "CamCAN_11subs_ad_adt_CamCANmodified_11subs_ad_adt.metric1.clinical.model.csv",
+            [
+                "dummy_figure_1.png",
+                "dummy_figure_2.png"
+            ],
+            [
+                "CamCANmodified_11subs_ad_adt.metric1.clinical.harmonized.bhattacharrya.txt",
+                "CamCANmodified_11subs_ad_adt.metric1.raw.bhattacharrya.txt"
+            ],
+            [
+                "AgeCurve_CamCAN_11subs_ad_adt-CamCANmodified_11subs_ad_adt_clinical_metric1.json",
+                "DataModels_CamCAN_11subs_ad_adt-CamCANmodified_11subs_ad_adt_clinical_metric1.json"
+            ],
+            [
+                "versions.yml:md5,47a5e1a2c98079ed1bd6c52bb04d33e2",
+                "versions.yml:md5,b1bdae3e52b877f3feac4184254ae0be",
+                "versions.yml:md5,c9f785dfce5de7769fa69befb72b9b5f",
+                "versions.yml:md5,cf554b92485c60bb473b87bdd4cdac6a"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-02-02T17:03:19.928388797"
+    }
+}

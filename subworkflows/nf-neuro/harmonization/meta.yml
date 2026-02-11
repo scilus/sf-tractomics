@@ -1,0 +1,117 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/nf-core/modules/master/subworkflows/yaml-schema.json
+name: "harmonization"
+description: |
+  This harmonization subworkflow essentially is a convenience wrapper around the
+  the harmonization module (e.g. harmonization/clinicalcombat). The combat
+  module requires specific input formats for the tabular stats files. This
+  subworkflow automatically handles the conversion from TSV to CSV format (including
+  pivoting/unpivoting of the metrics) before and after harmonization, using the
+  `harmonization/stats2combat` and `harmonization/combat2stats` modules.
+
+  Combat currently expects a CSV file with the following columns:
+  "sid,site,bundle,metric,mean,age,sex,handedness,disease".
+  AND a separate CSV file PER metric.
+
+  However, in other nf-neuro modules (e.g. stats/metricsinroi or bundle/stats), the
+  output stats files are in TSV format with the following columns:
+  "sid,roi,<covariates>,metric1,metric2,...".
+
+  You can simply provide the TSV stat files directly coming from bundle/stats or
+  stats/metricsinroi to this subworkflow, and it will take care of formatting them
+  into the CSV format expected by combat, and then re-formatting the harmonized CSV
+  outputs back into a TSV format that can be easily read by MultiQC or other
+  downstream tools.
+keywords:
+  - clinical
+  - combat
+  - tsv
+  - csv
+  - format
+  - harmonization
+  - harmonize
+components:
+  - harmonization/stats2combat
+  - harmonization/combat2stats
+  - harmonization/clinicalcombat
+input:
+  - ch_reference_site:
+      type: file
+      description: |
+        The input channel containing the reference site tractometry TSV stats file
+        with the following columns: "sid,roi,<covariates>,metric1,metric2,...".
+        Structure: [ val(meta), path(tsv_file) ]
+      pattern: "*.tsv"
+      mandatory: true
+  - ch_moving_site:
+      type: file
+      description: |
+        The input channel containing the moving site tractometry TSV stats file
+        with the following columns: "sid,roi,<covariates>,metric1,metric2,...".
+        Structure: [ val(meta), path(tsv_file) ]
+      pattern: "*.tsv"
+      mandatory: true
+output:
+  - harmonized_metrics:
+      type: file
+      description: |
+        Harmonized stats file in TSV format (MultiQC ready format).
+        Structure: [ path(*.tsv) ]
+      pattern: "*.tsv"
+      ontologies:
+        - edam: http://edamontology.org/format_3475 # TSV format
+  - figures:
+      type: file
+      description: |
+        PNG figures illustrating the harmonization results for each metric and each bundle.
+        Structure: [ path(img) ]
+      pattern: "*.png"
+      ontologies:
+        - edam: http://edamontology.org/format_3603 # PNG
+  - model:
+      type: file
+      description: |
+        Harmonization fitted model.
+        Structure: [ path(model_file) ]
+      pattern: "*.model.csv"
+      ontologies:
+        - edam: http://edamontology.org/format_3752 # CSV format
+  - qc_reports:
+      type: file
+      description: |
+        Values that can be reported in QC reports.
+        Structure: [ path(*bhattacharrya.txt) ]
+      pattern: "*bhattacharrya.txt"
+      ontologies:
+        - edam: http://edamontology.org/format_2330 # Plain text format
+  - qc_plot_data_json:
+      type: file
+      description: |
+        JSON files used to properly plot the harmonization results in a downstream MultiQC report.
+          These files contain the regression curves and the percentiles computed before and after
+          harmonization for all bundles of a given metric. The files have the following structure:
+          {
+            "bundle_name_1": {
+              "metric1": {
+                "plot_1": { ... },
+                "plot_2": { ... },
+              },
+            "bundle_name_2": {
+              "metric1": {
+                "plot_1": { ... },
+                "plot_2": { ... },
+              }
+          }
+        Structure: [ path(*.json) ]
+      pattern: "*.json"
+      ontologies:
+        - edam: http://edamontology.org/format_3464 # JSON format
+  - versions:
+      type: file
+      description: |
+        File containing software versions
+        Structure: [ path(versions.yml) ]
+      pattern: "versions.yml"
+authors:
+  - "@levje"
+maintainers:
+  - "@levje"

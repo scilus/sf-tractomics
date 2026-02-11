@@ -1,0 +1,68 @@
+nextflow_workflow {
+
+    name "Test Subworkflow HARMONIZATION"
+    script "../main.nf"
+    workflow "HARMONIZATION"
+
+    config "../nextflow.config"
+
+    tag "subworkflows"
+    tag "subworkflows_nfneuro"
+    tag "subworkflows/harmonization"
+    tag "load_test_data"
+
+    tag "harmonization"
+    tag "harmonization/stats2combat"
+    tag "harmonization/combat2stats"
+    tag "harmonization/clinicalcombat"
+
+    tag "stub"
+    options "-stub-run"
+
+    setup {
+        run("LOAD_TEST_DATA", alias: "LOAD_DATA") {
+            script "../../load_test_data/main.nf"
+            process {
+                """
+                input[0] = Channel.from( [ "harmonization.zip" ] )
+                input[1] = "test.load-test-data"
+                """
+            }
+        }
+    }
+
+    test("harmonization - subworkflow") {
+        when {
+            // The workflow should be able to process files coming from the bundle/stats or stats/metricsinroi
+            // which are structured differently.
+            workflow {
+                """
+                input[0] = LOAD_DATA.out.test_data_directory.map{
+                    test_data_directory ->
+                        file("\${test_data_directory}/CamCAN_11subs_ad_adt.tsv", checkIfExists: true)
+
+                }
+                input[1] = LOAD_DATA.out.test_data_directory.map{
+                    test_data_directory ->
+                        file("\${test_data_directory}/CamCANmodified_11subs_ad_adt.tsv", checkIfExists: true)
+
+                }
+                """
+            }
+        }
+
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    file(workflow.out.harmonized_stats.get(0)).name,
+                    file(workflow.out.model.get(0)).name,
+                    workflow.out.figures.get(0).collect { file(it).name }.sort(),
+                    workflow.out.qc_reports.get(0).collect { file(it).name }.sort(),
+                    workflow.out.qc_plot_data_json.get(0).collect { file(it).name }.sort(),
+                    workflow.out.versions
+                ).match() }
+            )
+        }
+    }
+}
