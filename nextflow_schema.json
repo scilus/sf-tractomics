@@ -150,13 +150,13 @@
                     "help_text": "Dilation radius applied to the preliminary mask to ensure whole brain coverage.",
                     "minimum": 1
                 },
-                "run_dwi_denoising": {
+                "run_denoising_dwi": {
                     "type": "boolean",
                     "default": true,
                     "description": "Run dwi denoising.",
                     "help_text": "Run dwi denoising."
                 },
-                "run_dwi_normalize": {
+                "run_normalize_dwi": {
                     "type": "boolean",
                     "default": true,
                     "description": "Run dwi intensity normalization.",
@@ -281,7 +281,7 @@
             "type": "object",
             "description": "All parameters related to T1 preprocessing.",
             "properties": {
-                "run_t1_denoising": {
+                "run_denoising_t1": {
                     "type": "boolean",
                     "default": true,
                     "description": "Run T1 denoising.",
