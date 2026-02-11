@@ -1,0 +1,83 @@
+name: "harmonization_stats2combat"
+description: |
+  This module converts the TSV stats file to the CSV format expected
+  by the Clinical-Combat module. This input TSV stats file might come from
+  the output of modules such as the stats/metricsinroi or bundle/stats
+  modules.
+
+  For context, the Clinical-Combat module currently
+  expects a CSV file with the following columns:
+  "sid,site,bundle,metric,mean,age,sex,handedness,disease".
+  And a separate CSV file PER metric.
+
+  However, in other nf-neuro modules (e.g. stats/metricsinroi or bundle/stats), the
+  output stats files are in TSV format with the following columns:
+  "sid,roi,<covariates>,metric1,metric2,...".
+
+keywords:
+  - harmonization
+  - combat
+  - stats
+  - format
+  - tsv
+  - csv
+tools:
+  - pandas:
+      description: "Python package used to manipulate the input and output tabular data for this module."
+      homepage: https://pypi.org/project/pandas/
+      identifier: ""
+
+input:
+  - stats_files:
+      type: file
+      description: |
+        Input tabular stats files to be reformatted in a CSV format ready for
+        consumption by the harmonization module. The provided file(s) should
+        be one or more TSV files with columns "sid,roi,<covariates>,metric1,metric2,...".
+      pattern: "*.tsv"
+      ontologies:
+        - edam: http://edamontology.org/format_3475 # TSV format
+args:
+  - covariates:
+      type: list
+      description: |
+        List of column names that are not considered metrics in the input stats files.
+        These columns will be kept unchanged (except for renaming the columns) while
+        the other columns (i.e. the metrics and their values) will be pivotted.
+      default: ["sample", "roi", "site", "age", "sex", "handedness", "disease"]
+  - value_col_name:
+      type: string
+      description: |
+        Name of the column containing the metric values in the output CSV files (ready for harmonization).
+      default: "mean"
+  - metric_col_name:
+      type: string
+      description: |
+        Name of the column containing the metric names in the output CSV files (ready for harmonization).
+      default: "metric"
+  - suffix:
+      type: string
+      description: |
+        Suffix to use for the output files based on the operation performed.
+        The output files will be named as "site.metric.<suffix>.csv".
+      default: "raw"
+output:
+  stats_for_combat:
+    - "*.csv":
+        type: file
+        description: |
+          Raw stats files in CSV format (harmonization ready).
+        pattern: "*.csv"
+        ontologies:
+          - edam: http://edamontology.org/format_3752 # CSV format
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: versions.yml
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+authors:
+  - "@levje"
+maintainers:
+  - "@levje"

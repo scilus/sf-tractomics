@@ -321,6 +321,17 @@ def mergeCovariatesIntoMeta(ch_src, ch_covariates) {
         return ch_src
     }
 
+    // Be careful on modifying the following lines, since there are 4 cases to handle.
+    // 1- If there's no covariates to add to the meta field.
+    // 2- Some subjects in the ch_src might not have a match in the participants.tsv,
+    //    so they won't have covariates to merge.
+    // 3- Some subjects in the participants.tsv might not have a match in the ch_src,
+    //    so they won't be merged at all (and that's fine since they don't have any
+    //    data to process in the pipeline).
+    // 4- For the subjects that have a match in the participants.tsv, we want to merge
+    //    the covariates into the meta field without overwriting any existing fields
+    //    in the meta (in case of any naming conflict, the original meta field takes
+    //    precedence over the participants.tsv content).
     def ch = ch_src.join(ch_covariates, by: 0, remainder: true)
         .map { item ->
             def original_meta = item[0]
@@ -340,6 +351,11 @@ def mergeCovariatesIntoMeta(ch_src, ch_covariates) {
             }
             return [merged_meta] + content
         }
+        // We need to filter out the entries from the
+        // participants.tsv that don't have a match in the ch_src.
+        // Required since the remainder join will keep all unmatched
+        // entries from the participants.tsv.
+        .filter { item -> item[0] != null && item[1] != null }
     return ch
 }
 /*

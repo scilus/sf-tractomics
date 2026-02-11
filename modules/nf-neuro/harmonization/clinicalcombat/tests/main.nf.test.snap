@@ -1,0 +1,68 @@
+{
+    "harmonization - clinicalcombat_pairwise": {
+        "content": [
+            "ShamCamCAN-CamCAN.md.pairwise.model.csv",
+            "ShamCamCAN.md.pairwise.harmonized.csv.gz",
+            [
+                "ShamCamCAN.md.pairwise.harmonized.bhattacharrya.txt",
+                "ShamCamCAN.md.raw.bhattacharrya.txt"
+            ],
+            [
+                "AgeCurve_CamCAN-ShamCamCAN_pairwise_harmonized_md_mniAFL.png",
+                "AgeCurve_CamCAN-ShamCamCAN_raw_md_mniAFL.png",
+                "DataModels_CamCAN-ShamCamCAN_pairwise_harmonized_md_mniAFL.png"
+            ],
+            [
+                "AgeCurve_CamCAN-ShamCamCAN_pairwise_md.json",
+                "DataModels_CamCAN-ShamCamCAN_pairwise_md.json"
+            ],
+            [
+                "versions.yml:md5,cbfeb7dd29c3ed4d900aeb0cff66b8c0"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-02-02T17:05:31.775633327"
+    },
+    "harmonization - stub-run clinicalcombat": {
+        "content": [
+            [
+                "versions.yml:md5,cbfeb7dd29c3ed4d900aeb0cff66b8c0"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-02-02T17:05:59.865026732"
+    },
+    "harmonization - clinicalcombat_clinical": {
+        "content": [
+            "ShamCamCAN-CamCAN.md.clinical.model.csv",
+            "ShamCamCAN.md.clinical.harmonized.csv.gz",
+            [
+                "ShamCamCAN.md.clinical.harmonized.bhattacharrya.txt",
+                "ShamCamCAN.md.raw.bhattacharrya.txt"
+            ],
+            [
+                "AgeCurve_CamCAN-ShamCamCAN_clinical_harmonized_md_mniAFL.png",
+                "AgeCurve_CamCAN-ShamCamCAN_raw_md_mniAFL.png",
+                "DataModels_CamCAN-ShamCamCAN_clinical_harmonized_md_mniAFL.png"
+            ],
+            [
+                "AgeCurve_CamCAN-ShamCamCAN_clinical_md.json",
+                "DataModels_CamCAN-ShamCamCAN_clinical_md.json"
+            ],
+            [
+                "versions.yml:md5,cbfeb7dd29c3ed4d900aeb0cff66b8c0"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
+        },
+        "timestamp": "2026-02-02T17:05:56.316293114"
+    }
+}

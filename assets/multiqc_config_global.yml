@@ -17,6 +17,7 @@ module_order:
   - coverage
   - tractometry
   - metricsinroi
+  - harmonization
   - custom_content
 
 # Define which file patterns to look for in each module
@@ -29,8 +30,25 @@ sp:
     fn: "*sc.txt"
   tractometry:
     fn: "*bundles_mean_stats.tsv"
+    shared: true
   metricsinroi:
-    fn: "*mean_desc-roi_stats.tsv"
+    fn: "space-native*mean_desc-roi_stats.tsv"
+    shared: true
+  harmonization/reference_stats:
+    fn: "*.reference.tsv"
+  harmonization/harmonized_stats:
+    fn: "*.harmonized.tsv"
+  harmonization/raw_stats:
+    - fn: "*mean_desc-roi_stats.tsv"
+      shared: true
+    - fn: "*bundles_mean_stats.tsv"
+      shared: true
+  harmonization/data_models_plots:
+    fn: "DataModels*.json"
+  harmonization/harmonization_plots:
+    fn: "AgeCurve*.json"
+  harmonization/harmonization_distance:
+    fn: "*.bhattacharrya.txt"
 
 # Customisable module parameters
 framewise_displacement:
@@ -50,3 +68,7 @@ tractometry:
 
 metricsinroi:
   iqr_multiplier: 1.5
+
+harmonization:
+  metrics: ["fa", "md", "rd"]
+  bundles: []

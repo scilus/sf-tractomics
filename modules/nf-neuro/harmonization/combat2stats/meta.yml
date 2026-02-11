@@ -1,0 +1,80 @@
+name: "harmonization_combat2stats"
+description: |
+  Format the CSV stats files (coming from combat) into a TSV format
+  that can be easily consumed by MultiQC or other downstream tools.
+  The combat module currently output a CSV file with the following
+  columns: "sid,site,bundle,metric,mean,age,sex,handedness,disease".
+  And a separate CSV file PER metric.
+
+  This module reformats these CSV files into TSV files with the following columns:
+  "sid,roi,<covariates>,metric1,metric2,..." and aggregates all metrics from
+  the same sites into a single TSV file per site.
+keywords:
+  - harmonization
+  - combat
+  - stats
+  - format
+  - tsv
+  - csv
+  - qc
+tools:
+  - pandas:
+      description: "Python package used to manipulate the input and output tabular data for this module."
+      homepage: https://pypi.org/project/pandas/
+      identifier: ""
+
+input:
+  - harmonized_stats:
+      type: file
+      description: |
+        CSV stats files to be reformatted after harmonization. This CSV should have the
+        following columns: "sid,site,bundle,metric,mean,<covariates>".
+        These input CSV stats files come from the output of the harmonization modules.
+      pattern: "*.csv"
+      ontologies:
+        - edam: http://edamontology.org/format_3752 # CSV format
+args:
+  - covariates:
+      type: list
+      description: |
+        List of columns that are not considered metrics in the input tabular files.
+        These columns will be kept unchanged (except for renaming the columns) while
+        the other columns (i.e. the metrics and their values) will be pivotted or
+        unpivotted.
+      default: ["sample", "roi", "site", "age", "sex", "handedness", "disease"]
+  - value_col_name:
+      type: string
+      description: |
+        Name of the column containing the metric values in the CSV files.
+      default: "mean"
+  - metric_col_name:
+      type: string
+      description: |
+        Name of the column containing the metric names in the CSV files.
+      default: "metric"
+  - suffix:
+      type: string
+      description: |
+        Suffix to use for the output files based on the operation performed.
+        The output files will be named as "site.<suffix>.tsv".
+      default: "harmonized"
+output:
+  stats_for_mqc:
+    - "*.tsv":
+        type: file
+        description: |
+          Harmonized stats files in TSV format (MultiQC ready format).
+        pattern: "*.tsv"
+        ontologies:
+          - edam: http://edamontology.org/format_3475 # TSV format
+  versions:
+    - versions.yml:
+        type: file
+        description: File containing software versions
+        pattern: versions.yml
+        ontologies:
+          - edam: http://edamontology.org/format_3750 # YAML
+authors:
+  - "@levje"
+maintainers:
+  - "@levje"
