@@ -1142,9 +1142,6 @@
             "$ref": "#/$defs/generic_options"
         },
         {
-            "$ref": "#/$defs/subworkflows_hidden_options"
-        },
-        {
             "$ref": "#/$defs/bundleseg_options"
         },
         {
