@@ -182,8 +182,8 @@
                 "keep_dwi_with_skull": {
                     "type": "boolean",
                     "default": false,
-                    "description": "Keep DWI before brain extraction.",
-                    "help_text": "Keep DWI before brain extraction."
+                    "description": "Keep DWI with skull.",
+                    "help_text": "DWI won't be cropped neither brain extracted."
                 },
                 "run_n4_dwi": {
                     "type": "boolean",
@@ -876,24 +876,6 @@
                     "type": "string",
                     "fa_icon": "far calendar",
                     "description": "Suffix to add to the trace report filename. Default is the date and time in the format yyyy-MM-dd_HH-mm-ss.",
-                    "hidden": true
-                }
-            }
-        },
-        "subworkflows_hidden_options": {
-            "properties": {
-                "topup_eddy_run_topup": {
-                    "type": "boolean",
-                    "hidden": true,
-                    "default": true
-                },
-                "topup_eddy_run_eddy": {
-                    "type": "boolean",
-                    "hidden": true,
-                    "default": true
-                },
-                "frf_average_from_data": {
-                    "type": "boolean",
                     "hidden": true
                 }
             }
