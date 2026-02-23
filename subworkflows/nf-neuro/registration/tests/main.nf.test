@@ -17,6 +17,8 @@ nextflow_workflow {
     tag "registration/easyreg"
     tag "registration/synthmorph"
 
+    tag "subworkflows/utils_options"
+
     tag "load_test_data"
 
     tag "stub"
@@ -27,7 +29,7 @@ nextflow_workflow {
             script "../../load_test_data/main.nf"
             process {
                 """
-                input[0] = Channel.from( [ "freesurfer.zip", "T1w.zip", "b0.zip", "dti.zip", "others.zip" ] )
+                input[0] = channel.from( [ "freesurfer.zip", "T1w.zip", "b0.zip", "dti.zip", "others.zip" ] )
                 input[1] = "test.load-test-data"
                 """
             }
@@ -35,7 +37,6 @@ nextflow_workflow {
     }
 
     test("registration - ANTs - Anat to DWI") {
-        config "./ants.config"
         when {
             workflow {
                 """
@@ -63,14 +64,14 @@ nextflow_workflow {
                         file("\${test_data_directory}/fa.nii.gz")
                     ]
                 }
-                input[3] = Channel.empty()
-                input[4] = Channel.empty()
-                input[5] = Channel.empty()
-                input[6] = Channel.empty()
+                input[3] = channel.empty()
+                input[4] = channel.empty()
+                input[5] = channel.empty()
+                input[6] = channel.empty()
+                input[7] = [:]
                 """
             }
         }
-
         then {
             assertAll(
                 { assert workflow.success},
@@ -99,7 +100,6 @@ nextflow_workflow {
     }
 
     test("registration - ANTs - SyNQuick") {
-        config "./ants.config"
         when {
             workflow {
                 """
@@ -118,19 +118,19 @@ nextflow_workflow {
                         [ id:'test' ],
                         file("\${test_data_directory}/t1.nii.gz")
                     ]}
-                input[2] = Channel.empty()
+                input[2] = channel.empty()
                 input[3] = ch_split_test_data.t1w.map{
                     test_data_directory -> [
                         [ id:'test' ],
                         file("\${test_data_directory}/T1w_mask.nii.gz")
                     ]}
-                input[4] = Channel.empty()
-                input[5] = Channel.empty()
-                input[6] = Channel.empty()
+                input[4] = channel.empty()
+                input[5] = channel.empty()
+                input[6] = channel.empty()
+                input[7] = [:]
                 """
             }
         }
-
         then {
             assertAll(
                 { assert workflow.success},
@@ -159,7 +159,6 @@ nextflow_workflow {
     }
 
     test("registration - easyreg") {
-        config "./easyreg.config"
         when {
             workflow {
                 """
@@ -180,15 +179,15 @@ nextflow_workflow {
                         file("\${test_data_directory}/b0.nii.gz")
                     ]
                 }
-                input[2] = Channel.empty()
-                input[3] = Channel.empty()
-                input[4] = Channel.empty()
-                input[5] = Channel.empty()
-                input[6] = Channel.empty()
+                input[2] = channel.empty()
+                input[3] = channel.empty()
+                input[4] = channel.empty()
+                input[5] = channel.empty()
+                input[6] = channel.empty()
+                input[7] = [ "run_easyreg": true ]
                 """
             }
         }
-
         then {
             assertAll(
                 { assert workflow.success},
@@ -208,7 +207,6 @@ nextflow_workflow {
     }
 
     test("registration - Synthmorph") {
-        config "./synthmorph.config"
         when {
             workflow {
                 """
@@ -230,17 +228,17 @@ nextflow_workflow {
                         file("\${test_data_directory}/b0.nii.gz")
                     ]
                 }
-                input[2] = Channel.empty()
-                input[3] = Channel.empty()
-                input[4] = Channel.empty()
-                input[5] = Channel.empty()
+                input[2] = channel.empty()
+                input[3] = channel.empty()
+                input[4] = channel.empty()
+                input[5] = channel.empty()
                 input[6] = ch_split_test_data.freesurfer.map{
                     test_data_directory -> file("\${test_data_directory}/license.txt")
                 }
+                input[7] = [ "run_synthmorph": true ]
                 """
             }
         }
-
         then {
             assertAll(
                 { assert workflow.success},

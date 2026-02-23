@@ -32,7 +32,7 @@ description: |
       The Gibbs artifact removal is performed in the original spatial resolution and
       running the algorithm on gibbs-free images does not lead to data degradation.
 
-  3. Brain Extraction (bet, FSL)
+  3. Brain Extraction (bet, FSL or SynthStrip)
 
       Extract brain mask from the b0 image and applied to the whole DWI.
       This brain extraction is required to remove the skull and prepare the DWI to the T1 Registration.
@@ -79,6 +79,10 @@ keywords:
 components:
   - image/cropvolume
   - betcrop/fslbetcrop
+  - betcrop/synthstrip
+  - image/powderaverage
+  - image/applymask
+  - image/convert
   - denoising/mppca
   - image/resample
   - preproc/n4
@@ -86,103 +90,255 @@ components:
   - utils/extractb0
   - preproc/gibbs
   - topup_eddy
+  - utils_options
+
 input:
   - ch_dwi:
       type: file
       description: |
         The input channel containing the DWI file, B-values and B-vectors in FSL format files
-        Structure: [ val(meta), path(dwi), path(bval), path(bvec) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - dwi:
+            type: file
+            description: DWI image file.
+        - bval:
+            type: file
+            description: B-values in FSL format.
+        - bvec:
+            type: file
+            description: B-vectors in FSL format.
       pattern: "*.{nii,nii.gz|bval|bvec}"
       mandatory: true
   - ch_rev_dwi:
       type: file
       description: |
         The input channel containing the reverse DWI file, reverse B-values and reverse B-vectors in FSL format files
-        Structure: [ val(meta), path(rev_dwi), path(bval), path(bvec) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - rev_dwi:
+            type: file
+            description: Reverse phase-encoded DWI image file.
+        - bval:
+            type: file
+            description: B-values in FSL format.
+        - bvec:
+            type: file
+            description: B-vectors in FSL format.
       pattern: "*.{nii,nii.gz|bval|bvec}"
       mandatory: false
   - ch_b0:
       type: file
       description: |
         The input channel containing the b0 file. This input is optional.
-        Structure: [ val(meta), path(rev_b0) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - b0:
+            type: file
+            description: B0 image file.
       pattern: "*.{nii,nii.gz}"
       mandatory: false
   - ch_rev_b0:
       type: file
       description: |
         The input channel containing the reverse b0 file. This input is optional.
-        Structure: [ val(meta), path(rev_b0) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - rev_b0:
+            type: file
+            description: Reverse phase-encoded B0 image file.
       pattern: "*.{nii,nii.gz}"
+      mandatory: false
+  - ch_synthstrip_weights:
+      type: file
+      description: |
+        The input channel containing the SynthStrip model weights for brain extraction. This input is optional.
+      structure:
+        - meta:
+            type: map
+            description: Metadata map (optional).
+        - synthstrip_weights:
+            type: file
+            description: SynthStrip model weights file.
+      pattern: "*.{pt}"
       mandatory: false
   - ch_config_topup:
       type: file
       description: |
         The input channel containing the config file for Topup. This input is optional. See https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/topup/TopupUsersGuide#Configuration_files
-        Structure: [ path(config_file) ]
+      structure:
+        - config_file:
+            type: file
+            description: Topup configuration file.
       pattern: "*.{cnf}"
       mandatory: false
+  - options:
+      type: map
+      description: Map of options for the preproc_dwi subworkflow.
+      mandatory: false
+      entries:
+        preproc_dwi_run_denoising:
+          type: boolean
+          description: Denoise the DWI using the MPPCA method from MRtrix3.
+          default: true
+        preproc_dwi_run_degibbs:
+          type: boolean
+          description: Remove Gibbs artifacts using the mrdegibbs method from MRtrix3.
+          default: true
+        topup_eddy_run_topup:
+          type: boolean
+          description: Perform Topup correction using FSL's Topup.
+          default: true
+        topup_eddy_run_eddy:
+          type: boolean
+          description: Perform Eddy currents and motion correction using FSL's Eddy.
+          default: true
+        preproc_dwi_run_synthstrip:
+          type: boolean
+          description: Use SynthStrip for brain extraction instead of FSL's BET.
+          default: false
+        preproc_dwi_keep_dwi_with_skull:
+          type: boolean
+          description: BET the DWI to generate masks, but keep the DWI with skull in processing.
+          default: false
+        preproc_dwi_run_N4:
+          type: boolean
+          description: Perform N4 bias field correction using ANTs' N4BiasFieldCorrection.
+          default: true
+        preproc_dwi_run_normalize:
+          type: boolean
+          description: Normalize the DWI to an average value of 1000 in WM using MRtrix3's dwinormalise.
+          default: true
+        preproc_dwi_run_resampling:
+          type: boolean
+          description: Resample the DWI to 1 mm isotropic spatial resolution.
+          default: true
 output:
   - dwi_resample:
       type: file
       description: |
         Channel containing DWI denoised, corrected for susceptibility and/or eddy currents and motion, normalized, cropped and resampled.
-        Structure: [ val(meta), path(dwi) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - dwi:
+            type: file
+            description: Resampled DWI image file.
       pattern: "*_resampled.{nii,nii.gz}"
   - bval:
       type: file
       description: |
         Channel containing Eddy-corrected B-values in FSL format
-        Structure: [ val(meta), path(bval) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - bval:
+            type: file
+            description: Eddy-corrected B-values file.
       pattern: "*__bval_eddy"
   - bvec:
       type: file
       description: |
         Channel containing Eddy-corrected B-vectors in FSL format
-        Structure: [ val(meta), path(bvec) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - bvec:
+            type: file
+            description: Eddy-corrected B-vectors file.
       pattern: "*__dwi_eddy_corrected.bvec"
   - b0:
       type: file
       description: |
         Channel containing b0 corrected file.
-        Structure: [ val(meta), path(b0) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - b0:
+            type: file
+            description: Brain-extracted B0 image file.
       pattern: "*__b0_bet.nii.gz"
   - b0_mask:
       type: file
       description: |
         Channel containing b0 corrected binary mask file.
-        Structure: [ val(meta), path(b0_mask) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - b0_mask:
+            type: file
+            description: Brain mask from B0 image.
       pattern: "*__b0_bet_mask.nii.gz"
   - dwi_bounding_box:
       type: file
       description: |
         Channel containing the bounding box defining the limits of the crop.
-        Structure: [ val(meta), path(bounding_box) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - bounding_box:
+            type: file
+            description: Bounding box pickle file.
       pattern: "*.{pkl}"
   - dwi_topup_eddy:
       type: file
       description: |
         Channel containing DWI output after denoised, correction for susceptibility and/or eddy currents and motion (Topup-Eddy).
-        Structure: [ val(meta), path(dwi) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - dwi:
+            type: file
+            description: Topup-Eddy corrected DWI image file.
       pattern: "*_corrected.{nii,nii.gz}"
   - dwi_n4:
       type: file
       description: |
         Channel containing DWI after denoised, corrected for susceptibility and/or eddy currents and motion, cropped and normalized (N4).
-        Structure: [ val(meta), path(dwi) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - dwi:
+            type: file
+            description: N4 corrected DWI image file.
       pattern: "*_normalized.{nii,nii.gz}"
       mandatory: false
   - mqc:
       type: file
       description: |
         Channel containing the quality control images for MultiQC.
-        Structure: [ val(meta), path(mqc) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - mqc:
+            type: file
+            description: Quality control images.
       pattern: "*_mqc.{gif,png}"
   - versions:
       type: file
       description: |
         File containing software versions
-        Structure: [ path(versions.yml) ]
+      structure:
+        - versions:
+            type: file
+            description: Versions YAML file.
       pattern: "versions.yml"
 authors:
   - "@medde"

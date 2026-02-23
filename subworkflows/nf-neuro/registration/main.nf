@@ -3,9 +3,7 @@ include { REGISTRATION_ANTS   } from '../../../modules/nf-neuro/registration/ant
 include { REGISTRATION_EASYREG   } from '../../../modules/nf-neuro/registration/easyreg/main'
 include { REGISTRATION_SYNTHMORPH } from '../../../modules/nf-neuro/registration/synthmorph/main'
 include { REGISTRATION_CONVERT } from '../../../modules/nf-neuro/registration/convert/main'
-
-params.run_easyreg      = false
-params.run_synthmorph   = false
+include { UTILS_OPTIONS } from '../utils_options/main'
 
 
 workflow REGISTRATION {
@@ -25,11 +23,17 @@ workflow REGISTRATION {
         ch_segmentation                 // channel: [ val(meta), segmentation ], optional
         ch_moving_segmentation          // channel: [ val(meta), segmentation ], optional
         ch_freesurfer_license           // channel: [ license ], optional
-    main:
-        ch_versions = Channel.empty()
-        ch_mqc = Channel.empty()
+        options                         // Map of options
 
-        if ( params.run_easyreg ) {
+    main:
+        ch_versions = channel.empty()
+        ch_mqc = channel.empty()
+
+        // Merge options with defaults from meta.yml
+        UTILS_OPTIONS("${moduleDir}/meta.yml", options, true)
+        options = UTILS_OPTIONS.out.options.value
+
+        if ( options.run_easyreg ) {
             // ** Registration using Easyreg ** //
             // Result : [ meta, reference, image | [], ref-segmentation | [], segmentation | [] ]
             //  Steps :
@@ -48,9 +52,9 @@ workflow REGISTRATION {
 
             // ** Set compulsory outputs ** //
             out_image_warped = REGISTRATION_EASYREG.out.image_warped
-            out_forward_affine = Channel.empty()
+            out_forward_affine = channel.empty()
             out_forward_warp = REGISTRATION_EASYREG.out.forward_warp
-            out_backward_affine = Channel.empty()
+            out_backward_affine = channel.empty()
             out_backward_warp = REGISTRATION_EASYREG.out.backward_warp
             out_forward_image_transform = REGISTRATION_EASYREG.out.forward_warp
             out_backward_image_transform = REGISTRATION_EASYREG.out.backward_warp
@@ -64,7 +68,7 @@ workflow REGISTRATION {
             out_segmentation = ch_segmentation.mix( REGISTRATION_EASYREG.out.segmentation_warped )
             out_ref_segmentation = ch_moving_segmentation.mix( REGISTRATION_EASYREG.out.fixed_segmentation_warped )
         }
-        else if ( params.run_synthmorph ) {
+        else if ( options.run_synthmorph ) {
             // ** Registration using synthmorph ** //
             ch_register = ch_fixed_image
                 .join(ch_moving_image)
@@ -147,9 +151,9 @@ workflow REGISTRATION {
             out_forward_tractogram_transform = out_backward_image_transform
             out_backward_tractogram_transform = out_forward_image_transform
             // ** and optional outputs. ** //
-            out_ref_warped = Channel.empty()
-            out_segmentation = Channel.empty()
-            out_ref_segmentation = Channel.empty()
+            out_ref_warped = channel.empty()
+            out_segmentation = channel.empty()
+            out_ref_segmentation = channel.empty()
         }
         else {
             // ** Classic registration using antsRegistration  ** //
@@ -213,9 +217,9 @@ workflow REGISTRATION {
             out_backward_tractogram_transform = out_backward_tractogram_transform.mix(REGISTRATION_ANTS.out.backward_tractogram_transform)
 
             // **and optional outputs **//
-            out_ref_warped = Channel.empty()
-            out_segmentation = Channel.empty()
-            out_ref_segmentation = Channel.empty()
+            out_ref_warped = channel.empty()
+            out_segmentation = channel.empty()
+            out_ref_segmentation = channel.empty()
         }
     emit:
         image_warped                    = out_image_warped                  // channel: [ val(meta), image ]

@@ -43,65 +43,125 @@ input:
       type: directory
       description: |
         Path to the BIDS directory. (You must supply only a single BIDS directory)
-        Structure: [ path(bids_folder) ]
+      structure:
+        - bids_folder:
+            type: directory
+            description: BIDS directory path.
   - fs_folder:
       type: directory
       description: |
         Path to the FreeSurfer directory.
-        Structure: [ path(fs_folder) ]
+      structure:
+        - fs_folder:
+            type: directory
+            description: FreeSurfer directory path.
       mandatory: false
   - bidsignore:
       type: file
       description: |
         Path to the .bidsignore file.
-        Structure: [ path(bidsignore) ]
+      structure:
+        - bidsignore:
+            type: file
+            description: BIDS ignore file.
       mandatory: false
 output:
   - ch_t1:
       type: file
       description: |
         Channel containing all T1w files
-        Structure: [ val(meta), path(t1) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - t1:
+            type: file
+            description: T1-weighted image file.
       pattern: "*.nii.gz"
   - ch_wmparc:
       type: file
       description: |
         Channel containing all FreeSurfer white matter parcellation files.
-        Structure: [ val(meta), path(wmparc) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - wmparc:
+            type: file
+            description: FreeSurfer white matter parcellation file.
       pattern: "*.mgz"
       mandatory: false
   - ch_aparc_aseg:
       type: file
       description: |
         Channel containing all FreeSurfer grey matter parcellation files.
-        Structure: [ val(meta), path(aparc_aseg) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - aparc_aseg:
+            type: file
+            description: FreeSurfer grey matter parcellation file.
       pattern: "*.mgz"
       mandatory: false
   - ch_dwi_bval_bvec:
       type: file
       description: |
         Channel containing all diffusion weighted images, b-values and b-vectors.
-        Structure: [ val(meta), path(dwi), path(bval), path(bvec) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - dwi:
+            type: file
+            description: DWI file.
+        - bval:
+            type: file
+            description: B-values file.
+        - bvec:
+            type: file
+            description: B-vectors file.
       pattern: "*.{nii.gz,bval,bvec}"
   - ch_rev_dwi_bval_bvec:
       type: file
       description: |
         Channel containing all reverse encoded diffusion weighted images, b-values and b-vectors.
-        Structure: [ val(meta), path(rev_dwi), path(rev_bval), path(rev_bvec) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - rev_dwi:
+            type: file
+            description: Reverse-encoded DWI file.
+        - rev_bval:
+            type: file
+            description: B-values file for reverse-encoded DWI.
+        - rev_bvec:
+            type: file
+            description: B-vectors file for reverse-encoded DWI.
       pattern: "*.{nii.gz,bval,bvec}"
       mandatory: false
   - ch_rev_b0:
       type: file
       description: |
         Channel containing all reverse b0 images.
-        Structure: [ val(meta), path(rev_b0) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - rev_b0:
+            type: file
+            description: Reverse b0 image file.
       pattern: "*.nii.gz"
       mandatory: false
   - versions:
       type: file
       description: |
         File containing software versions
-        Structure: [ path(versions.yml) ]
+      structure:
+        - versions:
+            type: file
+            description: Versions YAML file.
       pattern: "versions.yml"
 authors:
   - "@gagnonanthony"

@@ -9,16 +9,44 @@ nextflow_workflow {
     tag "subworkflows"
     tag "subworkflows_nfneuro"
     tag "subworkflows/atlas_iit"
+    tag "subworkflows/utils_options"
 
     tag "image/math"
 
-    test("atlas_iit - download and process") {
+    test("atlas_iit - download no thresholding") {
+        tag "atlas_iit_test"
+        when {
+            workflow {
+                """
+                input[0] = [ : ] // threshold_bundles: false
+                """
+            }
+        }
         then {
             assertAll(
                 { assert workflow.success},
                 { assert snapshot(
                     workflow.out.b0,
-                    workflow.out.bundle_masks,
+                    workflow.out.bundles,
+                    workflow.out.versions).match() }
+            )
+        }
+    }
+
+    test("atlas_iit - download with thresholding") {
+        when {
+            workflow {
+                """
+                input[0] = [ threshold_bundles: true ]
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert workflow.success},
+                { assert snapshot(
+                    workflow.out.b0,
+                    workflow.out.bundles,
                     workflow.out.versions).match() }
             )
         }

@@ -54,6 +54,7 @@ components:
   - registration/antsapplytransforms
   - tracking/localtracking
   - tracking/pfttracking
+  - utils_options
 args:
   - b0_max_threshold:
       type: float
@@ -84,30 +85,14 @@ args:
       type: boolean
       description: Fit spherical harmonics on specific shell instead of all shells.
       default: false
-  - preproc_dwi_run_denoising:
-      type: boolean
-      description: Enable MP-PCA denoising of the DWI image.
-      default: true
   - dwi_denoise_patch_size:
       type: integer
       description: Patch size for MP-PCA denoising algorithm.
       default: 7
-  - preproc_dwi_run_degibbs:
-      type: boolean
-      description: Enable Gibbs ringing removal correction.
-      default: false
-  - topup_eddy_run_topup:
-      type: boolean
-      description: Enable TOPUP correction for susceptibility distortions.
-      default: true
   - dwi_topup_config_file:
       type: string
       description: Configuration file for TOPUP processing (e.g., "b02b0.cnf").
       default: "b02b0.cnf"
-  - topup_eddy_run_eddy:
-      type: boolean
-      description: Enable EDDY correction for motion and eddy currents.
-      default: true
   - dwi_eddy_executable:
       type: string
       description: EDDY executable to use (e.g., "eddy_cpu" or "eddy_cuda10.2").
@@ -156,10 +141,6 @@ args:
         - quad
         - cubic
       default: "lin"
-  - preproc_dwi_run_N4:
-      type: boolean
-      description: Enable N4 bias field correction for DWI image.
-      default: true
   - dwi_n4_knot_interval:
       type: integer
       description: Number of voxels between splines' knots for DWI N4 bias correction.
@@ -168,10 +149,6 @@ args:
       type: integer
       description: Subsampling factor for DWI N4 bias correction.
       default: 2
-  - preproc_dwi_run_resampling:
-      type: boolean
-      description: Enable resampling of the DWI image to isotropic resolution.
-      default: true
   - dwi_resample_resolution_mm_iso:
       type: integer
       description: Isotropic resolution in mm for DWI resampling.
@@ -221,10 +198,6 @@ args:
       type: string
       description: Force specific FRF values instead of estimation (e.g., "15,4,4" for eigenvalues).
       default: null
-  - frf_average_from_data:
-      type: boolean
-      description: Average fiber response functions across all subjects.
-      default: false
   - fodf_sh_order:
       type: integer
       description: Spherical harmonics order for fODF reconstruction (must be even).
@@ -254,18 +227,6 @@ args:
       type: float
       description: Minimum MD value for ventricle mask creation.
       default: 0.003
-  - run_qball:
-      type: boolean
-      description: Enable Q-Ball modeling.
-      default: false
-  - use_qball_for_tracking:
-      type: boolean
-      description: Use Q-Ball model for tractography instead of fODFs.
-      default: false
-  - run_pft:
-      type: boolean
-      description: Enable Particle Filtering Tractography.
-      default: true
   - pft_random_seed:
       type: integer
       description: Random seed for PFT tractography reproducibility.
@@ -332,10 +293,6 @@ args:
       type: float
       description: Compression step size in mm for PFT streamlines.
       default: 0.2
-  - run_local_tracking:
-      type: boolean
-      description: Enable Local Tractography.
-      default: true
   - lt_processor:
       type: string
       description: Processor type for local tracking (e.g., "cpu", "gpu").
@@ -418,366 +375,882 @@ input:
       type: file
       description: |
         The input channel containing the DWI file, B-values and B-vectors in FSL format files.
-        Structure: [ val(meta), path(dwi), path(bval), path(bvec) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - dwi:
+            type: file
+            description: DWI file.
+        - bval:
+            type: file
+            description: B-values file.
+        - bvec:
+            type: file
+            description: B-vectors file.
   - ch_t1:
       type: file
       description: |
         The input channel containing the anatomical T1 weighted image.
-        Structure: [ val(meta), path(t1) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - t1:
+            type: file
+            description: T1-weighted image file.
   - ch_sbref:
       type: file
       description: |
         The input channel containing the single-band b0 reference for the DWI.
-        Structure: [ val(meta), path(rev_b0) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - rev_b0:
+            type: file
+            description: Single-band b0 reference file.
       mandatory: false
   - ch_rev_dwi:
       type: file
       description: |
         The input channel containing the reverse DWI file, B-values and B-vectors in FSL format files.
-        Structure: [ val(meta), path(rev_dwi), path(bval), path(bvec) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - rev_dwi:
+            type: file
+            description: Reverse-encoded DWI file.
+        - bval:
+            type: file
+            description: B-values file.
+        - bvec:
+            type: file
+            description: B-vectors file.
       mandatory: false
   - ch_rev_sbref:
       type: file
       description: |
         The input channel containing the reverse b0 file.
-        Structure: [ val(meta), path(rev_b0) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - rev_b0:
+            type: file
+            description: Reverse b0 file.
       mandatory: false
   - ch_aparc_aseg:
       type: file
       description: |
         The input channel containing freesurfer brain segmentation and gray matter parcellation (aparc+aseg).
         Must be supplied with ch_wm_parc. When supplied, those are used to generate tissues masks and probability maps.
-        Structure: [ val(meta), path(aparc_aseg) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - aparc_aseg:
+            type: file
+            description: FreeSurfer aparc+aseg parcellation file.
       mandatory: false
   - ch_wm_parc:
       type: file
       description: |
         The input channel containing freesurfer white matter parcellations (wmparc). Must be supplied with
         ch_aparc_aseg. When supplied, those are used to generate tissues masks and probability maps.
-        Structure: [ val(meta), path(wmparc) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - wmparc:
+            type: file
+            description: FreeSurfer white matter parcellation file.
       mandatory: false
   - ch_topup_config:
       type: file
       description: |
         The input channel containing the config file for Topup. This input is optional.
         See https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/topup/TopupUsersGuide#Configuration_files.
-        Structure: [ path(config_file) ]
+      structure:
+        - config_file:
+            type: file
+            description: Topup configuration file.
       mandatory: false
   - ch_bet_template:
       type: file
       description: |
         The input channel containing the anatomical template for antsBET.
-        Structure: [ val(meta), path(bet_template) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - bet_template:
+            type: file
+            description: ANTs BET template file.
       mandatory: false
   - ch_bet_probability_map:
       type: file
       description: |
         The input channel containing the brain probability mask for antsBET,
         with intensity range 1 (definitely brain) to 0 (definitely background).
-        Structure: [ val(meta), path(probability_map) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - probability_map:
+            type: file
+            description: Brain probability mask file.
+      mandatory: false
+  - ch_synthstrip_weights:
+      type: file
+      description: |
+        The input channel containing the SynthStrip model weights for brain extraction.
+      structure:
+        - meta:
+            type: map
+            description: Metadata map (optional).
+        - synthstrip_weights:
+            type: file
+            description: SynthStrip model weights file.
       mandatory: false
   - ch_lesion_mask:
       type: file
       description: |
         The input channel containing the lesion mask for segmentation.
-        Structure: [ val(meta), path(lesion_mask) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - lesion_mask:
+            type: file
+            description: Lesion mask file.
       mandatory: false
+  - options:
+      type: map
+      description: |
+        Map of options for the subworkflow.
+      entries:
+        preproc_dwi_run_denoising:
+          type: boolean
+          description: If 'true', the DWI will be denoised using the MPPCA method from MRtrix3.
+          default: true
+        preproc_dwi_run_degibbs:
+          type: boolean
+          description: If 'true', the Gibbs artifact removal will be performed using the mrdegibbs method from MRtrix3.
+          default: true
+        topup_eddy_run_topup:
+          type: boolean
+          description: If 'true', the Topup correction will be performed using FSL's Topup.
+          default: true
+        topup_eddy_run_eddy:
+          type: boolean
+          description: If 'true', the Eddy correction will be performed using FSL's Eddy.
+          default: true
+        preproc_dwi_run_synthstrip:
+          type: boolean
+          description: If 'true', the brain extraction will be performed using SynthStrip. If 'false', FSL's BET will be used.
+          default: false
+        preproc_dwi_keep_dwi_with_skull:
+          type: boolean
+          description: If 'true', the DWI before brain extraction will be kept and used for the following steps. If 'false', the DWI after brain extraction will be used for the following steps.
+          default: false
+        preproc_dwi_run_N4:
+          type: boolean
+          description: If 'true', the N4 bias field correction will be performed using ANTs' N4BiasFieldCorrection.
+          default: true
+        preproc_dwi_run_normalize:
+          type: boolean
+          description: If 'true', the DWI will be normalized to have a mean value in the WM of approximately 1000 using MRtrix3's dwinormalise.
+          default: true
+        preproc_dwi_run_resampling:
+          type: boolean
+          description: If 'true', the DWI will be resampled to 1 mm isotropic spatial resolution using DIPY's resample.
+          default: true
+        preproc_t1_run_denoising:
+          type: boolean
+          description: If 'true', the anatomical image will be denoised using the nlmeans method from scilpy.
+          default: true
+        preproc_t1_run_N4:
+          type: boolean
+          description: If 'true', the N4 bias field correction will be performed using the N4BiasFieldCorrection method from ANTs.
+          default: true
+        preproc_t1_run_resample:
+          type: boolean
+          description: If 'true', the anatomical image will be resampled using the resample method from DIPY.
+          default: true
+        preproc_t1_run_synthstrip:
+          type: boolean
+          description: If 'true', the subworkflow will use SynthStrip for brain extraction.
+          default: false
+        preproc_t1_run_ants_bet:
+          type: boolean
+          description: If 'true', the subworkflow will use ANTs' BET for brain extraction.
+          default: true
+        preproc_t1_run_crop:
+          type: boolean
+          description: If 'true', the subworkflow will crop the image after brain extraction.
+          default: true
+        frf_average_from_data:
+          type: boolean
+          description: If 'true', the fiber response function will be averaged across all subjects. If 'false', the fiber response function will be estimated for each subject independently.
+          default: false
+        run_qball:
+          type: boolean
+          description: If 'true', the Q-Ball model will be fitted on the DWI data and used for fODF reconstruction and tracking.
+          default: false
+        use_qball_for_tracking:
+          type: boolean
+          description: If 'true', the Q-Ball model will be used for tractography instead of the fODF model. This option is only relevant if run_qball is 'true'.
+          default: false
+        run_pft_tracking:
+          type: boolean
+          description: If 'true', Particle Filtering Tractography (PFT) will be performed using DIPY.
+          default: true
+        run_local_tracking:
+          type: boolean
+          description: If 'true', Local Tracking will be performed.
+          default: false
+      mandatory: true
 output:
   - dwi:
       type: file
       description: |
         Preprocessed DWI image.
-        Structure: [ val(meta), path(dwi), path(bval), path(bvec) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - dwi:
+            type: file
+            description: Preprocessed DWI file.
+        - bval:
+            type: file
+            description: B-values file.
+        - bvec:
+            type: file
+            description: B-vectors file.
   - t1:
       type: file
       description: |
         T1 image warped to the DWI space.
-        Structure: [ val(meta), path(t1) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - t1:
+            type: file
+            description: T1 image in DWI space.
   - wm_mask:
       type: file
       description: |
         White matter mask.
-        Structure: [ val(meta), path(wm_mask) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - wm_mask:
+            type: file
+            description: White matter mask file.
   - gm_mask:
       type: file
       description: |
         Gray matter mask.
-        Structure: [ val(meta), path(gm_mask) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - gm_mask:
+            type: file
+            description: Gray matter mask file.
   - csf_mask:
       type: file
       description: |
         Cerebrospinal fluid mask.
-        Structure: [ val(meta), path(csf_mask) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - csf_mask:
+            type: file
+            description: CSF mask file.
   - wm_map:
       type: file
       description: |
         White matter probability map.
-        Structure: [ val(meta), path(wm_map) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - wm_map:
+            type: file
+            description: White matter probability map file.
   - gm_map:
       type: file
       description: |
         Gray matter probability map.
-        Structure: [ val(meta), path(gm_map) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - gm_map:
+            type: file
+            description: Gray matter probability map file.
   - csf_map:
       type: file
       description: |
         Cerebrospinal fluid probability map.
-        Structure: [ val(meta), path(csf_map) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - csf_map:
+            type: file
+            description: CSF probability map file.
   - aparc_aseg:
       type: file
       description: |
         Freesurfer brain segmentation and gray matter parcellation (aparc+aseg) in diffusion space. Only
         available if ch_aparc_aseg is provided in inputs.
-        Structure: [ val(meta), path(aparc_aseg) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - aparc_aseg:
+            type: file
+            description: FreeSurfer aparc+aseg in diffusion space.
       mandatory: false
   - wmparc:
       type: file
       description: |
         Freesurfer white matter parcellations (wmparc) in diffusion space. Only available if ch_wm_parc
         is provided in inputs.
-        Structure: [ val(meta), path(wmparc) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - wmparc:
+            type: file
+            description: FreeSurfer wmparc in diffusion space.
       mandatory: false
   - anatomical_to_diffusion:
       type: file
       description: |
         Transformation matrix from the anatomical space to the diffusion space.
-        Structure: [ val(meta), [path(warp), path(affine)] ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - warp:
+            type: file
+            description: Warp field file.
+        - affine:
+            type: file
+            description: Affine transformation file.
   - diffusion_to_anatomical:
       type: file
       description: |
         Transformation matrix from the diffusion space to the anatomical space.
-        Structure: [ val(meta), [path(affine), path(warp)] ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - affine:
+            type: file
+            description: Affine transformation file.
+        - warp:
+            type: file
+            description: Warp field file.
   - t1_native:
       type: file
       description: |
         Preprocessed T1 in anatomical space.
-        Structure: [ val(meta), path(t1) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - t1:
+            type: file
+            description: T1 in native anatomical space.
   - dti_tensor:
       type: file
       description: |
         4-D Diffusion tensor image, with 6 components in the last dimensions, ordered by FSL convention
         (row-major : Dxx, Dxy, Dxz, Dyy, Dyz, Dzz).
-        Structure: [ val(meta), path(dti_tensor) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - dti_tensor:
+            type: file
+            description: DTI tensor file.
   - dti_md:
       type: file
       description: |
         Mean diffusivity map.
-        Structure: [ val(meta), path(dti_md) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - dti_md:
+            type: file
+            description: Mean diffusivity file.
   - dti_rd:
       type: file
       description: |
         Radial diffusivity map.
-        Structure: [ val(meta), path(dti_rd) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - dti_rd:
+            type: file
+            description: Radial diffusivity file.
   - dti_ad:
       type: file
       description: |
         Axial diffusivity map.
-        Structure: [ val(meta), path(dti_ad) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - dti_ad:
+            type: file
+            description: Axial diffusivity file.
   - dti_fa:
       type: file
       description: |
         Fractional anisotropy map.
-        Structure: [ val(meta), path(dti_fa) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - dti_fa:
+            type: file
+            description: Fractional anisotropy file.
   - dti_rgb:
       type: file
       description: |
         RGB map of the diffusion tensor.
-        Structure: [ val(meta), path(dti_rgb) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - dti_rgb:
+            type: file
+            description: DTI RGB file.
   - dti_peaks:
       type: file
       description: |
         Principal direction of the diffusion tensor.
-        Structure: [ val(meta), path(dti_peaks) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - dti_peaks:
+            type: file
+            description: DTI peaks file.
   - dti_evecs:
       type: file
       description: |
         Eigenvectors of the diffusion tensor, ordered by eigenvalue.
-        Structure: [ val(meta), path(dti_evecs) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - dti_evecs:
+            type: file
+            description: DTI eigenvectors file.
   - dti_evals:
       type: file
       description: |
         Eigenvalues of the diffusion tensor.
-        Structure: [ val(meta), path(dti_evals) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - dti_evals:
+            type: file
+            description: DTI eigenvalues file.
   - dti_residual:
       type: file
       description: |
         Residuals of the diffusion tensor fitting.
-        Structure: [ val(meta), path(dti_residual) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - dti_residual:
+            type: file
+            description: DTI residual file.
   - dti_ga:
       type: file
       description: |
         Generalized anisotropy map.
-        Structure: [ val(meta), path(dti_ga) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - dti_ga:
+            type: file
+            description: Generalized anisotropy file.
   - dti_mode:
       type: file
       description: |
         Mode of the diffusion tensor.
-        Structure: [ val(meta), path(dti_mode) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - dti_mode:
+            type: file
+            description: DTI mode file.
   - dti_norm:
       type: file
       description: |
         Norm of the diffusion tensor.
-        Structure: [ val(meta), path(dti_norm) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - dti_norm:
+            type: file
+            description: DTI norm file.
   - fiber_response:
       type: file
       description: |
         Fiber Response Function (FRF) estimated from the DWI image.
-        If using Single Tissue
-            Structure: [ val(meta), path(fiber_response) ]
-        If using Multi Tissues
-            Structure: [ val(meta), path(wm_fiber_response), path(gm_fiber_response), path(csf_fiber_response) ]
+        If using Single Tissue: contains fiber_response file.
+        If using Multi Tissues: contains wm_fiber_response, gm_fiber_response, and csf_fiber_response files.
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - fiber_response:
+            type: file
+            description: Single-tissue FRF file (when not using multi-tissue).
+        - wm_fiber_response:
+            type: file
+            description: White matter FRF file (multi-tissue).
+        - gm_fiber_response:
+            type: file
+            description: Gray matter FRF file (multi-tissue).
+        - csf_fiber_response:
+            type: file
+            description: CSF FRF file (multi-tissue).
   - fodf:
       type: file
       description: |
         Fiber Orientation Distribution Function (fODF) estimated from the DWI image.
-        If using Single Tissue
-            Structure: [ val(meta), path(fodf) ]
-        If using Multi Tissues
-            Structure: [ val(meta), path(wm_fodf), path(gm_fodf), path(csf_fodf) ]
+        If using Single Tissue: contains fodf file.
+        If using Multi Tissues: contains wm_fodf, gm_fodf, and csf_fodf files.
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - fodf:
+            type: file
+            description: Single-tissue fODF file (when not using multi-tissue).
+        - wm_fodf:
+            type: file
+            description: White matter fODF file (multi-tissue).
+        - gm_fodf:
+            type: file
+            description: Gray matter fODF file (multi-tissue).
+        - csf_fodf:
+            type: file
+            description: CSF fODF file (multi-tissue).
   - fodf_rgb:
       type: file
       description: |
         RGB map of the fODF, normalized by volume fraction of WM.
-        Structure: [ val(meta), path(fodf_rgb) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - fodf_rgb:
+            type: file
+            description: fODF RGB file.
   - fodf_peaks:
       type: file
       description: |
         Peaks of the fODF.
-        Structure: [ val(meta), path(fodf_peaks) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - fodf_peaks:
+            type: file
+            description: fODF peaks file.
   - afd_max:
       type: file
       description: |
         Maximum Apparent Fiber Density (AFD) map.
-        Structure: [ val(meta), path(afd_max) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - afd_max:
+            type: file
+            description: AFD max file.
   - afd_total:
       type: file
       description: |
         Total Apparent Fiber Density (AFD) map.
-        Structure: [ val(meta), path(afd_total) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - afd_total:
+            type: file
+            description: AFD total file.
   - afd_sum:
       type: file
       description: |
         Sum of Apparent Fiber Density (AFD) map.
-        Structure: [ val(meta), path(afd_sum) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - afd_sum:
+            type: file
+            description: AFD sum file.
   - nufo:
       type: file
       description: |
         Number of Unique Fibers Orientations (NUFO) map.
-        Structure: [ val(meta), path(nufo) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - nufo:
+            type: file
+            description: NUFO file.
   - volume_fraction:
       type: file
       description: |
         Tissues volume fraction map.
-        Structure: [ val(meta), path(volume_fraction) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - volume_fraction:
+            type: file
+            description: Tissues volume fraction file.
   - qball:
       type: file
       description: |
         Qball spherical harmonics coefficients.
-        Structure: [ val(meta), path(qball) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - qball:
+            type: file
+            description: Qball SH coefficients file.
       mandatory: false
   - qball_a_power:
       type: file
       description: |
         Anisotropic power map.
-        Structure: [ val(meta), path(qball_a_power) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - qball_a_power:
+            type: file
+            description: Qball anisotropic power file.
       mandatory: false
   - qball_peaks:
       type: file
       description: |
         Extracted peaks from Qball model.
-        Structure: [ val(meta), path(qball_peaks) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - qball_peaks:
+            type: file
+            description: Qball peaks file.
       mandatory: false
   - qball_peaks_indices:
       type: file
       description: |
         Generated peaks indices on the sphere from Qball model.
-        Structure: [ val(meta), path(qball_peak_indices) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - qball_peak_indices:
+            type: file
+            description: Qball peak indices file.
       mandatory: false
   - qball_gfa:
       type: file
       description: |
         Generalized fractional anisotropy.
-        Structure: [ val(meta), path(qball_gfa) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - qball_gfa:
+            type: file
+            description: Qball GFA file.
       mandatory: false
   - qball_nufo:
       type: file
       description: |
         NUFO map from Qball model.
-        Structure: [ val(meta), path(qball_nufo) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - qball_nufo:
+            type: file
+            description: Qball NUFO file.
       mandatory: false
   - pft_tractogram:
       type: file
       description: |
         Whole brain tractogram generated with Particle Filtering Tractography (PFT).
-        Structure: [ val(meta), path(pft_tractogram) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - pft_tractogram:
+            type: file
+            description: PFT tractogram file.
       mandatory: false
   - pft_config:
       type: file
       description: |
         Configuration file used for Particle Filtering Tractography (PFT).
-        Structure: [ val(meta), path(pft_config) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - pft_config:
+            type: file
+            description: PFT configuration file.
       mandatory: false
   - pft_map_include:
       type: file
       description: |
         Include map used for Particle Filtering Tractography (PFT).
-        Structure: [ val(meta), path(pft_map_include) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - pft_map_include:
+            type: file
+            description: PFT include map file.
       mandatory: false
   - pft_map_exclude:
       type: file
       description: |
         Exclude map used for Particle Filtering Tractography (PFT).
-        Structure: [ val(meta), path(pft_map_exclude) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - pft_map_exclude:
+            type: file
+            description: PFT exclude map file.
       mandatory: false
   - pft_seeding_mask:
       type: file
       description: |
         Seeding mask used for Particle Filtering Tractography (PFT).
-        Structure: [ val(meta), path(pft_seeding_mask) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - pft_seeding_mask:
+            type: file
+            description: PFT seeding mask file.
       mandatory: false
   - local_tractogram:
       type: file
       description: |
         Whole brain tractogram generated with Local Tracking.
-        Structure: [ val(meta), path(local_tractogram) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - local_tractogram:
+            type: file
+            description: Local tractogram file.
       mandatory: false
   - local_config:
       type: file
       description: |
         Configuration file used for Local Tracking.
-        Structure: [ val(meta), path(local_config) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - local_config:
+            type: file
+            description: Local tracking configuration file.
       mandatory: false
   - local_seeding_mask:
       type: file
       description: |
         Seeding mask used for Local Tracking.
-        Structure: [ val(meta), path(local_seeding_mask) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - local_seeding_mask:
+            type: file
+            description: Local tracking seeding mask file.
       mandatory: false
   - local_tracking_mask:
       type: file
       description: |
         Tracking mask used for Local Tracking.
-        Structure: [ val(meta), path(local_tracking_mask) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - local_tracking_mask:
+            type: file
+            description: Local tracking mask file.
       mandatory: false
   - mqc:
       type: file
       description: |
         QC files (png, gif, etc.) generated by all modules that can
         be leveraged in a subject-level MultiQC report.
-        Structure: [ val(meta), path(*mqc.*) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - mqc_files:
+            type: file
+            description: MultiQC files.
       mandatory: false
   - global_mqc:
       type: file
       description: |
         QC files (txt, npy, etc.) generated by all modules that can
         be leveraged in a global-level MultiQC report (all subjects).
-        Structure: [ val(meta), path(*mqc.*) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - global_mqc_files:
+            type: file
+            description: Global MultiQC files.
       mandatory: false
   - versions:
       type: file
       description: |
         File containing software versions
-        Structure: [ path(versions.yml) ]
+      structure:
+        - versions:
+            type: file
+            description: Versions YAML file.
       pattern: "versions.yml"
 authors:
   - "@AlexVCaron"

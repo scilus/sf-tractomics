@@ -59,20 +59,33 @@ components:
   - betcrop/antsbet
   - betcrop/synthstrip
   - image/cropvolume
+  - utils_options
 
 input:
   - ch_image:
       type: file
       description: |
         The input channel containing the anatomical image.
-        Structure: [ val(meta), path(image) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - image:
+            type: file
+            description: Anatomical T1 image file.
       pattern: "*.{nii,nii.gz}"
       mandatory: true
   - ch_template:
       type: file
       description: |
         The input channel containing the anatomical template for antsBET.
-        Structure: [ val(meta), path(image) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - image:
+            type: file
+            description: Anatomical template image file.
       pattern: "*.{nii,nii.gz}"
       mandatory: false
   - ch_probability_map:
@@ -80,7 +93,13 @@ input:
       description: |
         The input channel containing the brain probability mask for antsBET,
         with intensity range 1 (definitely brain) to 0 (definitely background).
-        Structure: [ val(meta), path(image) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - image:
+            type: file
+            description: Brain probability mask image file.
       pattern: "*.{nii,nii.gz}"
       mandatory: false
   - ch_template_mask:
@@ -101,84 +120,188 @@ input:
       type: file
       description: |
         The input channel containing a reference brain mask for all processing. Optional
-        Structure: [ val(meta), path(mask) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - mask:
+            type: file
+            description: Reference brain mask file.
       pattern: "*.{nii,nii.gz}"
       mandatory: false
   - ch_ref_n4:
       type: file
       description: |
         The input channel containing the reference and the reference mask for the n4 correction. Optional
-        Structure: [ val(meta), path(ref) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - ref:
+            type: file
+            description: Reference image for N4 correction.
       pattern: "*.{nii,nii.gz}"
       mandatory: false
   - ch_ref_resample:
       type: file
       description: |
         The input channel containing the reference for the resampling. Optional
-        Structure: [ val(meta), path(ref) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - ref:
+            type: file
+            description: Reference image for resampling.
       pattern: "*.{nii,nii.gz}"
       mandatory: false
   - ch_weights:
       type: file
       description: |
         The input channel containing an alternative model weights for synthstrip. Optional
-        Structure: [ val(meta), path (weights)]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - weights:
+            type: file
+            description: SynthStrip model weights file.
       pattern: "*.pt"
       mandatory: false
+  - options:
+      type: map
+      description: Map of options for the preproc_t1 subworkflow.
+      mandatory: false
+      entries:
+        preproc_t1_run_denoising:
+          type: boolean
+          description: Denoise the anatomical image using the nlmeans method from scilpy.
+          default: true
+        preproc_t1_run_N4:
+          type: boolean
+          description: Perform N4 bias field correction using ANTs' N4BiasFieldCorrection.
+          default: true
+        preproc_t1_run_resampling:
+          type: boolean
+          description: Resample the anatomical image using the resample method from DIPY.
+          default: true
+        preproc_t1_run_synthstrip:
+          type: boolean
+          description: Use SynthStrip for brain extraction.
+          default: true
+        preproc_t1_run_ants_bet:
+          type: boolean
+          description: Use ANTs BET for brain extraction.
+          default: false
+        preproc_t1_run_crop:
+          type: boolean
+          description: Crop the image after brain extraction.
+          default: true
 output:
   - image_nlmeans:
       type: file
       description: |
         Channel containing the anatomical image after the nlmeans denoising.
-        Structure: [ val(meta), path(image) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - image:
+            type: file
+            description: Denoised T1 image file.
       pattern: "*.{nii,nii.gz}"
   - image_N4:
       type: file
       description: |
         Channel containing the anatomical image after the N4 correction.
-        Structure: [ val(meta), path(image) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - image:
+            type: file
+            description: N4-corrected T1 image file.
       pattern: "*.{nii,nii.gz}"
   - image_resample:
       type: file
       description: |
         Channel containing the anatomical image after the resampling.
-        Structure: [ val(meta), path(image) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - image:
+            type: file
+            description: Resampled T1 image file.
       pattern: "*.{nii,nii.gz}"
   - image_bet:
       type: file
       description: |
         Channel containing the anatomical image after the brain-extraction.
-        Structure: [ val(meta), path(t1) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - t1:
+            type: file
+            description: Brain-extracted T1 image file.
       pattern: "*.{nii,nii.gz}"
   - mask_bet:
       type: file
       description: |
         Channel containing the binary mask after the brain-extraction.
-        Structure: [ val(meta), path(mask) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - mask:
+            type: file
+            description: Brain extraction mask file.
       pattern: "*.{nii,nii.gz}"
   - crop_box:
       type: file
       description: |
         Channel containing the bouding box defining the limits of the crop.
-        Structure: [ val(meta), path(image) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - image:
+            type: file
+            description: Bounding box pickle file.
       pattern: "*.{pkl}"
   - mask_final:
       type: file
       description: |
         Channel containing the binary mask after the all preprocessing.
-        Structure: [ val(meta), path(mask) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - mask:
+            type: file
+            description: Final preprocessed brain mask file.
       pattern: "*.{nii,nii.gz}"
   - t1_final:
       type: file
       description: |
         Channel containing the anatomical image after the all preprocessing.
-        Structure: [ val(meta), path(image) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - image:
+            type: file
+            description: Final preprocessed T1 image file.
       pattern: "*.{nii,nii.gz}"
   - versions:
       type: file
       description: |
         File containing software versions
-        Structure: [ path(versions.yml) ]
+      structure:
+        - versions:
+            type: file
+            description: Versions YAML file.
       pattern: "versions.yml"
 
 authors:

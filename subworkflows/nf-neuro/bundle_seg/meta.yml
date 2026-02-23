@@ -32,73 +32,117 @@ keywords:
 components:
   - bundle/recognize
   - registration
-args:
-  - run_synthmorph:
-      type: boolean
-      description: "Run SynthMorph registration instead of ANTs."
-      default: false
-  - atlas_directory:
-      type: directory
-      default: ""
-      description: |
-        Use an alternative atlas to the default BundleSeg one available on Zenodo (https://zenodo.org/records/10103446).
-        The folder MUST follow the same organisation as archive `atlas.zip` hosted on Zenodo at the link above.
+  - utils_options
 input:
   - ch_fa:
       type: file
       description: |
         The input channel containing the FA map. This map is used to compute the transformation between the atlas'
         space and the subject's space.
-        Structure: [ val(meta), path(fa) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - fa:
+            type: file
+            description: FA map image file.
       pattern: "*.{nii,nii.gz}"
       mandatory: true
   - ch_tractogram:
       type: file
       description: |
         The input channel containing the whole-brain tractogram to be segmented.
-        Structure: [ val(meta), path(tractogram) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - tractogram:
+            type: file
+            description: Whole-brain tractogram file.
       pattern: "*.trk"
       mandatory: true
   - ch_freesurfer_license:
       type: file
       description: |
         ONLY USED WITH SYNTHMORPH REGISTRATION. The input channel containing the Freesurfer license file.
-        Structure: [ val(meta), path(license) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - license:
+            type: file
+            description: Freesurfer license file.
       pattern: "*.txt"
       mandatory: false
+  - options:
+      type: map
+      description: Map of options for the bundle_seg subworkflow.
+      mandatory: false
+      entries:
+        run_synthmorph:
+          type: boolean
+          description: Use Synthmorph ML registration model instead of ANTs.
+          default: false
+        run_easyreg:
+          type: boolean
+          description: This option is not supported and will throw an error if set to 'true'.
+          default: false
+        atlas_directory:
+          type: string
+          description: Use an alternative atlas to the default BundleSeg one available on Zenodo (https://zenodo.org/records/10103446). The folder MUST follow the same organisation as archive `atlas.zip` hosted on Zenodo.
+          default: null
+
 output:
   - bundles:
       type: file
       description: |
         Channel containing all the segmented bundle files.
-        Structure: [ val(meta), path(bundles) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - bundles:
+            type: file
+            description: List of segmented bundle files.
       pattern: "*.trk"
   - mqc:
       type: file
       description: |
         Channel containing QC data for MultiQC reports.
-        Structure: [ *mqc.* ]
+      structure:
+        - mqc:
+            type: file
+            description: MultiQC report file.
       pattern: "*mqc.*"
       mandatory: false
   - bundles_mqc:
       type: file
       description: |
         Channel containing the bundle segmentation mosaic images for QC.
-        Structure: [ *_bundles_mosaic_mqc.png ]
+      structure:
+        - bundles_mosaic:
+            type: file
+            description: Bundle segmentation mosaic image.
       pattern: "*_bundles_mosaic_mqc.png"
       mandatory: false
   - stats_mqc:
       type: file
       description: |
         Channel containing the bundle segmentation statistics for QC.
-        Structure: [ *_bundles_stats_mqc.json ]
+      structure:
+        - stats:
+            type: file
+            description: Bundle segmentation statistics JSON file.
       pattern: "*_bundles_stats_mqc.json"
       mandatory: false
   - versions:
       type: file
       description: |
         File containing software versions
-        Structure: [ path(versions.yml) ]
+      structure:
+        - versions:
+            type: file
+            description: Versions YAML file.
       pattern: "versions.yml"
 authors:
   - "@gagnonanthony"

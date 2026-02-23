@@ -25,6 +25,8 @@ nextflow_workflow {
     tag "tracking/localtracking"
     tag "tracking/pfttracking"
 
+    tag "subworkflows/utils_options"
+
     tag "stub"
     options "-stub-run"
 
@@ -33,7 +35,7 @@ nextflow_workflow {
             script "../../load_test_data/main.nf"
             process {
                 """
-                input[0] = Channel.from( [ "antsbet.zip", "raw_DWIss1000-dir32.zip", "raw_T1w.zip" ] )
+                input[0] = channel.from( [ "antsbet.zip", "raw_DWIss1000-dir32.zip", "raw_T1w.zip" ] )
                 input[1] = "test.load-test-data"
                 """
             }
@@ -69,12 +71,12 @@ nextflow_workflow {
                         [ id:'test' ],
                         file("\${test_data_directory}/T1w.nii.gz")
                     ]}
-                input[2] = Channel.empty()
-                input[3] = Channel.empty()
-                input[4] = Channel.empty()
-                input[5] = Channel.empty()
-                input[6] = Channel.empty()
-                input[7] = Channel.empty()
+                input[2] = channel.empty()
+                input[3] = channel.empty()
+                input[4] = channel.empty()
+                input[5] = channel.empty()
+                input[6] = channel.empty()
+                input[7] = channel.empty()
                 input[8] = ch_split_test_data.template.map{
                     test_data_directory -> [
                         [ id:'test' ],
@@ -85,11 +87,24 @@ nextflow_workflow {
                         [ id:'test' ],
                         file("\${test_data_directory}/t1_brain_probability_map.nii.gz")
                     ]}
-                input[10] = Channel.empty()
+                input[10] = channel.from("https://surfer.nmr.mgh.harvard.edu/docs/synthstrip/requirements/synthstrip.1.pt")
+                input[11] = channel.empty()
+                input[12] = [
+                    "preproc_dwi_run_denoising": true,
+                    "preproc_dwi_run_degibbs": false,
+                    "topup_eddy_run_topup": true,
+                    "topup_eddy_run_eddy": true,
+                    "preproc_dwi_run_N4": true,
+                    "preproc_dwi_run_resampling": true,
+                    "preproc_dwi_run_normalize": true,
+                    "preproc_dwi_run_synthstrip": true,
+                    "frf_average_from_data": false,
+                    "run_local_tracking": true,
+                    "run_pft_tracking": true
+                    ]
                 """
             }
         }
-
         then {
             assertAll(
                 { assert workflow.success},
@@ -116,8 +131,6 @@ nextflow_workflow {
                 pft_number_of_particles = 4
                 lt_seeding_strategy = "nt"
                 lt_number_of_seeds = 4000
-                run_qball = true
-                use_qball_for_tracking = true
             }
             workflow {
                 """
@@ -139,12 +152,12 @@ nextflow_workflow {
                         [ id:'test' ],
                         file("\${test_data_directory}/T1w.nii.gz")
                     ]}
-                input[2] = Channel.empty()
-                input[3] = Channel.empty()
-                input[4] = Channel.empty()
-                input[5] = Channel.empty()
-                input[6] = Channel.empty()
-                input[7] = Channel.empty()
+                input[2] = channel.empty()
+                input[3] = channel.empty()
+                input[4] = channel.empty()
+                input[5] = channel.empty()
+                input[6] = channel.empty()
+                input[7] = channel.empty()
                 input[8] = ch_split_test_data.template.map{
                     test_data_directory -> [
                         [ id:'test' ],
@@ -155,11 +168,26 @@ nextflow_workflow {
                         [ id:'test' ],
                         file("\${test_data_directory}/t1_brain_probability_map.nii.gz")
                     ]}
-                input[10] = Channel.empty()
+                input[10] = channel.empty()
+                input[11] = channel.empty()
+                input[12] = [
+                    "preproc_dwi_run_denoising": true,
+                    "preproc_dwi_run_degibbs": false,
+                    "topup_eddy_run_topup": true,
+                    "topup_eddy_run_eddy": true,
+                    "preproc_dwi_run_N4": true,
+                    "preproc_dwi_run_resampling": true,
+                    "preproc_dwi_run_normalize": true,
+                    "preproc_dwi_run_synthstrip": false,
+                    "frf_average_from_data": false,
+                    "run_qball": true,
+                    "use_qball_for_tracking": true,
+                    "run_local_tracking": true,
+                    "run_pft_tracking": true
+                    ]
                 """
             }
         }
-
         then {
             assertAll(
                 { assert workflow.success},

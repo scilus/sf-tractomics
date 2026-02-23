@@ -127,22 +127,22 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. `[ id:'test', single_end:false ]`
-      - "*__FiberVolume.nii.gz":
+      - "*__fibervolume.nii.gz":
           type: file
           description: Nifti file for fiber volume.
-          pattern: "*__FiberVolume.{nii,nii.gz}"
+          pattern: "*__fibervolume.{nii,nii.gz}"
           ontologies:
             - edam: http://edamontology.org/format_4001 # NIFTI format
-  fw:
+  fwf:
     - - meta:
           type: map
           description: |
             Groovy Map containing sample information
             e.g. `[ id:'test', single_end:false ]`
-      - "*__FW.nii.gz":
+      - "*__fwf.nii.gz":
           type: file
-          description: Nifti file for freewater (isotropic volume).
-          pattern: "*__FIT_FW.{nii,nii.gz}"
+          description: Nifti file for freewater fraction (isotropic volume).
+          pattern: "*__fwf.{nii,nii.gz}"
           ontologies:
             - edam: http://edamontology.org/format_4001 # NIFTI format
   nrmse:
@@ -151,10 +151,10 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. `[ id:'test', single_end:false ]`
-      - "*__NRMSE.nii.gz":
+      - "*__nrmse.nii.gz":
           type: file
           description: Nifti file for nrmse.
-          pattern: "*__NRMSE.{nii,nii.gz}"
+          pattern: "*__nrmse.{nii,nii.gz}"
           ontologies:
             - edam: http://edamontology.org/format_4001 # NIFTI format
   kernels:

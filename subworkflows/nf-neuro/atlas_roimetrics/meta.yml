@@ -5,8 +5,8 @@ description: |
   for each bundle mask of the configured atlas. The subworkflow takes as input the reference
   image from each subject (e.g. the B0). The atlas template reference image is registered
   to the subject's DWI space. The transformation is then applied on the bundle masks for each
-  subject, allowing us to have the bundle masks in the same space as the input metric images (i.e.
-  in the subject's DWI space).
+  subject, allowing us to have the bundle maps/masks in the same space as the input metric
+  images (i.e. in the subject's DWI space).
 keywords:
   - atlas
   - bundles
@@ -21,23 +21,7 @@ components:
   - registration/ants
   - stats/metricsinroi
   - registration/antsapplytransforms
-args:
-  - atlas_iit_b0:
-      type: string
-      description: |
-        Path to a Mean B0 map of the IIT Human Brain Atlas.
-        If provided, this input will be used instead of downloading the Mean B0 map.
-        Structure: path(img)
-      mandatory: false
-      default: null
-  - atlas_iit_bundle_masks_dir:
-      type: string
-      description: |
-        Path to a directory containing IIT bundle masks.
-        If provided, these inputs will be used instead of downloading and processing the bundle masks.
-      Structure: path(dir)
-      mandatory: false
-      default: null
+  - utils_options
 input:
   - ch_subject_reference:
       type: file
@@ -45,7 +29,14 @@ input:
         Reference image from each subject on which the
         atlas' reference image will be registered. This
         image is in the subject's DWI space.
-        Structure: [ val(meta), path(b0) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - b0:
+            type: file
+            description: |
+              B0 image for a subject in the subject's DWI space.
       pattern: "*.nii.gz"
       ontologies:
         - edam: http://edamontology.org/format_4001 # NIFTI format
@@ -53,23 +44,49 @@ input:
       type: file
       description: |
         List of metric maps for each subject in the subject's DWI space.
-        Structure: [ val(meta), [ path(metric1), path(metric2), ... ] ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - metrics:
+            type: file
+            description: |
+              List of metric maps for a subject in the subject's DWI space.
       pattern: "*.nii.gz"
       ontologies:
         - edam: http://edamontology.org/format_4001 # NIFTI format
   - options:
       type: map
-      description: |
-        Map of options for the subworkflow.
-          - use_atlas_iit (bool): If 'true', the IIT Human Brain Atlas will be used for ROI metrics extraction.
+      description: Map of options for the subworkflow.
+      entries:
+        use_atlas_iit:
+          type: boolean
+          description: If 'true', the IIT Human Brain Atlas will be used for ROI metrics extraction.
+          default: false
+        atlas_iit_b0:
+          type: string
+          description: Path to a Mean B0 map of the IIT Human Brain Atlas. This input will be used instead of downloading the Mean B0 map if `use_atlas_iit` is set to 'true'.
+          default: null
+        atlas_iit_bundle_masks_dir:
+          type: string
+          description: Path to a directory containing IIT bundle masks. This input will be used instead of downloading and processing the bundle masks if `use_atlas_iit` is set to 'true'.
+          default: null
+        use_binary_masks:
+          type: boolean
+          description: If 'true', the IIT bundle masks will be thresholded to create binary masks before extracting the metrics.
+          default: false
       mandatory: true
-      default: {}
 output:
   - json:
       type: file
-      description: |
-        List of binary bundle masks.
-        Structure: [ path(img), path(img), ... ]
+      description: List of binary bundle masks.
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - img:
+            type: file
+            description: List of binary bundle masks in the subject's DWI space.
       pattern: "*.nii.gz"
       ontologies:
         - edam: http://edamontology.org/format_4001 # NIFTI format
@@ -79,7 +96,13 @@ output:
         Structured tabular (TSV or CSV) file holding MEAN metrics
         values for each bundle mask. The tabular file has the following
         column structure: (sample, roi, metric1, metric2, ..., metricN).
-        Structure: [ val(meta), path(tab_mean) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - tab_mean:
+            type: file
+            description: Mean statistics table file.
       pattern: "*_desc-mean_*.{csv,tsv}"
       ontologies: []
   - stats_tab_std:
@@ -89,14 +112,23 @@ output:
         DEVIATION metrics values for each bundle mask. The
         tabular file has the following column structure:
         (sample, roi, metric1, metric2, ..., metricN).
-        Structure: [ val(meta), path(tab_std) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - tab_std:
+            type: file
+            description: Standard deviation statistics table file.
       pattern: "*_desc-std_*.{csv,tsv}"
       ontologies: []
   - versions:
       type: file
       description: |
         File containing software versions
-        Structure: [ path(versions.yml) ]
+      structure:
+        - versions:
+            type: file
+            description: Versions YAML file.
       pattern: "versions.yml"
 authors:
   - "@levje"

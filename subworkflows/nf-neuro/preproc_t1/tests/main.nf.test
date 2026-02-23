@@ -3,6 +3,7 @@ nextflow_workflow {
     name "Test Subworkflow PREPROC_T1"
     script "../main.nf"
     workflow "PREPROC_T1"
+    config "./nextflow.config"
 
     tag "subworkflows"
     tag "subworkflows_nfneuro"
@@ -15,6 +16,8 @@ nextflow_workflow {
     tag "betcrop/synthstrip"
     tag "image/cropvolume"
 
+    tag "subworkflows/utils_options"
+
     tag "load_test_data"
 
     tag "stub"
@@ -25,7 +28,7 @@ nextflow_workflow {
             script "../../load_test_data/main.nf"
             process {
                 """
-                input[0] = Channel.from( [ "antsbet.zip" , "T1w.zip" ] )
+                input[0] = channel.from( [ "antsbet.zip" , "T1w.zip" ] )
                 input[1] = "test.load-test-data"
                 """
             }
@@ -33,7 +36,6 @@ nextflow_workflow {
     }
 
     test("preproc_t1_antsbet_error") {
-        config "./nextflow.config"
         when {
             workflow {
                 """
@@ -47,24 +49,30 @@ nextflow_workflow {
                         [ id:'test' ],
                         file("\${test_data_directory}/T1w.nii.gz")
                     ]}
-                input[1] = Channel.empty()
-                input[2] = Channel.empty()
-                input[3] = Channel.empty()
-                input[4] = Channel.empty()
-                input[5] = Channel.empty()
-                input[6] = Channel.empty()
-                input[7] = Channel.empty()
+                input[1] = channel.empty()
+                input[2] = channel.empty()
+                input[3] = channel.empty()
+                input[4] = channel.empty()
+                input[5] = channel.empty()
+                input[6] = channel.empty()
+                input[7] = channel.empty()
+                input[8] = [
+                    "preproc_t1_run_denoising": true,
+                    "preproc_t1_run_N4": true,
+                    "preproc_t1_run_resampling": true,
+                    "preproc_t1_run_ants_bet": true,
+                    "preproc_t1_run_synthstrip": false,
+                    "preproc_t1_run_crop": true
+                ]
                 """
             }
         }
-
         then {
             assert workflow.failed
         }
     }
 
     test("preproc_t1_antsbet") {
-        config "./nextflow.config"
         when {
             workflow {
                 """
@@ -88,15 +96,22 @@ nextflow_workflow {
                         [ id:'test' ],
                         file("\${test_data_directory}/t1_brain_probability_map.nii.gz"),
                     ]}
-                input[3] = Channel.empty()
-                input[4] = Channel.empty()
-                input[5] = Channel.empty()
-                input[6] = Channel.empty()
-                input[7] = Channel.empty()
+                input[3] = channel.empty()
+                input[4] = channel.empty()
+                input[5] = channel.empty()
+                input[6] = channel.empty()
+                input[7] = channel.empty()
+                input[8] = [
+                    "preproc_t1_run_denoising": true,
+                    "preproc_t1_run_N4": true,
+                    "preproc_t1_run_resampling": true,
+                    "preproc_t1_run_ants_bet": true,
+                    "preproc_t1_run_synthstrip": false,
+                    "preproc_t1_run_crop": true
+                ]
                 """
             }
         }
-
         then {
             assertAll(
                 { assert workflow.success},
@@ -122,8 +137,6 @@ nextflow_workflow {
     }
 
     test("preproc_t1_synthstrip") {
-        config "./nextflow_synthstrip.config"
-
         when {
             workflow {
                 """
@@ -137,17 +150,24 @@ nextflow_workflow {
                         [ id:'test' ],
                         file("\${test_data_directory}/T1w.nii.gz")
                     ]}
-                input[1] = Channel.empty()
-                input[2] = Channel.empty()
-                input[3] = Channel.empty()
-                input[4] = Channel.empty()
-                input[5] = Channel.empty()
-                input[6] = Channel.empty()
-                input[7] = Channel.empty()
+                input[1] = channel.empty()
+                input[2] = channel.empty()
+                input[3] = channel.empty()
+                input[4] = channel.empty()
+                input[5] = channel.empty()
+                input[6] = channel.empty()
+                input[7] = channel.empty()
+                input[8] = [
+                    "preproc_t1_run_denoising": true,
+                    "preproc_t1_run_N4": true,
+                    "preproc_t1_run_resampling": true,
+                    "preproc_t1_run_ants_bet": false,
+                    "preproc_t1_run_synthstrip": true,
+                    "preproc_t1_run_crop": true
+                ]
                 """
             }
         }
-
         then {
             assertAll(
                 { assert workflow.success},
@@ -173,8 +193,6 @@ nextflow_workflow {
     }
 
     test("preproc_t1_quick") {
-        config "./nextflow_quick.config"
-
         when {
             workflow {
                 """
@@ -188,17 +206,24 @@ nextflow_workflow {
                         [ id:'test' ],
                         file("\${test_data_directory}/T1w.nii.gz")
                     ]}
-                input[1] = Channel.empty()
-                input[2] = Channel.empty()
-                input[3] = Channel.empty()
-                input[4] = Channel.empty()
-                input[5] = Channel.empty()
-                input[6] = Channel.empty()
-                input[7] = Channel.empty()
+                input[1] = channel.empty()
+                input[2] = channel.empty()
+                input[3] = channel.empty()
+                input[4] = channel.empty()
+                input[5] = channel.empty()
+                input[6] = channel.empty()
+                input[7] = channel.empty()
+                input[8] = [
+                    "preproc_t1_run_denoising": true,
+                    "preproc_t1_run_N4": false,
+                    "preproc_t1_run_resampling": true,
+                    "preproc_t1_run_ants_bet": false,
+                    "preproc_t1_run_synthstrip": false,
+                    "preproc_t1_run_crop": true
+                ]
                 """
             }
         }
-
         then {
             assertAll(
                 { assert workflow.success },
@@ -227,8 +252,6 @@ nextflow_workflow {
     }
 
     test("preproc_t1_skip_all") {
-        config "./nextflow_skip_all.config"
-
         when {
             workflow {
                 """
@@ -242,17 +265,24 @@ nextflow_workflow {
                         [ id:'test' ],
                         file("\${test_data_directory}/T1w.nii.gz")
                     ]}
-                input[1] = Channel.empty()
-                input[2] = Channel.empty()
-                input[3] = Channel.empty()
-                input[4] = Channel.empty()
-                input[5] = Channel.empty()
-                input[6] = Channel.empty()
-                input[7] = Channel.empty()
+                input[1] = channel.empty()
+                input[2] = channel.empty()
+                input[3] = channel.empty()
+                input[4] = channel.empty()
+                input[5] = channel.empty()
+                input[6] = channel.empty()
+                input[7] = channel.empty()
+                input[8] = [
+                    "preproc_t1_run_denoising": false,
+                    "preproc_t1_run_N4": false,
+                    "preproc_t1_run_resampling": false,
+                    "preproc_t1_run_ants_bet": false,
+                    "preproc_t1_run_synthstrip": false,
+                    "preproc_t1_run_crop": false
+                ]
                 """
             }
         }
-
         then {
             assertAll(
                 { assert workflow.success },

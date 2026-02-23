@@ -15,14 +15,20 @@ input:
       type: string
       description: |
         Input archives to download and extract
-        Structure: [ val(archive_name) ]
+      structure:
+        - archive_name:
+            type: string
+            description: Archive name identifier.
       pattern: "*.zip"
 
   - test_data_prefix:
       type: string
       description: |
         Prefix for the output test data directory
-        Structure: [ val(directory_prefix) ]
+      structure:
+        - directory_prefix:
+            type: string
+            description: Directory prefix for test data.
       pattern: "*"
 
 output:
@@ -30,14 +36,20 @@ output:
       type: file
       description: |
         Directory containing test data extracted from the archive
-        Structure: [ path(temporary_test_data_path) ]
+      structure:
+        - test_data_path:
+            type: file
+            description: Path to extracted test data directory.
       pattern: "*/{prefix}_*/archive_name"
 
   - versions:
       type: file
       description: |
         File containing software versions
-        Structure: [ path(versions.yml) ]
+      structure:
+        - versions:
+            type: file
+            description: Versions YAML file.
       pattern: "versions.yml"
 
 authors:

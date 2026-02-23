@@ -18,233 +18,410 @@ components:
   - reconst/diffusivitypriors
   - reconst/meandiffusivitypriors
   - reconst/dtimetrics
+  - utils_options
 input:
   - dwi_bval_bvec:
       type: file
       description: |
         The input channel containing the DWI, BVAL, and BVEC files.
-        Structure: [ val(meta), path(dwi), path(bval), path(bvec) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - dwi:
+            type: file
+            description: DWI file.
+        - bval:
+            type: file
+            description: B-values file.
+        - bvec:
+            type: file
+            description: B-vectors file.
       pattern: "*.{dwi,bval,bvec}"
   - brain_mask:
       type: file
       description: |
         The input channel containing the brain mask file (e.g. b0_mask).
-        Structure: [ val(meta), path(brain_mask) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - brain_mask:
+            type: file
+            description: Brain mask file.
       pattern: "*.nii.gz"
   - fa_ad_rd_md:
       type: file
       description: |
         The input channel containing DTI metrics (FA, AD, RD, MD). Not used
         when supplying custom diffusivity priors.
-        Structure: [ val(meta), path(fa), path(ad), path(rd), path(md) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - fa:
+            type: file
+            description: Fractional anisotropy file.
+        - ad:
+            type: file
+            description: Axial diffusivity file.
+        - rd:
+            type: file
+            description: Radial diffusivity file.
+        - md:
+            type: file
+            description: Mean diffusivity file.
       pattern: "*.nii.gz"
       mandatory: false
-args:
-  - run_noddi:
-      type: boolean
-      default: false
+  - diffusivities:
+      type: Map
       description: |
-        Whether to run the NODDI reconstruction.
-  - run_freewater:
-      type: boolean
-      default: false
+        The input channel containing custom diffusivity priors to use for NODDI
+        and FreeWater models. If not provided, the diffusivity priors will be
+        computed automatically. Can be subject-bound (i.e. different values per
+        subject), a single-value for all subjects, or empty to compute them
+        automatically. IMPORTANT: all priors must be provided the same way,
+        meaning that if one prior is subject-bound, all others must be subject-bound
+        as well (same for single-value or empty).
+        Structure: [
+          para_diff: channel.empty(),     // Example of empty to compute automatically
+          iso_diff: channel.value(0.003), // Example of single-value for all subjects
+          perp_diff_min: channel.of(      // Example of subject-bound values
+            tuple([ id:'subj1' ], 0.0001),
+            tuple([ id:'subj2' ], 0.00015)
+          ),
+          perp_diff_max: channel.of(
+            tuple([ id:'subj1' ], 0.0007),
+            tuple([ id:'subj2' ], 0.00065)
+          )
+        ]
+      mandatory: false
+  - options:
+      type: Map
       description: |
-        Whether to run the FreeWater correction.
-  - para_diff:
-      type: float
-      default: null
-      description: |
-        Custom parallel diffusivity prior to use for NODDI and FreeWater models.
-  - iso_diff:
-      type: float
-      default: null
-      description: |
-        Custom isotropic diffusivity prior to use for NODDI and FreeWater models.
-  - perp_diff_min:
-      type: float
-      default: null
-      description: |
-        Minimum perpendicular diffusivity prior to use for NODDI and FreeWater
-        models when computing diffusivity priors automatically.
-  - perp_diff_max:
-      type: float
-      default: null
-      description: |
-        Maximum perpendicular diffusivity prior to use for NODDI and FreeWater
-        models when computing diffusivity priors automatically.
-  - average_diff_priors:
-      type: boolean
-      default: false
-      description: |
-        Whether to average the diffusivity priors computed from the
-        RECONST/DIFFUSIVITYPRIORS module across all subjects. (Recommended)
+        Map of options for the subworkflow.
+      entries:
+        run_noddi:
+          type: boolean
+          description: If 'true', the NODDI reconstruction will be performed.
+          default: false
+        run_freewater:
+          type: boolean
+          description: If 'true', the FreeWater correction will be performed.
+          default: false
+        average_diff_priors:
+          type: boolean
+          description: If 'true', the diffusivity priors computed from the RECONST/DIFFUSIVITYPRIORS module will be averaged across all subjects. (Recommended)
+          default: false
+      mandatory: false
 output:
   - noddi_dir:
       type: file
       description: |
         Nifti file main direction.
-        Structure: [ val(meta), path(dir) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - dir:
+            type: file
+            description: NODDI main direction file.
       pattern: "*__fit_dir.nii.gz"
       mandatory: false
-  - noddi_fwf:
+  - noddi_isovf:
       type: file
       description: |
-        Nifti file for Free Water Fraction.
-        Structure: [ val(meta), path(fwf) ]
-      pattern: "*__fit_FWF.nii.gz"
+        Nifti file for isotropic volume fraction.
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - isovf:
+            type: file
+            description: NODDI isotropic volume fraction file.
+      pattern: "*__isovf.nii.gz"
       mandatory: false
-  - noddi_ndi:
+  - noddi_icvf:
       type: file
       description: |
-        Nifti file for Neurite Density Index.
-        Structure: [ val(meta), path(ndi) ]
-      pattern: "*__fit_NDI.nii.gz"
+        Nifti file for intracellular volume fraction.
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - icvf:
+            type: file
+            description: NODDI intracellular volume fraction file.
+      pattern: "*__icvf.nii.gz"
       mandatory: false
   - noddi_ecvf:
       type: file
       description: |
         Nifti file for Extra-Cellular Volume Fraction.
-        Structure: [ val(meta), path(ecvf) ]
-      pattern: "*__fit_ECVF.nii.gz"
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - ecvf:
+            type: file
+            description: NODDI extra-cellular volume fraction file.
+      pattern: "*__ecvf.nii.gz"
       mandatory: false
   - noddi_odi:
       type: file
       description: |
         Nifti file for Orientation Dispersion Index.
-        Structure: [ val(meta), path(odi) ]
-      pattern: "*__fit_ODI.nii.gz"
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - odi:
+            type: file
+            description: NODDI orientation dispersion index file.
+      pattern: "*__odi.nii.gz"
       mandatory: false
   - fw_dwi:
       type: file
       description: |
         Free Water corrected DWI Nifti file.
-        Structure: [ val(meta), path(fw_dwi) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - fw_dwi:
+            type: file
+            description: Free water corrected DWI file.
       pattern: "*__dwi_fw_corrected.nii.gz"
       mandatory: false
   - fw_dir:
       type: file
       description: |
         Free Water corrected main direction Nifti file.
-        Structure: [ val(meta), path(fw_dir) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - fw_dir:
+            type: file
+            description: Free water corrected main direction file.
       pattern: "*__dir.nii.gz"
       mandatory: false
   - fw_fibervolume:
       type: file
       description: |
         Free Water corrected fiber volume Nifti file.
-        Structure: [ val(meta), path(fw_fibvolume) ]
-      pattern: "*__FiberVolume.nii.gz"
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - fw_fibvolume:
+            type: file
+            description: Free water corrected fiber volume file.
+      pattern: "*__fibervolume.nii.gz"
       mandatory: false
-  - fw_fw:
+  - fw_fwf:
       type: file
       description: |
         Free Water corrected Free Water Fraction Nifti file.
-        Structure: [ val(meta), path(fw_fw) ]
-      pattern: "*__FW.nii.gz"
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - fw_fwf:
+            type: file
+            description: Free water fraction file.
+      pattern: "*__fwf.nii.gz"
       mandatory: false
   - fw_nrmse:
       type: file
       description: |
         Free Water correction NRMSE Nifti file.
-        Structure: [ val(meta), path(fw_nrmse) ]
-      pattern: "*__NRMSE.nii.gz"
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - fw_nrmse:
+            type: file
+            description: Free water correction NRMSE file.
+      pattern: "*__nrmse.nii.gz"
       mandatory: false
   - fw_dti_tensor:
       type: file
       description: |
         Free Water corrected DTI tensor Nifti file.
-        Structure: [ val(meta), path(fw_dti_tensor) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - fw_dti_tensor:
+            type: file
+            description: Free water corrected DTI tensor file.
       pattern: "*__tensor.nii.gz"
       mandatory: false
   - fw_dti_md:
       type: file
       description: |
         Free Water corrected DTI Mean Diffusivity Nifti file.
-        Structure: [ val(meta), path(fw_dti_md) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - fw_dti_md:
+            type: file
+            description: Free water corrected DTI mean diffusivity file.
       pattern: "*__md.nii.gz"
       mandatory: false
   - fw_dti_rd:
       type: file
       description: |
         Free Water corrected DTI Radial Diffusivity Nifti file.
-        Structure: [ val(meta), path(fw_dti_rd) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - fw_dti_rd:
+            type: file
+            description: Free water corrected DTI radial diffusivity file.
       pattern: "*__rd.nii.gz"
       mandatory: false
   - fw_dti_ad:
       type: file
       description: |
         Free Water corrected DTI Axial Diffusivity Nifti file.
-        Structure: [ val(meta), path(fw_dti_ad) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - fw_dti_ad:
+            type: file
+            description: Free water corrected DTI axial diffusivity file.
       pattern: "*__ad.nii.gz"
       mandatory: false
   - fw_dti_fa:
       type: file
       description: |
         Free Water corrected DTI Fractional Anisotropy Nifti file.
-        Structure: [ val(meta), path(fw_dti_fa) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - fw_dti_fa:
+            type: file
+            description: Free water corrected DTI fractional anisotropy file.
       pattern: "*__fa.nii.gz"
       mandatory: false
   - fw_dti_rgb:
       type: file
       description: |
         Free Water corrected DTI RGB Nifti file.
-        Structure: [ val(meta), path(fw_dti_rgb) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - fw_dti_rgb:
+            type: file
+            description: Free water corrected DTI RGB file.
       pattern: "*__rgb.nii.gz"
       mandatory: false
   - fw_dti_peaks:
       type: file
       description: |
         Free Water corrected DTI Peaks Nifti file.
-        Structure: [ val(meta), path(fw_dti_peaks) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - fw_dti_peaks:
+            type: file
+            description: Free water corrected DTI peaks file.
       pattern: "*__evec_v1.nii.gz"
       mandatory: false
   - fw_dti_evecs:
       type: file
       description: |
         Free Water corrected DTI Eigenvectors Nifti file.
-        Structure: [ val(meta), path(fw_dti_evecs) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - fw_dti_evecs:
+            type: file
+            description: Free water corrected DTI eigenvectors file.
       pattern: "*__evecs.nii.gz"
       mandatory: false
   - fw_dti_evals:
       type: file
       description: |
         Free Water corrected DTI Eigenvalues Nifti file.
-        Structure: [ val(meta), path(fw_dti_evals) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - fw_dti_evals:
+            type: file
+            description: Free water corrected DTI eigenvalues file.
       pattern: "*__evals.nii.gz"
       mandatory: false
   - fw_dti_residual:
       type: file
       description: |
         Free Water corrected DTI Residuals Nifti file.
-        Structure: [ val(meta), path(fw_dti_residual) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - fw_dti_residual:
+            type: file
+            description: Free water corrected DTI residuals file.
       pattern: "*__residual.nii.gz"
       mandatory: false
   - fw_dti_ga:
       type: file
       description: |
         Free Water corrected DTI Geodesic Anisotropy Nifti file.
-        Structure: [ val(meta), path(fw_dti_ga) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - fw_dti_ga:
+            type: file
+            description: Free water corrected DTI geodesic anisotropy file.
       pattern: "*__ga.nii.gz"
       mandatory: false
   - fw_dti_mode:
       type: file
       description: |
         Free Water corrected DTI Mode Nifti file.
-        Structure: [ val(meta), path(fw_dti_mode) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - fw_dti_mode:
+            type: file
+            description: Free water corrected DTI mode file.
       pattern: "*__mode.nii.gz"
       mandatory: false
   - fw_dti_norm:
       type: file
       description: |
         Free Water corrected DTI Norm Nifti file.
-        Structure: [ val(meta), path(fw_dti_norm) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - fw_dti_norm:
+            type: file
+            description: Free water corrected DTI norm file.
       pattern: "*__norm.nii.gz"
       mandatory: false
   - versions:
       type: file
       description: |
         File containing software versions
-        Structure: [ path(versions.yml) ]
+      structure:
+        - versions:
+            type: file
+            description: Versions YAML file.
       pattern: "versions.yml"
 authors:
   - "@levje"

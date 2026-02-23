@@ -16,6 +16,7 @@ nextflow_workflow {
     tag "registration/ants"
     tag "registration/antsapplytransforms"
 
+    tag "subworkflows/utils_options"
 
     tag "stub"
     options "-stub-run"
@@ -25,14 +26,14 @@ nextflow_workflow {
             script "../../load_test_data/main.nf"
             process {
                 """
-                input[0] = Channel.from( [ "processing.zip" ] )
+                input[0] = channel.from( [ "processing.zip" ] )
                 input[1] = "test.load-test-data"
                 """
             }
         }
     }
 
-    test("atlas_roimetrics - IIT atlas") {
+    test("atlas_roimetrics - IIT atlas - binary") {
         when {
             workflow {
                 """
@@ -51,7 +52,50 @@ nextflow_workflow {
                         file("\${test_data_directory}/rd.nii.gz"),
                         file("\${test_data_directory}/md.nii.gz")]
                     ]}
-                input[2] = [use_atlas_iit: true]
+                input[2] = [use_atlas_iit: true, use_binary_masks: true]
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out
+                        .findAll{ channel -> !channel.key.isInteger() && channel.value  }
+                        .collectEntries{ channel ->
+                            [(channel.key): ["versions"].contains(channel.key)
+                                ? channel.value
+                                : channel.value.collect{ subject ->
+                                    [ subject[0] ] + subject[1..-1].flatten().collect{ entry -> entry
+                                        ? file(entry).name
+                                        : "" }
+                            } ]
+                        }
+                ).match() }
+            )
+        }
+    }
+
+    test("atlas_roimetrics - IIT atlas - weighted") {
+        when {
+            workflow {
+                """
+                ch_split_test_data = LOAD_DATA.out.test_data_directory
+
+                input[0] = ch_split_test_data
+                    .map{ test_data_directory -> [
+                    [ id:'test', single_end:false ], // meta map
+                    file("\${test_data_directory}/b0.nii.gz")
+                    ]}
+                input[1] = ch_split_test_data
+                    .map{ test_data_directory -> [
+                        [ id:'test', single_end:false ], // meta map
+                        [file("\${test_data_directory}/fa.nii.gz"),
+                        file("\${test_data_directory}/ad.nii.gz"),
+                        file("\${test_data_directory}/rd.nii.gz"),
+                        file("\${test_data_directory}/md.nii.gz")]
+                    ]}
+                input[2] = [use_atlas_iit: true] // use_binary_mask: false
                 """
             }
         }
@@ -75,6 +119,7 @@ nextflow_workflow {
             )
         }
     }
+
     test("atlas_roimetrics - no atlas selected") {
         when {
             workflow {
@@ -94,11 +139,10 @@ nextflow_workflow {
                         file("\${test_data_directory}/rd.nii.gz"),
                         file("\${test_data_directory}/md.nii.gz")]
                     ]}
-                input[2] = [ : ]
+                input[2] = [ use_atlas_iit: false ]
                 """
             }
         }
-
         then {
             assert workflow.failed
         }

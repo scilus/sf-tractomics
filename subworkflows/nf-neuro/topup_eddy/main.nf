@@ -2,7 +2,7 @@
 include { PREPROC_TOPUP } from '../../../modules/nf-neuro/preproc/topup/main'
 include { PREPROC_EDDY } from '../../../modules/nf-neuro/preproc/eddy/main'
 include { UTILS_EXTRACTB0 } from '../../../modules/nf-neuro/utils/extractb0/main'
-include { BETCROP_FSLBETCROP } from '../../../modules/nf-neuro/betcrop/fslbetcrop/main'
+include { UTILS_OPTIONS } from '../utils_options/main'
 
 workflow TOPUP_EDDY {
 
@@ -15,15 +15,22 @@ workflow TOPUP_EDDY {
         ch_rev_dwi      // channel: [ val(meta), rev-dwi, rev-bval, rev-bvec ], optional
         ch_rev_b0       // channel: [ val(meta), rev-b0 ], optional
         ch_config_topup // channel: [ 'topup.cnf' ], optional
+        options         // Map of options [ options ]
 
     main:
-        ch_versions = Channel.empty()
-        ch_multiqc_files = Channel.empty()
+        // Merge options with defaults from meta.yml
+        UTILS_OPTIONS("${moduleDir}/meta.yml", options, true)
+        options = UTILS_OPTIONS.out.options.value
 
-        ch_topup_fieldcoeff = Channel.empty()
-        ch_topup_movpart = Channel.empty()
-        ch_b0_corrected = Channel.empty()
-        if (params.topup_eddy_run_topup) {
+        ch_versions = channel.empty()
+        ch_multiqc_files = channel.empty()
+
+        ch_topup_fieldcoeff = channel.empty()
+        ch_topup_movpart = channel.empty()
+        ch_b0_corrected = channel.empty()
+        ch_b0_mask = channel.empty()
+
+        if ( options.topup_eddy_run_topup ) {
             // ** Create channel for TOPUP ** //
             // Result : [ meta, dwi, bval, bvec, b0 | [], rev-dwi | [], rev-bval | [], rev-bvec | [], rev-b0 | [] ]
             //  Steps :
@@ -54,8 +61,7 @@ workflow TOPUP_EDDY {
             ch_b0_corrected = PREPROC_TOPUP.out.topup_corrected_b0s
         }
 
-
-        if (params.topup_eddy_run_eddy) {
+        if ( options.topup_eddy_run_eddy ) {
             // ** Create channel for EDDY ** //
             // Result : [ meta, dwi, bval, bvec, rev-dwi | [], rev-bval | [], rev-bvec | [], b0 | [], coeffs | [], movpar | [] ]
             //  Steps :
@@ -96,13 +102,6 @@ workflow TOPUP_EDDY {
                 .join(PREPROC_EDDY.out.bval_corrected)
                 .join(PREPROC_EDDY.out.bvec_corrected)
             ch_b0_mask = PREPROC_EDDY.out.b0_mask
-        }
-        else {
-            // Compute bet mask on b0, since Eddy did not do it
-            BETCROP_FSLBETCROP(ch_b0_corrected.map{ it + [[], []] })
-            ch_versions = ch_versions.mix(BETCROP_FSLBETCROP.out.versions.first())
-
-            ch_b0_mask = BETCROP_FSLBETCROP.out.mask
         }
 
         ch_output_dwi = ch_dwi

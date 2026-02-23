@@ -19,6 +19,8 @@ include { RECONST_QBALL      } from '../../../modules/nf-neuro/reconst/qball/mai
 include { TRACKING_PFTTRACKING   } from '../../../modules/nf-neuro/tracking/pfttracking/main'
 include { TRACKING_LOCALTRACKING } from '../../../modules/nf-neuro/tracking/localtracking/main'
 
+// UTILS
+include { UTILS_OPTIONS } from '../utils_options/main'
 
 // ** UTILITY FUNCTIONS ** //
 
@@ -32,22 +34,27 @@ def group_frf ( label, ch_frf ) {
 
 workflow TRACTOFLOW {
     take:
-        ch_dwi              // channel : [required] meta, dwi, bval, bvec
-        ch_t1               // channel : [required] meta, t1
-        ch_sbref            // channel : [optional] meta, sbref
-        ch_rev_dwi          // channel : [optional] meta, rev_dwi, rev_bval, rev_bvec
-        ch_rev_sbref        // channel : [optional] meta, rev_sbref
-        ch_wmparc           // channel : [optional] meta, wmparc
-        ch_aparc_aseg       // channel : [optional] meta, aparc_aseg
-        ch_topup_config     // channel : [optional] topup_config
-        ch_bet_template     // channel : [optional] meta, bet_template
-        ch_bet_probability  // channel : [optional] meta, bet_probability
-        ch_lesion_mask      // channel : [optional] meta, lesion_mask
+        ch_dwi                  // channel : [required] meta, dwi, bval, bvec
+        ch_t1                   // channel : [required] meta, t1
+        ch_sbref                // channel : [optional] meta, sbref
+        ch_rev_dwi              // channel : [optional] meta, rev_dwi, rev_bval, rev_bvec
+        ch_rev_sbref            // channel : [optional] meta, rev_sbref
+        ch_wmparc               // channel : [optional] meta, wmparc
+        ch_aparc_aseg           // channel : [optional] meta, aparc_aseg
+        ch_topup_config         // channel : [optional] topup_config
+        ch_bet_template         // channel : [optional] meta, bet_template
+        ch_bet_probability      // channel : [optional] meta, bet_probability
+        ch_synthstrip_weights   // channel : [optional] meta, weights or weights
+        ch_lesion_mask          // channel : [optional] meta, lesion_mask
+        options                 // Map of options [ options ]
     main:
+        // Merge options with defaults from meta.yml
+        UTILS_OPTIONS("${moduleDir}/meta.yml", options, true)
+        options = UTILS_OPTIONS.out.options.value
 
-        ch_versions = Channel.empty()
-        ch_mqc_files = Channel.empty()
-        ch_global_mqc_files = Channel.empty()
+        ch_versions = channel.empty()
+        ch_mqc_files = channel.empty()
+        ch_global_mqc_files = channel.empty()
 
         /* PREPROCESSING */
 
@@ -59,7 +66,19 @@ workflow TRACTOFLOW {
             ch_rev_dwi,
             ch_sbref,
             ch_rev_sbref,
-            ch_topup_config
+            ch_synthstrip_weights,
+            ch_topup_config,
+            [
+                "preproc_dwi_run_denoising": options.preproc_dwi_run_denoising,
+                "preproc_dwi_run_degibbs": options.preproc_dwi_run_degibbs,
+                "topup_eddy_run_topup": options.topup_eddy_run_topup,
+                "topup_eddy_run_eddy": options.topup_eddy_run_eddy,
+                "preproc_dwi_run_N4": options.preproc_dwi_run_N4,
+                "preproc_dwi_run_normalize": options.preproc_dwi_run_normalize,
+                "preproc_dwi_run_resampling": options.preproc_dwi_run_resampling,
+                "preproc_dwi_run_synthstrip": options.preproc_dwi_run_synthstrip,
+                "preproc_dwi_keep_dwi_with_skull": options.preproc_dwi_keep_dwi_with_skull
+            ]
         )
         ch_versions = ch_versions.mix(PREPROC_DWI.out.versions.first())
         ch_mqc_files = ch_mqc_files.mix(PREPROC_DWI.out.mqc)
@@ -71,11 +90,19 @@ workflow TRACTOFLOW {
             ch_t1,
             ch_bet_template,
             ch_bet_probability,
-            Channel.empty(),
-            Channel.empty(),
-            Channel.empty(),
-            Channel.empty(),
-            Channel.empty()
+            channel.empty(),
+            channel.empty(),
+            channel.empty(),
+            channel.empty(),
+            channel.empty(),
+            [
+                "preproc_t1_run_denoising": options.preproc_t1_run_denoising,
+                "preproc_t1_run_N4": options.preproc_t1_run_N4,
+                "preproc_t1_run_resampling": options.preproc_t1_run_resampling,
+                "preproc_t1_run_synthstrip": options.preproc_t1_run_synthstrip,
+                "preproc_t1_run_ants_bet": options.preproc_t1_run_ants_bet,
+                "preproc_t1_run_crop": options.preproc_t1_run_crop
+            ]
         )
         ch_versions = ch_versions.mix(PREPROC_T1.out.versions.first())
 
@@ -87,7 +114,10 @@ workflow TRACTOFLOW {
         ch_dti_metrics = PREPROC_DWI.out.dwi
             .join(PREPROC_DWI.out.bval)
             .join(PREPROC_DWI.out.bvec)
-            .join(PREPROC_DWI.out.b0_mask)
+
+        ch_dti_metrics = !options.preproc_dwi_keep_dwi_with_skull
+            ? ch_dti_metrics.join(PREPROC_DWI.out.b0_mask)
+            : ch_dti_metrics.map{ it + [[]] }
 
         RECONST_DTIMETRICS( ch_dti_metrics )
         ch_versions = ch_versions.mix(RECONST_DTIMETRICS.out.versions.first())
@@ -100,10 +130,14 @@ workflow TRACTOFLOW {
             PREPROC_DWI.out.b0,
             PREPROC_T1.out.t1_final,
             RECONST_DTIMETRICS.out.fa,
-            Channel.empty(),
-            Channel.empty(),
-            Channel.empty(),
-            Channel.empty()
+            channel.empty(),
+            channel.empty(),
+            channel.empty(),
+            channel.empty(),
+            [
+                "run_easyreg": options.run_easyreg,
+                "run_synthmorph": options.run_synthmorph,
+            ]
         )
         ch_versions = ch_versions.mix(T1_REGISTRATION.out.versions.first())
         ch_mqc_files = ch_mqc_files.mix(T1_REGISTRATION.out.mqc)
@@ -147,10 +181,11 @@ workflow TRACTOFLOW {
         //
         ANATOMICAL_SEGMENTATION(
             T1_REGISTRATION.out.image_warped,
-            TRANSFORM_WMPARC.out.warped_image
-                .join(TRANSFORM_APARC_ASEG.out.warped_image),
+            TRANSFORM_APARC_ASEG.out.warped_image
+                .join(TRANSFORM_WMPARC.out.warped_image),
             TRANSFORM_LESION_MASK.out.warped_image,
-            Channel.empty()
+            channel.empty(),
+            [ "run_synthseg": options.run_synthseg ]
         )
         ch_versions = ch_versions.mix(ANATOMICAL_SEGMENTATION.out.versions.first())
         ch_global_mqc_files = ch_global_mqc_files.mix(ANATOMICAL_SEGMENTATION.out.qc_score)
@@ -180,7 +215,7 @@ workflow TRACTOFLOW {
             .join(RECONST_FRF.out.csf_frf)
             .mix(ch_single_frf)
 
-        if ( params.frf_average_from_data ) {
+        if ( options.frf_average_from_data ) {
             ch_single_frf = group_frf("ssst", RECONST_FRF.out.frf)
 
             ch_wm_frf = group_frf("wm", RECONST_FRF.out.wm_frf)
@@ -218,7 +253,12 @@ workflow TRACTOFLOW {
         ch_reconst_fodf = PREPROC_DWI.out.dwi
             .join(PREPROC_DWI.out.bval)
             .join(PREPROC_DWI.out.bvec)
-            .join(PREPROC_DWI.out.b0_mask)
+
+        ch_reconst_fodf = !options.preproc_dwi_keep_dwi_with_skull
+            ? ch_reconst_fodf.join(PREPROC_DWI.out.b0_mask)
+            : ch_reconst_fodf.map{ it + [[]] }
+
+        ch_reconst_fodf = ch_reconst_fodf
             .join(RECONST_DTIMETRICS.out.fa)
             .join(RECONST_DTIMETRICS.out.md)
             .join(ch_fiber_response)
@@ -229,22 +269,26 @@ workflow TRACTOFLOW {
         //
         // MODULE: Run RECONST/QBALL
         //
-        ch_qball               = Channel.empty()
-        ch_qball_a_power       = Channel.empty()
-        ch_qball_peaks         = Channel.empty()
-        ch_qball_peak_indices  = Channel.empty()
-        ch_qball_gfa           = Channel.empty()
-        ch_qball_nufo          = Channel.empty()
-        if (params.run_qball) {
+        ch_qball               = channel.empty()
+        ch_qball_a_power       = channel.empty()
+        ch_qball_peaks         = channel.empty()
+        ch_qball_peak_indices  = channel.empty()
+        ch_qball_gfa           = channel.empty()
+        ch_qball_nufo          = channel.empty()
+        if ( options.run_qball ) {
             ch_qball_input = PREPROC_DWI.out.dwi
                 .join(PREPROC_DWI.out.bval)
                 .join(PREPROC_DWI.out.bvec)
-                .join(PREPROC_DWI.out.b0_mask)
+
+            ch_qball_input = !options.preproc_dwi_keep_dwi_with_skull
+                ? ch_qball_input.join(PREPROC_DWI.out.b0_mask)
+                : ch_qball_input.map{ it + [[]] }
+
             RECONST_QBALL( ch_qball_input )
 
             ch_versions = ch_versions.mix(RECONST_QBALL.out.versions.first())
 
-            if (params.use_qball_for_tracking) {
+            if ( options.use_qball_for_tracking ) {
                 ch_diffusion_model = RECONST_QBALL.out.qball
             }
 
@@ -260,8 +304,8 @@ workflow TRACTOFLOW {
         //
         // MODULE: Run TRACKING/PFTTRACKING
         //
-        ch_pft_tracking = Channel.empty()
-        if ( params.run_pft ) {
+        ch_pft_tracking = channel.empty()
+        if ( options.run_pft_tracking ) {
             ch_input_pft_tracking = ANATOMICAL_SEGMENTATION.out.wm_mask
                 .join(ANATOMICAL_SEGMENTATION.out.gm_mask)
                 .join(ANATOMICAL_SEGMENTATION.out.csf_mask)
@@ -283,8 +327,8 @@ workflow TRACTOFLOW {
         //
         // MODULE: Run TRACKING/LOCALTRACKING
         //
-        ch_local_tracking = Channel.empty()
-        if ( params.run_local_tracking ) {
+        ch_local_tracking = channel.empty()
+        if ( options.run_local_tracking ) {
             ch_input_local_tracking = ANATOMICAL_SEGMENTATION.out.wm_mask
                 .join(ch_diffusion_model)
                 .join(RECONST_DTIMETRICS.out.fa)

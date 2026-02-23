@@ -20,13 +20,20 @@ components:
   - segmentation/fastseg
   - segmentation/freesurferseg
   - segmentation/synthseg
+  - utils_options
 input:
   - ch_image:
       type: file
       description: |
         The input channel containing the anatomical images (typically T1s). If provided, the
         subworkflow will perform segmentation using FSL's fast.
-        Structure: [ val(meta), path(image) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - image:
+            type: file
+            description: Anatomical image file.
       pattern: "*.{nii,nii.gz}"
   - ch_freesurferseg:
       type: file
@@ -34,105 +41,204 @@ input:
         The input channel containing freesurfer parcellations files (aparc+aseg and wm_parc
         parcellations). If provided, the subworkflow will use Scilpy's tools to convert the
         parcellations into masks.
-        Structure: [ val(meta), path(aparc_aseg), path(wm_parc) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - aparc_aseg:
+            type: file
+            description: FreeSurfer aparc+aseg parcellation file.
+        - wm_parc:
+            type: file
+            description: FreeSurfer white matter parcellation file.
       pattern: "*.mgz"
       mandatory: false
   - ch_lesion:
       type: file
       description: |
         The input channel containing a lesion mask file to correct the white matter mask. The lesion mask must be a binary mask.
-        Structure: [ val(meta), path(lesion) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - lesion:
+            type: file
+            description: Lesion mask file.
       pattern: "*{nii.nii.gz}"
       mandatory: false
   - ch_fs_license:
       type: file
       description: |
         The input channel containing the FreeSurfer license.To get one, go to https://surfer.nmr.mgh.harvard.edu/registration.html. Optional. If you have already set your license as prescribed by Freesurfer (copied to a .license file in your $FREESURFER_HOME), this is not required.
-        Structure: [ val(meta). path(fs_license) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - fs_license:
+            type: file
+            description: FreeSurfer license file.
       mandatory: false
+  - options:
+      type: map
+      description: |
+        Map of options for the subworkflow.
+      entries:
+        run_synthseg:
+          type: boolean
+          description: Whether to run SynthSeg for segmentation. If false, FSL's fast will be used for segmentation.
+          default: false
 output:
   - wm_mask:
       type: file
       description: |
         Channel containing WM mask files. Will be outputted regardless of the selected
         segmentation method and inputs provided.
-        Structure: [ val(meta), path(wm_mask) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - wm_mask:
+            type: file
+            description: White matter mask file.
       pattern: "*.{nii,nii.gz}"
   - gm_mask:
       type: file
       description: |
         Channel containing GM mask files. Will be outputted regardless of the selected
         segmentation method and inputs provided.
-        Structure: [ val(meta), path(gm_mask) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - gm_mask:
+            type: file
+            description: Gray matter mask file.
       pattern: "*.{nii,nii.gz}"
   - csf_mask:
       type: file
       description: |
         Channel containing CSF mask files. Will be outputted regardless of the selected
         segmentation method and inputs provided.
-        Structure: [ val(meta), path(csf_mask) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - csf_mask:
+            type: file
+            description: Cerebrospinal fluid mask file.
       pattern: "*.{nii,nii.gz}"
   - wm_map:
       type: file
       description: |
         Channel containing WM probability maps.
-        Structure: [ val(meta), path(wm_map) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - wm_map:
+            type: file
+            description: White matter probability map file.
       pattern: "*.{nii,nii.gz}"
       mandatory: false
   - gm_map:
       type: file
       description: |
         Channel containing GM probability maps.
-        Structure: [ val(meta), path(gm_map) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - gm_map:
+            type: file
+            description: Gray matter probability map file.
       pattern: "*.{nii,nii.gz}"
       mandatory: false
   - csf_map:
       type: file
       description: |
         Channel containing CSF probability maps.
-        Structure: [ val(meta), path(csf_map) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - csf_map:
+            type: file
+            description: Cerebrospinal fluid probability map file.
       pattern: "*.{nii,nii.gz}"
       mandatory: false
   - seg:
       type: file
       description: |
         Channel containing the optional nifti segmentation volume from synthseg.
-        Structure: [ val(meta), path(seg) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - seg:
+            type: file
+            description: SynthSeg segmentation file.
       pattern: "*.{nii,nii.gz}"
       mandatory: false
   - aparc_aseg:
       type: file
       description: |
         Channel containing the optional nifti cortical parcellation and segmentation volume from synthseg.
-        Structure: [ val(meta), path(aparc_aseg) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - aparc_aseg:
+            type: file
+            description: SynthSeg aparc+aseg parcellation file.
       pattern: "*.{nii,nii.gz}"
       mandatory: false
   - resample:
       type: file
       description: |
         Channel containing the optional resampled images at 1mm.
-        Structure: [ val(meta), path(resample) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - resample:
+            type: file
+            description: Resampled image file.
       pattern: "*.{nii.nii.gz}"
       mandatory: false
   - volume:
       type: file
       description: |
         Channel containing the optional Output CSV file with volumes for all structures and subjects.
-        Structure: [ val(meta), path(volume) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - volume:
+            type: file
+            description: Volumes CSV file.
       pattern: "*.csv"
       mandatory: false
   - qc_score:
       type: file
       description: |
         Channel containing the optional output CSV file with qc scores for all subjects.
-        Structure: [ val(meta), path(qc_score) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - qc_score:
+            type: file
+            description: QC scores CSV file.
       pattern: "*.csv"
       mandatory: false
   - versions:
       type: file
       description: |
         File containing software versions.
-        Structure: [ path(versions.yml) ]
+      structure:
+        - versions:
+            type: file
+            description: Versions YAML file.
       pattern: "versions.yml"
 authors:
   - "@gagnonanthony"

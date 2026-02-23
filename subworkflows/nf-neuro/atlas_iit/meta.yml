@@ -2,10 +2,12 @@
 name: "atlas_iit"
 description: |
   This subworkflow fetches and processes the IIT Human Brain Atlas including the mean B0 image and bundle masks.
-  The authors of the IIT WM atlas only provide track density images (TDI) for the bundle masks.
-  Therefore, in this subworkflow, we apply a lower threshold to the TDI images to create binary bundle masks.
-  The threshold values are based on recommendations from the IIT authors. For more information
-  about the atlas and the recommended thresholds, please refer to
+  The authors of the IIT WM atlas only provide track density images (TDI) which can be used to
+  create binary bundle masks by applying a threshold. Therefore, in this subworkflow, we offer the option to
+  apply such a threshold (with the values recommended by the IIT authors) to create binary bundle masks, or
+  to simply output the TDI bundle maps which can also be used as weighted representations of the bundles
+  for downstream analyses (e.g. for extracting metrics weighted by the TDI values).
+  For more information about the atlas and the recommended thresholds, please refer to
   [this link](https://www.nitrc.org/frs/download.php/12417/IIT_Atlas_v.5.0_MANUAL.pdf)
 
   The user can also provide their own Mean B0 map and/or bundle masks directory, using the parameters
@@ -23,29 +25,38 @@ keywords:
   - template
 components:
   - image/math
-args:
-  - atlas_iit_b0:
-      type: string
-      description: |
-        Path to a Mean B0 map of the IIT Human Brain Atlas.
-        If provided, this input will be used instead of downloading the Mean B0 map.
-        Structure: path(img)
+  - utils_options
+input:
+  - options:
+      type: map
+      description: Map of options for the atlas_iit subworkflow.
       mandatory: false
-      default: null
-  - atlas_iit_bundle_masks_dir:
-      type: string
-      description: |
-        Path to a directory containing IIT bundle masks.
-        If provided, these inputs will be used instead of downloading and processing the bundle masks.
-      Structure: path(dir)
-      mandatory: false
-      default: null
+      entries:
+        threshold_bundles:
+          type: boolean
+          description: If enabled, this will threshold the TDI bundle maps with the recommended thresholds to create binary bundle masks. If disabled, the subworkflow will output the TDI bundle maps.
+          default: false
+        smooth_sigma:
+          type: float
+          description: If `threshold_bundles` is enabled, this will apply a gaussian smoothing with the specified sigma to the TDI bundle maps before thresholding. This is based on the recommendation of the IIT atlas authors to apply some smoothing to the TDI maps before thresholding.
+          default: 1.0
+        atlas_iit_b0:
+          type: string
+          description: Path to a Mean B0 map of the IIT Human Brain Atlas. If provided, this input will be used instead of downloading the Mean B0 map.
+          default: null
+        atlas_iit_bundle_masks_dir:
+          type: string
+          description: Path to a directory containing IIT bundle masks. If provided, these inputs will be used instead of downloading and processing the bundle masks.
+          default: null
 output:
   - bundle_masks:
       type: file
       description: |
         List of IIT binary bundle masks.
-        Structure: [ path(img), path(img), ... ]
+      structure:
+        - bundle_masks:
+            type: file
+            description: List of IIT binary bundle mask files.
       pattern: "*.nii.gz"
       ontologies:
         - edam: http://edamontology.org/format_4001 # NIFTI format
@@ -53,7 +64,10 @@ output:
       type: file
       description: |
         Mean B0 map of the IIT Human Brain Atlas.
-        Structure: [ path(img) ]
+      structure:
+        - b0:
+            type: file
+            description: Mean B0 image file.
       pattern: "*_b0.nii.gz"
       ontologies:
         - edam: http://edamontology.org/format_4001 # NIFTI format
@@ -61,7 +75,10 @@ output:
       type: file
       description: |
         File containing software versions
-        Structure: [ path(versions.yml) ]
+      structure:
+        - versions:
+            type: file
+            description: Versions YAML file.
       pattern: "versions.yml"
 authors:
   - "@levje"

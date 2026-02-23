@@ -11,6 +11,10 @@ nextflow_workflow {
     tag "subworkflows/topup_eddy"
     tag "image/cropvolume"
     tag "betcrop/fslbetcrop"
+    tag "betcrop/synthstrip"
+    tag "image/powderaverage"
+    tag "image/applymask"
+    tag "image/convert"
     tag "denoising/mppca"
     tag "preproc/gibbs"
     tag "image/resample"
@@ -18,6 +22,7 @@ nextflow_workflow {
     tag "preproc/normalize"
     tag "utils/extractb0"
     tag "topup_eddy"
+    tag "subworkflows/utils_options"
 
     tag "load_test_data"
 
@@ -29,15 +34,14 @@ nextflow_workflow {
             script "../../load_test_data/main.nf"
             process {
                 """
-                input[0] = Channel.from( [ "topup_eddy_light.zip" ] )
+                input[0] = channel.from( [ "topup_eddy_light.zip" ] )
                 input[1] = "test.load-test-data"
                 """
             }
         }
     }
 
-    test("preproc_dwi - AP DWI | PA sbref") {
-
+    test("preproc_dwi - AP DWI | skip steps") {
         when {
             workflow {
                 """
@@ -48,18 +52,68 @@ nextflow_workflow {
                         file("\${test_data_directory}/sub-01_dir-AP_dwi.bval"),
                         file("\${test_data_directory}/sub-01_dir-AP_dwi.bvec")
                     ]}
-                input[1] = Channel.from( [] )
-                input[2] = Channel.from( [] )
+                input[1] = channel.from( [] )
+                input[2] = channel.from( [] )
+                input[3] = channel.from( [] )
+                input[4] = channel.empty()
+                input[5] = channel.from( [] )
+                input[6] = [
+                    "topup_eddy_run_topup": false,
+                    "topup_eddy_run_eddy": false,
+                    "preproc_dwi_run_denoising": false,
+                    "preproc_dwi_run_degibbs": false,
+                    "preproc_dwi_run_normalize": false,
+                    "preproc_dwi_keep_dwi_with_skull": true
+                ]
+                """
+            }
+        }
+        then {
+            assertAll(
+                { assert workflow.success },
+                { assert snapshot(
+                    workflow.out
+                        .findAll{ channel -> !channel.key.isInteger() && channel.value  }
+                        .collectEntries{ channel ->
+                            [(channel.key): ["versions"].contains(channel.key)
+                                ? channel.value
+                                : channel.value.collect{ subject ->
+                                    [ subject[0] ] + subject[1..-1].flatten().collect{ entry -> entry
+                                        ? file(entry).name
+                                        : "" }
+                            } ]
+                        }
+                ).match() }
+            )
+        }
+    }
+
+    test("preproc_dwi - AP DWI | PA sbref") {
+        when {
+            workflow {
+                """
+                input[0] = LOAD_DATA.out.test_data_directory.map{
+                    test_data_directory -> [
+                        [ id:'test' ],
+                        file("\${test_data_directory}/sub-01_dir-AP_dwi.nii.gz"),
+                        file("\${test_data_directory}/sub-01_dir-AP_dwi.bval"),
+                        file("\${test_data_directory}/sub-01_dir-AP_dwi.bvec")
+                    ]}
+                input[1] = channel.from( [] )
+                input[2] = channel.from( [] )
                 input[3] = LOAD_DATA.out.test_data_directory.map{
                     test_data_directory -> [
                         [ id:'test' ],
                         file("\${test_data_directory}/sub-01_dir-PA_sbref.nii.gz")
                     ]}
-                input[4] = Channel.from( [] )
+                input[4] = channel.empty()
+                input[5] = channel.from( [] )
+                input[6] = [
+                    "preproc_dwi_run_synthstrip": true
+                ]
                 """
             }
         }
-
         then {
             assertAll(
                 { assert workflow.success },
@@ -81,7 +135,6 @@ nextflow_workflow {
     }
 
     test("preproc_dwi - AP DWI | PA DWI") {
-
         when {
             workflow {
                 """
@@ -99,13 +152,16 @@ nextflow_workflow {
                         file("\${test_data_directory}/sub-01_dir-PA_dwi.bval"),
                         file("\${test_data_directory}/sub-01_dir-PA_dwi.bvec")
                     ]}
-                input[2] = Channel.from( [] )
-                input[3] = Channel.from( [] )
-                input[4] = Channel.from( [] )
+                input[2] = channel.from( [] )
+                input[3] = channel.from( [] )
+                input[4] = channel.from("https://surfer.nmr.mgh.harvard.edu/docs/synthstrip/requirements/synthstrip.1.pt")
+                input[5] = channel.from( [] )
+                input[6] = [
+                    "preproc_dwi_run_synthstrip": true
+                ]
                 """
             }
         }
-
         then {
             assertAll(
                 { assert workflow.success },
@@ -126,9 +182,7 @@ nextflow_workflow {
         }
     }
 
-
     test("preproc_dwi - AP DWI+sbref | PA DWI+sbref") {
-
         when {
             workflow {
                 """
@@ -156,11 +210,13 @@ nextflow_workflow {
                         [ id:'test' ],
                         file("\${test_data_directory}/sub-01_dir-PA_sbref.nii.gz")
                     ]}
-                input[4] = Channel.from( [] )
+                input[4] = channel.from("https://surfer.nmr.mgh.harvard.edu/docs/synthstrip/requirements/synthstrip.1.pt")
+                    .map{ weights -> [ [ id:'test' ], weights ] }
+                input[5] = channel.from( [] )
+                input[6] = [:]
                 """
             }
         }
-
         then {
             assertAll(
                 { assert workflow.success },

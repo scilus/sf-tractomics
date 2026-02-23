@@ -12,6 +12,8 @@ nextflow_workflow {
 
     tag "bundle/recognize"
 
+    tag "subworkflows/utils_options"
+
     tag "load_test_data"
 
     tag "stub"
@@ -22,7 +24,7 @@ nextflow_workflow {
             script "../../load_test_data/main.nf"
             process {
                 """
-                input[0] = Channel.from( [ "tracking.zip", "freesurfer.zip" ] )
+                input[0] = channel.from( [ "tracking.zip", "freesurfer.zip" ] )
                 input[1] = "test.load-test-data"
                 """
             }
@@ -50,7 +52,8 @@ nextflow_workflow {
                         file("\${test_data_directory}/pft.trk")
                     ]
                 }
-                input[2] = Channel.empty()
+                input[2] = channel.empty()
+                input[3] = [:]
                 """
             }
         }
@@ -74,8 +77,6 @@ nextflow_workflow {
     }
 
     test("rbx - download atlas - synthmorph registration") {
-        config "./synthmorph.config"
-
         when {
             workflow {
                 """
@@ -99,6 +100,7 @@ nextflow_workflow {
                 input[2] = ch_split_test_data.freesurfer.map{
                     test_data_directory -> file("\${test_data_directory}/license.txt")
                 }
+                input[3] = [ "run_synthmorph": true ]
                 """
             }
         }
