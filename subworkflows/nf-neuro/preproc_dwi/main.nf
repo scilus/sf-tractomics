@@ -13,7 +13,7 @@ include { PREPROC_N4 as N4_DWI } from '../../../modules/nf-neuro/preproc/n4/main
 include { PREPROC_NORMALIZE as NORMALIZE_DWI } from '../../../modules/nf-neuro/preproc/normalize/main'
 include { IMAGE_RESAMPLE as RESAMPLE_DWI } from '../../../modules/nf-neuro/image/resample/main'
 include { IMAGE_RESAMPLE as RESAMPLE_MASK } from '../../../modules/nf-neuro/image/resample/main'
-include { UTILS_EXTRACTB0 } from '../../../modules/nf-neuro/utils/extractb0/main'
+include { UTILS_EXTRACTB0 as EXTRACTB0} from '../../../modules/nf-neuro/utils/extractb0/main'
 include { TOPUP_EDDY } from '../topup_eddy/main'
 include { UTILS_OPTIONS } from '../utils_options/main'
 
@@ -260,13 +260,13 @@ workflow PREPROC_DWI {
         } // No else, we just use ch_dwi
 
         // ** Extract B0 ** //
-        UTILS_EXTRACTB0 ( ch_dwi )
-        ch_versions = ch_versions.mix(UTILS_EXTRACTB0.out.versions.first())
+        EXTRACTB0 ( ch_dwi )
+        ch_versions = ch_versions.mix(EXTRACTB0.out.versions.first())
 
         if ( options.preproc_dwi_run_resampling ) {
             // ** Resample mask ** //
             ch_resample_mask = ch_mask
-                .join(UTILS_EXTRACTB0.out.b0)
+                .join(EXTRACTB0.out.b0)
 
             RESAMPLE_MASK ( ch_resample_mask )
             ch_mask = RESAMPLE_MASK.out.image
@@ -287,7 +287,7 @@ workflow PREPROC_DWI {
         bval                = ch_bval           // channel: [ val(meta), bval-corrected ]
         bvec                = ch_bvec           // channel: [ val(meta), bvec-corrected ]
         pwd_avg             = ch_pwd_avg                    // channel: [ val(meta), pwd-avg ]
-        b0                  = UTILS_EXTRACTB0.out.b0        // channel: [ val(meta), b0-preproc ]
+        b0                  = EXTRACTB0.out.b0        // channel: [ val(meta), b0-preproc ]
         b0_mask             = ch_mask                       // channel: [ val(meta), b0-mask ]
         dwi_bounding_box    = ch_bbox                       // channel: [ val(meta), dwi-bounding-box ]
         mqc                 = ch_multiqc_files              // channel: [ val(meta), mqc ]

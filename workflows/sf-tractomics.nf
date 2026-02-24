@@ -65,9 +65,9 @@ workflow SF_TRACTOMICS {
     /* Load bet template */
     template_directory = file(params.template_t1 ?: "$projectDir/assets/templates/mni_152_sym_09c/t1")
     if ( template_directory.exists() && template_directory.isDirectory() ){
-        ch_bet_template = ch_t1.map{ it -> it[0] }
+        ch_bet_template = ch_t1.map{ meta, _t1 ->  meta}
             .combine(channel.fromPath(template_directory / "t1_template.nii.gz"))
-        ch_bet_probability = ch_t1.map{ it -> it[0] }
+        ch_bet_probability = ch_t1.map{ meta, _t1 ->  meta }
             .combine(channel.fromPath(template_directory / "t1_brain_probability_map.nii.gz"))
     }
     else {
