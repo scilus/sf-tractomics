@@ -27,7 +27,7 @@ lint:
   schema_lint: false
   schema_params: false
   nfcore_components: false
-nf_core_version: 3.5.2
+nf_core_version: 3.5.1
 repository_type: pipeline
 template:
   author: "@AlexVCaron"
