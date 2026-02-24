@@ -104,7 +104,7 @@ workflow SF_TRACTOMICS {
             "preproc_dwi_run_resampling": params.run_dwi_resampling,
             "preproc_t1_run_denoising": params.run_t1_denoising,
             "preproc_t1_run_N4": params.run_t1_N4,
-            "preproc_t1_run_resample": params.run_t1_resample,
+            "preproc_t1_run_resample": params.run_t1_resampling,
             "preproc_t1_run_synthstrip": params.run_t1_synthstrip,
             "preproc_t1_run_ants_bet": params.run_t1_ants_bet,
             "preproc_t1_run_crop": params.run_t1_crop,

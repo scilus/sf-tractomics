@@ -287,6 +287,24 @@
                     "description": "Run T1 N4 bias correction.",
                     "help_text": "Run T1 N4 bias correction."
                 },
+                "run_t1_crop": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Run T1 cropping.",
+                    "help_text": "Run T1 cropping."
+                },
+                "run_t1_ants_bet": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Run T1 brain extraction using ANTs.",
+                    "help_text": "Run T1 brain extraction using ANTs."
+                },
+                "run_t1_synthstrip": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Run T1 brain extraction using Synthstrip.",
+                    "help_text": "Run T1 brain extraction using Synthstrip."
+                },
                 "template_t1": {
                     "type": "string",
                     "description": "Path to the template for antsBrainExtraction. The folder must contain t1_template.nii.gz and t1_brain_probability_map.nii.gz. Defaults to the mni_152_sym_09c template directory delivered with the pipeline in the assets directory.",
