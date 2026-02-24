@@ -340,7 +340,7 @@ workflow SF_TRACTOMICS {
             [
                 template: params.template,
                 templateflow_home: params.templateflow_home,
-                template_res: params.templateflow_resolution,
+                templateflow_res: params.templateflow_resolution,
                 templateflow_cohort: params.templateflow_cohort,
                 run_easyreg: params.run_easyreg,
                 run_synthmorph: params.run_synthmorph
