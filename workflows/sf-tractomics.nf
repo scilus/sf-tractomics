@@ -50,6 +50,7 @@ workflow SF_TRACTOMICS {
     ch_topup_config = channel.empty()
     ch_bet_template = channel.empty()
     ch_bet_probability = channel.empty()
+    ch_synthstrip_weights = channel.empty()
 
     /* Load topup config if provided */
     if ( params.config_topup ) {
@@ -63,7 +64,7 @@ workflow SF_TRACTOMICS {
 
     /* Load bet template */
     template_directory = file(params.template_t1 ?: "$projectDir/assets/templates/mni_152_sym_09c/t1")
-    if (template_directory.exists() && template_directory.isDirectory()){
+    if ( template_directory.exists() && template_directory.isDirectory() ){
         ch_bet_template = ch_t1.map{ it -> it[0] }
             .combine(channel.fromPath(template_directory / "t1_template.nii.gz"))
         ch_bet_probability = ch_t1.map{ it -> it[0] }
@@ -71,6 +72,10 @@ workflow SF_TRACTOMICS {
     }
     else {
         error "A T1w template is required for brain extraction. Provide its directory with params.template_t1."
+    }
+
+    if ( params.synthstrip_weights ) {
+        ch_synthstrip_weights = channel.fromPath(params.synthstrip_weights, checkIfExists: true)
     }
 
     TRACTOFLOW(
@@ -89,7 +94,7 @@ workflow SF_TRACTOMICS {
         ch_topup_config,
         ch_bet_template,
         ch_bet_probability,
-        channel.empty(),
+        ch_synthstrip_weights,
         ch_lesion
             .filter{ it -> it[1] },
         [
@@ -123,7 +128,7 @@ workflow SF_TRACTOMICS {
     // Ensemble tracking
     //
     ch_input_tracking_qc = channel.empty()
-    if (params.run_local_tracking && params.run_pft_tracking) {
+    if ( params.run_local_tracking && params.run_pft_tracking ) {
         ch_tractogram_math_input = TRACTOFLOW.out.pft_tractogram
             .join(TRACTOFLOW.out.local_tractogram)
             .map {
@@ -132,7 +137,7 @@ workflow SF_TRACTOMICS {
         ENSEMBLE_TRACKING(ch_tractogram_math_input)
         ch_input_tracking_qc = ENSEMBLE_TRACKING.out.trk
     }
-    else if (params.run_local_tracking || params.run_pft_tracking) {
+    else if ( params.run_local_tracking || params.run_pft_tracking ) {
         ch_input_tracking_qc = TRACTOFLOW.out.pft_tractogram
             .mix(TRACTOFLOW.out.local_tractogram)
     }
@@ -149,7 +154,7 @@ workflow SF_TRACTOMICS {
     //
     // Run RECONST/SH_METRICS
     //
-    if (params.sh_fitting) {
+    if ( params.sh_fitting ) {
         RECONST_SHSIGNAL(
             TRACTOFLOW.out.dwi
                 .map{ it -> it + [[]] }
@@ -160,7 +165,7 @@ workflow SF_TRACTOMICS {
     // Run BundleSeg
     //
     ch_bundle_seg = channel.empty()
-    if (params.run_bundle_seg) {
+    if ( params.run_bundle_seg ) {
         BUNDLE_SEG(
             TRACTOFLOW.out.dti_fa,
             TRACTOFLOW.out.pft_tractogram
@@ -193,7 +198,7 @@ workflow SF_TRACTOMICS {
     //
     // Run RECONST/NODDI & RECONST/FREEWATER
     //
-    if (params.run_noddi || params.run_freewater) {
+    if ( params.run_noddi || params.run_freewater ) {
         // TODO: support subject-specific diffusivity options
         RECONST_FW_NODDI(
             TRACTOFLOW.out.dwi,
@@ -235,7 +240,7 @@ workflow SF_TRACTOMICS {
         return [meta, metrics]
     }
 
-    if (params.run_atlas_roimetrics) {
+    if ( params.run_atlas_roimetrics ) {
         ATLAS_ROIMETRICS(
             mergeCovariatesIntoMeta(TRACTOFLOW.out.b0, ch_covariates),
             mergeCovariatesIntoMeta(ch_input_metrics, ch_covariates),
@@ -262,7 +267,7 @@ workflow SF_TRACTOMICS {
         ch_global_multiqc_files = ch_global_multiqc_files.mix(ch_collection_mean_input)
 
 
-        if (params.harmonization_reference) {
+        if ( params.harmonization_reference ) {
             // The QC expects the harmonization reference to have the following pattern: *.reference.tsv
             // So we copy the file in the workflow workdir with the expected name pattern. If the file
             // already has the expected name pattern, this step will simply create a copy of the file.
@@ -271,7 +276,7 @@ workflow SF_TRACTOMICS {
                     def dest_name = ref_file.name.endsWith('.reference.tsv') ? ref_file.name : ref_file.name.replaceAll(/\.tsv$/, '.reference.tsv')
                     def dest_file = file("${workflow.workDir}/${dest_name}")
 
-                    if (!dest_file.exists()) {
+                    if ( !dest_file.exists() ) {
                         ref_file.copyTo(dest_file)
                     }
 

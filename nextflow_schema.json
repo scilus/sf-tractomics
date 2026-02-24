@@ -140,6 +140,13 @@
                     "description": "Run Synthstrip for BET DWI.",
                     "help_text": "Run Synthstrip for BET DWI."
                 },
+                "synthstrip_weights": {
+                    "type": "string",
+                    "description": "Path to the Synthstrip weights to use for BET DWI and BET T1. If not provided, default weights will be used.",
+                    "help_text": "Path to the Synthstrip weights to use for BET DWI and BET T1. If not provided, default weights will be used.",
+                    "format": "file-path",
+                    "default": null
+                },
                 "bet_prelim_f": {
                     "type": "number",
                     "default": 0.16,
@@ -304,6 +311,13 @@
                     "default": false,
                     "description": "Run T1 brain extraction using Synthstrip.",
                     "help_text": "Run T1 brain extraction using Synthstrip."
+                },
+                "synthstrip_weights": {
+                    "type": "string",
+                    "description": "Path to the Synthstrip weights to use for BET DWI and BET T1. If not provided, default weights will be used.",
+                    "help_text": "Path to the Synthstrip weights to use for BET DWI and BET T1. If not provided, default weights will be used.",
+                    "format": "file-path",
+                    "default": null
                 },
                 "keep_dwi_with_skull": {
                     "type": "boolean",

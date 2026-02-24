@@ -124,12 +124,16 @@
                 "pipeline_info",
                 "sub-test-1",
                 "sub-test-1/anat",
+                "sub-test-1/anat/sub-test-1_T1w.nii.gz",
+                "sub-test-1/anat/sub-test-1_desc-brain_mask.nii.gz",
                 "sub-test-1/anat/sub-test-1_label-CSF_desc-fastseg_mask.nii.gz",
                 "sub-test-1/anat/sub-test-1_label-CSF_desc-fastseg_probseg.nii.gz",
                 "sub-test-1/anat/sub-test-1_label-GM_desc-fastseg_mask.nii.gz",
                 "sub-test-1/anat/sub-test-1_label-GM_desc-fastseg_probseg.nii.gz",
                 "sub-test-1/anat/sub-test-1_label-WM_desc-fastseg_mask.nii.gz",
                 "sub-test-1/anat/sub-test-1_label-WM_desc-fastseg_probseg.nii.gz",
+                "sub-test-1/anat/sub-test-1_space-T1w_desc-brain_mask.nii.gz",
+                "sub-test-1/anat/sub-test-1_space-T1w_desc-preproc_T1w.nii.gz",
                 "sub-test-1/anat/sub-test-1_space-dwi_desc-preproc_T1w.nii.gz",
                 "sub-test-1/dwi",
                 "sub-test-1/dwi/bundles",
@@ -213,6 +217,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-24T12:32:34.621226368"
+        "timestamp": "2026-02-24T16:53:36.429722328"
     }
 }
