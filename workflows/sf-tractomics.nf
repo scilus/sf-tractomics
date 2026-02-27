@@ -223,20 +223,20 @@ workflow SF_TRACTOMICS {
         // Add FW/NODDI metrics to the volume
         // ROI extraction.
         ch_input_metrics = ch_input_metrics
-            .join(RECONST_FW_NODDI.out.fw_fwf)
-            .join(RECONST_FW_NODDI.out.fw_dti_fa)
-            .join(RECONST_FW_NODDI.out.fw_dti_md)
-            .join(RECONST_FW_NODDI.out.fw_dti_rd)
-            .join(RECONST_FW_NODDI.out.fw_dti_ad)
-            .join(RECONST_FW_NODDI.out.noddi_isovf)
-            .join(RECONST_FW_NODDI.out.noddi_icvf)
-            .join(RECONST_FW_NODDI.out.noddi_ecvf)
-            .join(RECONST_FW_NODDI.out.noddi_odi)
+            .join(RECONST_FW_NODDI.out.fw_fwf, remainder: true)
+            .join(RECONST_FW_NODDI.out.fw_dti_fa, remainder: true)
+            .join(RECONST_FW_NODDI.out.fw_dti_md, remainder: true)
+            .join(RECONST_FW_NODDI.out.fw_dti_rd, remainder: true)
+            .join(RECONST_FW_NODDI.out.fw_dti_ad, remainder: true)
+            .join(RECONST_FW_NODDI.out.noddi_isovf, remainder: true)
+            .join(RECONST_FW_NODDI.out.noddi_icvf, remainder: true)
+            .join(RECONST_FW_NODDI.out.noddi_ecvf, remainder: true)
+            .join(RECONST_FW_NODDI.out.noddi_odi, remainder: true)
     }
 
     ch_input_metrics = ch_input_metrics.map {tuple ->
         def meta = tuple[0]
-        def metrics = tuple[1..-1]
+        def metrics = tuple[1..-1].findAll { metric -> metric != null }
         return [meta, metrics]
     }
 
@@ -258,12 +258,8 @@ workflow SF_TRACTOMICS {
         // while keeping the header from the first
         // file only and skipping it in the rest.
         ch_collection_mean_input = ATLAS_ROIMETRICS.out.stats_tab_mean
-            .map{ _meta, stats_tab -> stats_tab }
-            .collectFile(
-                storeDir: "${params.outdir}/metrics/",
-                name: "space-native_atlas-iit_label-mean_desc-roi_stats.tsv",
-                skip: 1,
-                keepHeader: true)
+
+        ch_collection_mean_input = collectStatsFiles(ch_collection_mean_input, "space-native_atlas-iit_label-mean_desc-roi_stats.tsv", "${params.outdir}/metrics/")
         ch_global_multiqc_files = ch_global_multiqc_files.mix(ch_collection_mean_input)
 
 
@@ -460,6 +456,70 @@ workflow SF_TRACTOMICS {
     versions       = ch_versions                 // channel: [ path(versions.yml) ]
 
 }
+
+// This function should simply collect the stats files into a single file by appending each row of the TSV/CSV files.
+// However, some files might have more or less fields in their TSV/CSV files, which can cause misalignement and
+// columns with no names. To avoid this, we read each file, build a set of all column names across all files, and
+// then write a new file with all columns, filling missing values with no value.
+// Be careful, the ch_stats_files is expected to be a nextflow channel with a list of stat files.
+def collectStatsFiles(ch_stats_files, name, storeDir) {
+
+    def output_file_path = "${storeDir}/${name}"
+
+    ch_stats_files = ch_stats_files
+        .map{ _meta, stats_file ->
+            return stats_file
+        }
+        .collect()
+        .subscribe { stats_files ->
+            def header_written = false
+            def all_columns = new LinkedHashSet()
+
+            // Check all columns.
+            stats_files.each { stats_file ->
+                def lines = file(stats_file).readLines()
+                if (lines.size() < 2) {
+                    log.info("Warning: No data rows in file ${stats_file}. Skipping.")
+                    return
+                }
+                def file_columns = lines[0].split('\t').toList()
+                all_columns.addAll(file_columns)
+            }
+            all_columns = all_columns.toList()
+
+            // Create file writer for new file
+            def output_file = file(output_file_path)
+            def file_writer = output_file.newWriter()
+
+            stats_files.each { stats_file ->
+                def lines = file(stats_file).readLines()
+                if (lines.size() < 2) {
+                    return
+                }
+                def file_columns = lines[0].split('\t').toList()
+                def column_indices = file_columns.withIndex().collectEntries { col, idx -> [col, idx] }
+                if (!header_written) {
+                    log.debug("Writing header with columns: ${all_columns.join(', ')}")
+                    file_writer.write(all_columns.join('\t') + '\n')
+                    header_written = true
+                }
+
+                lines[1..-1].each { line ->
+                    def values = line.split('\t')
+                    def row = all_columns.collect { col ->
+                        column_indices.containsKey(col) ? values[column_indices[col]] : ''
+                    }
+                    file_writer.write(row.join('\t') + '\n')
+                }
+            }
+
+            // Close the file writer
+            file_writer.close()
+        }
+
+    return channel.fromPath(output_file_path)
+}
+
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     THE END
