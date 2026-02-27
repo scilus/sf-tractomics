@@ -14,7 +14,7 @@
                     
                 ],
                 "2": [
-                    "versions.yml:md5,ceabc00e745975c884a5ab0b435c93db"
+                    "versions.yml:md5,9f489676278f53897c3a11eaeeaaf40e"
                 ],
                 "image": [
                     [
@@ -28,26 +28,26 @@
                     
                 ],
                 "versions": [
-                    "versions.yml:md5,ceabc00e745975c884a5ab0b435c93db"
+                    "versions.yml:md5,9f489676278f53897c3a11eaeeaaf40e"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "25.04.7"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-24T18:48:04.703922151"
+        "timestamp": "2026-02-26T22:13:57.884967396"
     },
     "denoising - nlmeans - stub-run": {
         "content": [
             [
-                "versions.yml:md5,ceabc00e745975c884a5ab0b435c93db"
+                "versions.yml:md5,9f489676278f53897c3a11eaeeaaf40e"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "25.04.7"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-24T18:52:31.125489656"
+        "timestamp": "2026-02-26T22:14:02.18333582"
     }
 }

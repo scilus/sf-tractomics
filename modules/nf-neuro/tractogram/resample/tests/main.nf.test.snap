@@ -12,7 +12,7 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,2ae2adf670d0bb7b1305cb119e1b86d2"
+                    "versions.yml:md5,ac9879eb2722306022d42ae122771bd5"
                 ],
                 "tractograms": [
                     [
@@ -24,40 +24,40 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,2ae2adf670d0bb7b1305cb119e1b86d2"
+                    "versions.yml:md5,ac9879eb2722306022d42ae122771bd5"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "25.04.7"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-23T00:32:56.997650605"
+        "timestamp": "2026-02-26T15:53:38.479710085"
     },
     "tractogram - resample - tractogram": {
         "content": [
             [
-                "versions.yml:md5,2ae2adf670d0bb7b1305cb119e1b86d2"
+                "versions.yml:md5,ac9879eb2722306022d42ae122771bd5"
             ],
             "test_IFGWM_color_resampled.trk",
             "test_IFGWM_resampled.trk"
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "25.04.7"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-23T00:49:12.243663019"
+        "timestamp": "2026-02-26T15:53:34.055865213"
     },
     "tractogram - resample - stub-run": {
         "content": [
             [
-                "versions.yml:md5,2ae2adf670d0bb7b1305cb119e1b86d2"
+                "versions.yml:md5,ac9879eb2722306022d42ae122771bd5"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "25.04.7"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-23T00:33:10.587137954"
+        "timestamp": "2026-02-26T15:53:44.984873233"
     }
 }

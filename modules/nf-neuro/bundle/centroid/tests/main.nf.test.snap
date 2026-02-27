@@ -20,7 +20,7 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,f973b5915a569c3c5d7a27c2680f11ba"
+                    "versions.yml:md5,aeddba08d3114474b9bc8a855ee4e2d4"
                 ],
                 "centroids": [
                     [
@@ -40,26 +40,26 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,f973b5915a569c3c5d7a27c2680f11ba"
+                    "versions.yml:md5,aeddba08d3114474b9bc8a855ee4e2d4"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "25.04.7"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-17T17:36:58.2171355"
+        "timestamp": "2026-02-26T14:08:06.220745197"
     },
     "bundle - compute centroids - stub-run": {
         "content": [
             [
-                "versions.yml:md5,f973b5915a569c3c5d7a27c2680f11ba"
+                "versions.yml:md5,aeddba08d3114474b9bc8a855ee4e2d4"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "25.04.7"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-17T17:37:18.476808522"
+        "timestamp": "2026-02-26T14:08:13.891945684"
     }
 }

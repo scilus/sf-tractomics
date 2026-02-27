@@ -2,14 +2,14 @@
     "tractogram - remove invalid - stub-run": {
         "content": [
             [
-                "versions.yml:md5,40c76353c3f21a5426537a0627ff7cd9"
+                "versions.yml:md5,eb6df26666790c0025e44f8564bc5948"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-05T09:08:44.246096"
+        "timestamp": "2026-02-26T15:53:26.779925555"
     },
     "tractogram - remove invalid": {
         "content": [
@@ -32,7 +32,7 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,40c76353c3f21a5426537a0627ff7cd9"
+                    "versions.yml:md5,eb6df26666790c0025e44f8564bc5948"
                 ],
                 "tractograms": [
                     [
@@ -52,14 +52,14 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,40c76353c3f21a5426537a0627ff7cd9"
+                    "versions.yml:md5,eb6df26666790c0025e44f8564bc5948"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-05T09:08:32.861386"
+        "timestamp": "2026-02-26T15:53:22.134384858"
     }
 }

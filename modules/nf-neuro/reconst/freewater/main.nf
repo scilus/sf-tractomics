@@ -3,7 +3,7 @@ process RECONST_FREEWATER {
     tag "$meta.id"
     label 'process_low'
 
-    container "scilus/scilpy:2.2.0_cpu"
+    container "scilus/scilpy:2.2.2_cpu"
 
     input:
         tuple val(meta), path(dwi), path(bval), path(bvec), path(mask), path(kernels), val(para_diff), val(iso_diff), val(perp_diff_min), val(perp_diff_max)
@@ -65,6 +65,11 @@ process RECONST_FREEWATER {
     def prefix = task.ext.prefix ?: "${meta.id}"
 
     """
+    # Set home directory. This is problematic if the container is run
+    # with non-root user which does not create a home directory, whilst
+    # AMICO attempts to write in the home directory, raising an error.
+    export HOME=/tmp
+
     scil_freewater_maps -h
     mkdir kernels
     touch "${prefix}__dwi_fw_corrected.nii.gz"

@@ -2,7 +2,7 @@ process REGISTRATION_TRACTOGRAM {
     tag "$meta.id"
     label 'process_single'
 
-    container "scilus/scilus:2.2.1"
+    container "scilus/scilus:2.2.2"
 
     input:
     tuple val(meta), path(tractograms, arity: '1..*'), path(trk_reference), path(reference), path(transformations, arity: '1..2')

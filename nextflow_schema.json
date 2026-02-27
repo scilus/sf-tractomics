@@ -178,7 +178,8 @@
                 "run_gibbs_correction": {
                     "type": "boolean",
                     "description": "Run Gibbs correction.",
-                    "help_text": "Run Gibbs correction."
+                    "help_text": "Run Gibbs correction.",
+                    "default": true
                 },
                 "run_topup": {
                     "type": "boolean",
@@ -308,20 +309,11 @@
                 },
                 "run_t1_synthstrip": {
                     "type": "boolean",
-                    "default": false,
                     "description": "Run T1 brain extraction using Synthstrip.",
                     "help_text": "Run T1 brain extraction using Synthstrip."
                 },
-                "synthstrip_weights": {
-                    "type": "string",
-                    "description": "Path to the Synthstrip weights to use for BET DWI and BET T1. If not provided, default weights will be used.",
-                    "help_text": "Path to the Synthstrip weights to use for BET DWI and BET T1. If not provided, default weights will be used.",
-                    "format": "file-path",
-                    "default": null
-                },
                 "keep_dwi_with_skull": {
                     "type": "boolean",
-                    "default": false,
                     "description": "Keep DWI in native space with skull for the registration to T1.",
                     "help_text": "Keep DWI in native space with skull for the registration to T1."
                 },
@@ -1086,8 +1078,7 @@
                 "use_binary_masks": {
                     "type": "boolean",
                     "description": "If 'true', the IIT bundle masks will be thresholded to create binary masks before extracting the metrics.",
-                    "help_text": "IIT bundle masks will be thresholded to create binary masks before extracting the metrics.",
-                    "default": false
+                    "help_text": "IIT bundle masks will be thresholded to create binary masks before extracting the metrics."
                 }
             }
         },
@@ -1217,7 +1208,15 @@
             "help_text": "Hook URL to notify a web server e.g. Microsoft Teams and Slack "
         },
         "use_template_t2w": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Use the T2w template from TemplateFlow for registration.",
+            "help_text": "Use the T2w template from TemplateFlow for registration."
+        },
+        "match_t1_run": {
+            "type": "boolean",
+            "default": true,
+            "description": "If there's multiple T1w images for a single single DWI run, this option will try to match the T1w and DWI runs based on their run number.",
+            "help_text": "If there's multiple T1w images for a single single DWI run, this option will try to match the T1w and DWI runs based on their run number."
         }
     }
 }

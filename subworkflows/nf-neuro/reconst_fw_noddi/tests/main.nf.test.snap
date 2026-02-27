@@ -165,16 +165,16 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,689b2c4f00690ac95de93f6175661a17",
-                    "versions.yml:md5,a223178747e3c47275c80317e23f35a6"
+                    "versions.yml:md5,9afc90b08b74fc84e879e1d2d0d7c7d0",
+                    "versions.yml:md5,d1764b00cbc88145b08362c8ae9762b3"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-06T21:43:02.336654"
+        "timestamp": "2026-02-26T23:29:23.820516886"
     },
     "reconst_fw_noddi - noddi & freewater - custom priors": {
         "content": [
@@ -548,20 +548,20 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,0576c1fdab3c59610cd67015e8146f95",
-                    "versions.yml:md5,0576c1fdab3c59610cd67015e8146f95",
-                    "versions.yml:md5,689b2c4f00690ac95de93f6175661a17",
-                    "versions.yml:md5,689b2c4f00690ac95de93f6175661a17",
-                    "versions.yml:md5,a223178747e3c47275c80317e23f35a6",
-                    "versions.yml:md5,a223178747e3c47275c80317e23f35a6"
+                    "versions.yml:md5,62b008e3bc1925b77790071d9e96a1a2",
+                    "versions.yml:md5,62b008e3bc1925b77790071d9e96a1a2",
+                    "versions.yml:md5,9afc90b08b74fc84e879e1d2d0d7c7d0",
+                    "versions.yml:md5,9afc90b08b74fc84e879e1d2d0d7c7d0",
+                    "versions.yml:md5,d1764b00cbc88145b08362c8ae9762b3",
+                    "versions.yml:md5,d1764b00cbc88145b08362c8ae9762b3"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-07T13:01:00.125977"
+        "timestamp": "2026-02-26T23:28:51.64962634"
     },
     "reconst_fw_noddi - noddi & freewater": {
         "content": [
@@ -774,18 +774,18 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,0576c1fdab3c59610cd67015e8146f95",
-                    "versions.yml:md5,689b2c4f00690ac95de93f6175661a17",
-                    "versions.yml:md5,9fe765550b2a3f33e52de7bdd91daf0b",
-                    "versions.yml:md5,a223178747e3c47275c80317e23f35a6"
+                    "versions.yml:md5,62b008e3bc1925b77790071d9e96a1a2",
+                    "versions.yml:md5,70017630e95110c203240f3be07c716b",
+                    "versions.yml:md5,9afc90b08b74fc84e879e1d2d0d7c7d0",
+                    "versions.yml:md5,d1764b00cbc88145b08362c8ae9762b3"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-07T12:59:40.0078"
+        "timestamp": "2026-02-26T23:28:24.016168121"
     },
     "reconst_fw_noddi - noddi & freewater - average priors": {
         "content": [
@@ -998,19 +998,19 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,0576c1fdab3c59610cd67015e8146f95",
-                    "versions.yml:md5,689b2c4f00690ac95de93f6175661a17",
-                    "versions.yml:md5,9fe765550b2a3f33e52de7bdd91daf0b",
-                    "versions.yml:md5,a223178747e3c47275c80317e23f35a6",
-                    "versions.yml:md5,d3add69fba59455ab809263f88deae99"
+                    "versions.yml:md5,21ec0c32bc11dca0c4ccc95fdf1a2690",
+                    "versions.yml:md5,62b008e3bc1925b77790071d9e96a1a2",
+                    "versions.yml:md5,70017630e95110c203240f3be07c716b",
+                    "versions.yml:md5,9afc90b08b74fc84e879e1d2d0d7c7d0",
+                    "versions.yml:md5,d1764b00cbc88145b08362c8ae9762b3"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-07T13:00:24.184698"
+        "timestamp": "2026-02-26T23:28:38.89054199"
     },
     "reconst_fw_noddi - noddi": {
         "content": [
@@ -1061,16 +1061,16 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,0576c1fdab3c59610cd67015e8146f95",
-                    "versions.yml:md5,9fe765550b2a3f33e52de7bdd91daf0b"
+                    "versions.yml:md5,62b008e3bc1925b77790071d9e96a1a2",
+                    "versions.yml:md5,70017630e95110c203240f3be07c716b"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-07T12:58:12.483052"
+        "timestamp": "2026-02-26T23:27:55.253043493"
     },
     "reconst_fw_noddi - freewater": {
         "content": [
@@ -1238,17 +1238,17 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,689b2c4f00690ac95de93f6175661a17",
-                    "versions.yml:md5,9fe765550b2a3f33e52de7bdd91daf0b",
-                    "versions.yml:md5,a223178747e3c47275c80317e23f35a6"
+                    "versions.yml:md5,70017630e95110c203240f3be07c716b",
+                    "versions.yml:md5,9afc90b08b74fc84e879e1d2d0d7c7d0",
+                    "versions.yml:md5,d1764b00cbc88145b08362c8ae9762b3"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-06T21:39:28.970849"
+        "timestamp": "2026-02-26T23:28:09.646051384"
     },
     "reconst_fw_noddi - noddi - custom priors": {
         "content": [
@@ -1299,15 +1299,15 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,0576c1fdab3c59610cd67015e8146f95"
+                    "versions.yml:md5,62b008e3bc1925b77790071d9e96a1a2"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-07T13:01:52.180681"
+        "timestamp": "2026-02-26T23:29:11.365231081"
     },
     "reconst_fw_noddi - noddi & freewater - custom priors subject-bound": {
         "content": [
@@ -1520,16 +1520,16 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,0576c1fdab3c59610cd67015e8146f95",
-                    "versions.yml:md5,689b2c4f00690ac95de93f6175661a17",
-                    "versions.yml:md5,a223178747e3c47275c80317e23f35a6"
+                    "versions.yml:md5,62b008e3bc1925b77790071d9e96a1a2",
+                    "versions.yml:md5,9afc90b08b74fc84e879e1d2d0d7c7d0",
+                    "versions.yml:md5,d1764b00cbc88145b08362c8ae9762b3"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-07T13:01:33.794529"
+        "timestamp": "2026-02-26T23:29:04.257198065"
     }
 }

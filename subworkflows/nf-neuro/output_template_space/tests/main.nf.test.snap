@@ -64,12 +64,12 @@
                 ],
                 "versions": [
                     "versions.yml:md5,08c023826481c9130c3914096cda7f63",
-                    "versions.yml:md5,2b72cc481686daf9f4a00587bbf1efa3",
-                    "versions.yml:md5,5091055c3aacdbd4dccc294cc841b8b3",
-                    "versions.yml:md5,513f314aaedec96c49c67ed0bd3bbf4b",
-                    "versions.yml:md5,53e0a593f56efd67061357b22888233f",
-                    "versions.yml:md5,6e9699943a528da0a010defdd462fa3a",
-                    "versions.yml:md5,957fd24bd8b559411e3a565ac7313f40"
+                    "versions.yml:md5,16dbf59818dee83cc2d0df98ab8bca83",
+                    "versions.yml:md5,1eb68be05dd453a43bd7e4c84aa65435",
+                    "versions.yml:md5,596d9223aafe3b087eff98891aa55207",
+                    "versions.yml:md5,cd1137ba5811cb376ecce1e90a8f3461",
+                    "versions.yml:md5,ce9c7ec52ed86a19d0a7ee301e444344",
+                    "versions.yml:md5,fe45b823234eb14a9e13fa03cca099d1"
                 ]
             }
         ],
@@ -77,7 +77,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-18T15:32:34.613817021"
+        "timestamp": "2026-02-26T22:42:28.120902041"
     },
     "Template MNI152NLin2009aAsym - using synthmorph registration": {
         "content": [
@@ -138,13 +138,13 @@
                 ],
                 "versions": [
                     "versions.yml:md5,08c023826481c9130c3914096cda7f63",
-                    "versions.yml:md5,5091055c3aacdbd4dccc294cc841b8b3",
-                    "versions.yml:md5,513f314aaedec96c49c67ed0bd3bbf4b",
-                    "versions.yml:md5,53e0a593f56efd67061357b22888233f",
-                    "versions.yml:md5,6e9699943a528da0a010defdd462fa3a",
+                    "versions.yml:md5,16dbf59818dee83cc2d0df98ab8bca83",
+                    "versions.yml:md5,1eb68be05dd453a43bd7e4c84aa65435",
                     "versions.yml:md5,837bc1b10db6cb6c459b8871725ba254",
                     "versions.yml:md5,9013974da5ab5a7ae91e580948968e75",
-                    "versions.yml:md5,957fd24bd8b559411e3a565ac7313f40"
+                    "versions.yml:md5,cd1137ba5811cb376ecce1e90a8f3461",
+                    "versions.yml:md5,ce9c7ec52ed86a19d0a7ee301e444344",
+                    "versions.yml:md5,fe45b823234eb14a9e13fa03cca099d1"
                 ]
             }
         ],
@@ -152,7 +152,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-20T10:03:09.839689352"
+        "timestamp": "2026-02-26T22:42:44.929412455"
     },
     "Template MNI152NLin2009cAsym - local templates": {
         "content": [
@@ -219,12 +219,12 @@
                 ],
                 "versions": [
                     "versions.yml:md5,08c023826481c9130c3914096cda7f63",
-                    "versions.yml:md5,2b72cc481686daf9f4a00587bbf1efa3",
-                    "versions.yml:md5,5091055c3aacdbd4dccc294cc841b8b3",
-                    "versions.yml:md5,513f314aaedec96c49c67ed0bd3bbf4b",
-                    "versions.yml:md5,53e0a593f56efd67061357b22888233f",
-                    "versions.yml:md5,6e9699943a528da0a010defdd462fa3a",
-                    "versions.yml:md5,957fd24bd8b559411e3a565ac7313f40"
+                    "versions.yml:md5,16dbf59818dee83cc2d0df98ab8bca83",
+                    "versions.yml:md5,1eb68be05dd453a43bd7e4c84aa65435",
+                    "versions.yml:md5,596d9223aafe3b087eff98891aa55207",
+                    "versions.yml:md5,cd1137ba5811cb376ecce1e90a8f3461",
+                    "versions.yml:md5,ce9c7ec52ed86a19d0a7ee301e444344",
+                    "versions.yml:md5,fe45b823234eb14a9e13fa03cca099d1"
                 ]
             }
         ],
@@ -232,6 +232,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-18T15:09:34.238061542"
+        "timestamp": "2026-02-26T22:42:09.383936612"
     }
 }

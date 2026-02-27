@@ -2,7 +2,7 @@ process RECONST_NODDI {
     tag "$meta.id"
     label 'process_medium'
 
-    container "scilus/scilpy:2.2.0_cpu"
+    container "scilus/scilpy:2.2.2_cpu"
 
     input:
         tuple val(meta), path(dwi), path(bval), path(bvec), path(mask), path(kernels), val(para_diff), val(iso_diff)
@@ -87,6 +87,11 @@ process RECONST_NODDI {
     def prefix = task.ext.prefix ?: "${meta.id}"
 
     """
+    # Set home directory. This is problematic if the container is run
+    # with non-root user which does not create a home directory, whilst
+    # AMICO attempts to write in the home directory, raising an error.
+    export HOME=/tmp
+
     scil_NODDI_maps -h
     scil_volume_math -h
 

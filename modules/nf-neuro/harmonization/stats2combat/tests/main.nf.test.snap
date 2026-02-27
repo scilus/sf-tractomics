@@ -9,7 +9,7 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,7805a70986c7855407ca906fc4ca5efb"
+                    "versions.yml:md5,ed923958987058f181d32191785a06d1"
                 ],
                 "stats_for_combat": [
                     [
@@ -18,7 +18,7 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,7805a70986c7855407ca906fc4ca5efb"
+                    "versions.yml:md5,ed923958987058f181d32191785a06d1"
                 ]
             }
         ],
@@ -26,7 +26,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-21T00:02:06.623868756"
+        "timestamp": "2026-02-26T21:57:21.551171399"
     },
     "harmonization - stats2combat - stub-run": {
         "content": [
@@ -35,13 +35,13 @@
                 "CamCAN_11subs_ad_adt.metric2.raw.csv"
             ],
             [
-                "versions.yml:md5,7805a70986c7855407ca906fc4ca5efb"
+                "versions.yml:md5,ed923958987058f181d32191785a06d1"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-21T00:02:09.988067119"
+        "timestamp": "2026-02-26T21:57:24.89078794"
     }
 }

@@ -60,14 +60,26 @@ input:
       type: file
       description: |
         Channel containing all the segmented bundle files.
-        Structure: [ val(meta), [ path(bundle1), path(bundle2), ... ] ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - bundles:
+            type: file
+            description: List of bundle tractogram files.
       pattern: "*.trk"
 
   - ch_centroids:
       type: file
       description: |
         Channel containing all the segmented centroids files.
-        Structure: [ val(meta), [ path(centroid1), path(centroid2), ... ] ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - centroids:
+            type: file
+            description: List of centroid tractogram files.
       pattern: "*.trk"
 
   - ch_metrics:
@@ -75,21 +87,39 @@ input:
       description: |
         Channel containing nifti file to compute statistics on. Probably some tractometry measure(s) such as FA, MD, RD, ...
         The metrics has to follow a specific naming convention.
-        Structure: [ val(meta), [ path(metric1), path(metric2), ... ] ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - metrics:
+            type: file
+            description: List of metric image files.
       pattern: "*.nii.gz"
 
   - ch_lesion_mask:
       type: file
       description: |
         Channel containing  lesion volume to compute statistics on. The lesion mask must be a binary mask.
-        Structure: [ val(meta), path(lesion) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - lesion:
+            type: file
+            description: Lesion mask image file.
       pattern: "*.nii.gz"
 
   - ch_fodf:
       type: file
       description: |
         Channel containing fODF file to extract fixel measurements from.
-        Structure: [ val(meta), path(fodf) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - fodf:
+            type: file
+            description: fODF image file.
       pattern: "*.nii.gz"
 
 output:
@@ -97,105 +127,195 @@ output:
       type: file
       description: |
         Information on a tractogram, number of streamlines, mean / min / max / std of length in number of points, length in mm and step size.
-        Structure: [ val(meta), path(length) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - length:
+            type: file
+            description: Length statistics JSON file.
       pattern: "*__length_stats.json"
 
   - stats_endpoints_raw:
       type: file
       description: |
         Estimation of the cortical area affected by the bundle (assuming streamlines start/end in the cortex).
-        Structure: [ val(meta), path(endpoints_raw) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - endpoints_raw:
+            type: file
+            description: Endpoints raw statistics JSON file.
       pattern: "*__endpoints_map_raw.json"
 
   - stats_endpoints_metric:
       type: file
       description: |
         Compute the statistics of metrics at the bundle endpoint map.
-        Structure: [ val(meta), path(endpoints_metric) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - endpoints_metric:
+            type: file
+            description: Endpoints metric statistics JSON file.
       pattern: "*__endpoints_metric_stats.json"
 
   - stats_mean_std:
       type: file
       description: |
         Average the metric values of all voxels occupied by the bundle.
-        Structure: [ val(meta), path(mean_std) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - mean_std:
+            type: file
+            description: Mean and standard deviation statistics JSON file.
       pattern: "*__mean_std.json"
 
   - stats_volume:
       type: file
       description: |
         Evaluate basic measurements of bundle(s).
-        Structure: [ val(meta), path(volume) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - volume:
+            type: file
+            description: Volume statistics JSON file.
       pattern: "*__volume.json"
 
   - stats_volume_lesions:
       type: file
       description: |
         Compute bundle volume in each lesions in mm3.
-        Structure: [ val(meta), path(volume_lesions) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - volume_lesions:
+            type: file
+            description: Volume lesions statistics JSON file.
       pattern: "*__volume_lesion.json"
 
   - stats_streamline_count:
       type: file
       description: |
         Return the number of streamlines in a tractogram.
-        Structure: [ val(meta), path(streamline_count) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - streamline_count:
+            type: file
+            description: Streamline count statistics JSON file.
       pattern: "*__streamline_count.json"
 
   - stats_streamline_count_lesions:
       type: file
       description: |
         Return the number of streamlines in each lesions.
-        Structure: [ val(meta), path(streamline_count_lesions) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - streamline_count_lesions:
+            type: file
+            description: Streamline count lesions statistics JSON file.
       pattern: "*__streamline_count_lesions.json"
 
   - stats_volume_per_labels:
       type: file
       description: |
         Compute bundle volume per label in mm3. This script supports anisotropic voxels resolution. Volume is estimated by counting the number of voxel occupied by each label and multiplying it by the volume of a single voxel.
-        Structure: [ val(meta), path(volume_per_labels) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - volume_per_labels:
+            type: file
+            description: Volume per labels statistics JSON file.
       pattern: "*__volume_per_label.json"
 
   - stats_volume_per_labels_lesions:
       type: file
       description: |
         Compute bundle volume per label in each lesions in mm3.
-        Structure: [ val(meta), path(volume_per_labels_lesions) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - volume_per_labels_lesions:
+            type: file
+            description: Volume per labels lesions statistics JSON file.
       pattern: "*__volume_per_label_lesions.json"
 
   - stats_mean_std_per_point:
       type: file
       description: |
         Average the metric values of all voxels occupied by the bundle per label.
-        Structure: [ val(meta), path(mean_std_per_point) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - mean_std_per_point:
+            type: file
+            description: Mean and standard deviation per point statistics JSON file.
       pattern: "*__mean_std_per_point.json"
 
   - stats_lesion_stats:
       type: file
       description: |
         File of the lesion-wise volume measure.
-        Structure: [ val(meta), path(lesion_stats) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - lesion_stats:
+            type: file
+            description: Lesion statistics JSON file.
       pattern: "*_lesion_stats.json"
 
   - endpoints_head:
       type: file
       description: |
         Endpoint head map of bundle. The endpoint head map is simply a count of the number of streamlines that start in each voxel.
-        Structure: [ val(meta), path(endpoints_head) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - endpoints_head:
+            type: file
+            description: Endpoints head image file.
       pattern: "*.nii.gz"
 
   - endpoints_tail:
       type: file
       description: |
         Endpoint tail map of bundle. The endpoint tail map is simply a count of the number of streamlines that end in each voxel.
-        Structure: [ val(meta), path(endpoints_tail) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - endpoints_tail:
+            type: file
+            description: Endpoints tail image file.
       pattern: "*.nii.gz"
 
   - lesion_map:
       type: file
       description: |
         Nifti files of labelized lesion(s) map for each bundles.
-        Structure: [ val(meta), path(lesion_map) ]
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - lesion_map:
+            type: file
+            description: Lesion map image file.
       pattern: "*.nii.gz"
 
   - mean_lesions_tsv:

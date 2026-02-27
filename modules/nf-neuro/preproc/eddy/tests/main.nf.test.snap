@@ -25,14 +25,14 @@
             "test_ses-01__rev_dwi_eddy_mqc.gif",
             "test_ses-01__dwi_eddy_restricted_movement_rms.txt",
             [
-                "versions.yml:md5,4157cb171ff54c81c093562e757288a5"
+                "versions.yml:md5,6e22928e1858f4b5e6d43a9f19ef4a84"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.4"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-28T09:45:20.989634172"
+        "timestamp": "2026-02-26T22:15:32.652065952"
     },
     "eddy_light": {
         "content": [
@@ -57,25 +57,25 @@
             "test__dwi_eddy_mqc.gif",
             "test__dwi_eddy_restricted_movement_rms.txt",
             [
-                "versions.yml:md5,4157cb171ff54c81c093562e757288a5"
+                "versions.yml:md5,6e22928e1858f4b5e6d43a9f19ef4a84"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.4"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-28T09:47:44.893652151"
+        "timestamp": "2026-02-26T22:16:33.991059908"
     },
     "eddy - stub-run": {
         "content": [
             [
-                "versions.yml:md5,4157cb171ff54c81c093562e757288a5"
+                "versions.yml:md5,6e22928e1858f4b5e6d43a9f19ef4a84"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-20T20:28:40.763803"
+        "timestamp": "2026-02-26T22:16:49.440847103"
     }
 }

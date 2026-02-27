@@ -2,7 +2,7 @@ process IMAGE_MATH {
     tag "$meta.id"
     label 'process_single'
 
-    container "scilus/scilpy:2.2.1_cpu"
+    container "scilus/scilpy:2.2.2_cpu"
 
     input:
         tuple val(meta), path(images), val(value) /* optional = null */

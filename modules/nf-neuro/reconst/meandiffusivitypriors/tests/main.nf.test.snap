@@ -47,25 +47,25 @@
                 "0.000674"
             ],
             [
-                "versions.yml:md5,173a289151d0c143f9f85c42bd9e0fdf"
+                "versions.yml:md5,92f10d87720a4a89e1cc2e03ca7f3476"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.6"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-14T15:19:21.667053044"
+        "timestamp": "2026-02-26T14:52:20.550759623"
     },
     "reconst - diffusivitypriors - stub-run": {
         "content": [
             [
-                "versions.yml:md5,173a289151d0c143f9f85c42bd9e0fdf"
+                "versions.yml:md5,92f10d87720a4a89e1cc2e03ca7f3476"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.6"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-14T15:19:26.429304418"
+        "timestamp": "2026-02-26T14:52:25.786916938"
     }
 }

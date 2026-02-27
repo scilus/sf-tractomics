@@ -184,19 +184,19 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,5b034b80fad1f75bb7722f43fc3b5e22",
-                    "versions.yml:md5,70c4d8b5826f64201a61b649d66629d4",
-                    "versions.yml:md5,83e6b744f2dbc45967e6afb303fd98f4",
-                    "versions.yml:md5,a93eedde46ec66212d61c880b1876e28",
-                    "versions.yml:md5,f0a30fe6de6ef6e42da2780c4b05773b"
+                    "versions.yml:md5,5289aecc6e751c65ce29832a1fe4f2dd",
+                    "versions.yml:md5,74a2286b7b4dc5081a88d5d62696abbe",
+                    "versions.yml:md5,7fa093cc30b9e7496f74f07984193fb7",
+                    "versions.yml:md5,8ba139fdcda3b8c48d20acf00268140e",
+                    "versions.yml:md5,9ffde4e41677e319dcb15e20cecd726e"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-11T21:14:51.020148"
+        "timestamp": "2026-02-26T15:54:19.426714955"
     },
     "tractometry_without_centroids": {
         "content": [
@@ -383,19 +383,19 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,0150dae017a7ceaa25fbfb07fb130a13",
-                    "versions.yml:md5,5b034b80fad1f75bb7722f43fc3b5e22",
-                    "versions.yml:md5,6640b53653075e278953a2c8c478d671",
-                    "versions.yml:md5,70c4d8b5826f64201a61b649d66629d4",
-                    "versions.yml:md5,a93eedde46ec66212d61c880b1876e28",
-                    "versions.yml:md5,f0a30fe6de6ef6e42da2780c4b05773b"
+                    "versions.yml:md5,073d90b89f1b64ce495c0f1c19302652",
+                    "versions.yml:md5,093b5ceefcac25bae148e146e9dc60a6",
+                    "versions.yml:md5,5289aecc6e751c65ce29832a1fe4f2dd",
+                    "versions.yml:md5,74a2286b7b4dc5081a88d5d62696abbe",
+                    "versions.yml:md5,7fa093cc30b9e7496f74f07984193fb7",
+                    "versions.yml:md5,8ba139fdcda3b8c48d20acf00268140e"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-11T21:18:29.415234"
+        "timestamp": "2026-02-26T15:54:54.636210701"
     }
 }

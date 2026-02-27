@@ -3,28 +3,28 @@
         "content": [
             {
                 "BUNDLE_CENTROID": {
-                    "scilpy": "2.2.0"
+                    "scilpy": "2.2.2"
                 },
                 "BUNDLE_LABELMAP": {
-                    "scilpy": "2.2.1"
+                    "scilpy": "2.2.2"
                 },
                 "BUNDLE_RECOGNIZE": {
-                    "scilpy": "2.2.0"
+                    "scilpy": "2.2.2"
                 },
                 "BUNDLE_STATS": {
-                    "scilpy": "2.2.1"
+                    "scilpy": "2.2.2"
                 },
                 "BUNDLE_UNIFORMIZE": {
-                    "scilpy": "2.2.0"
+                    "scilpy": "2.2.2"
                 },
                 "DENOISE_DWI": {
                     "mrtrix": "3.0.5"
                 },
                 "DENOISING_NLMEANS": {
-                    "scilpy": "2.2.0"
+                    "scilpy": "2.2.2"
                 },
                 "FW_CORRECTED_DTIMETRICS": {
-                    "scilpy": "2.2.0",
+                    "scilpy": "2.2.2",
                     "mrtrix": "3.0.7",
                     "imagemagick": "6.9.12"
                 },
@@ -35,69 +35,69 @@
                     "mrtrix": "3.0.5"
                 },
                 "RECONST_DTIMETRICS": {
-                    "scilpy": "2.2.0",
+                    "scilpy": "2.2.2",
                     "mrtrix": "3.0.7",
                     "imagemagick": "6.9.12"
                 },
                 "RECONST_FODF": {
-                    "scilpy": "2.2.0"
+                    "scilpy": "2.2.2"
                 },
                 "RECONST_FREEWATER": {
-                    "scilpy": "2.2.0"
+                    "scilpy": "2.2.2"
                 },
                 "RECONST_FRF": {
-                    "scilpy": "2.2.0"
+                    "scilpy": "2.2.2"
                 },
                 "RECONST_NODDI": {
-                    "scilpy": "2.2.0"
+                    "scilpy": "2.2.2"
                 },
                 "RECONST_QBALL": {
-                    "scilpy": "2.2.0"
+                    "scilpy": "2.2.2"
                 },
                 "REGISTER_ATLAS_REF": {
                     "ants": "2.6.2",
                     "imagemagick": "6.9.12-98",
                     "mrtrix": "3.0.7",
-                    "scilpy": "2.2.0"
+                    "scilpy": "2.2.2"
                 },
                 "REGISTRATION_ANATTODWI": {
                     "ants": "2.6.2",
                     "imagemagick": "6.9.12-98",
                     "mrtrix": "3.0.7",
-                    "scilpy": "2.2.0"
+                    "scilpy": "2.2.2"
                 },
                 "REGISTRATION_ANTS": {
                     "ants": "2.6.2",
                     "imagemagick": "6.9.12-98",
                     "mrtrix": "3.0.7",
-                    "scilpy": "2.2.0"
+                    "scilpy": "2.2.2"
                 },
                 "REGISTRATION_TRACTOGRAM": {
                     "ants": "2.6.2",
-                    "scilpy": "2.2.1"
+                    "scilpy": "2.2.2"
                 },
                 "SEGMENTATION_FASTSEG": {
-                    "scilpy": "2.2.0",
+                    "scilpy": "2.2.2",
                     "fsl": 6.0
                 },
                 "STATS_METRICSINROI": {
-                    "scilpy": "2.2.1",
+                    "scilpy": "2.2.2",
                     "jq": 1.7
                 },
                 "TRACKING_LOCALTRACKING": {
-                    "scilpy": "2.2.0"
+                    "scilpy": "2.2.2"
                 },
                 "TRACKING_PFTTRACKING": {
-                    "scilpy": "2.2.0"
+                    "scilpy": "2.2.2"
                 },
                 "TRACTOGRAM_REMOVEINVALID": {
-                    "scilpy": "2.2.1"
+                    "scilpy": "2.2.2"
                 },
                 "TRANSFORM_ATLAS_BUNDLES": {
                     "ants": "2.6.2",
                     "imagemagick": "6.9.12-98",
                     "mrtrix": "3.0.7",
-                    "scilpy": "2.2.0"
+                    "scilpy": "2.2.2"
                 },
                 "UTILS_TEMPLATEFLOW": {
                     "templateflow": "24.2.2",
@@ -107,7 +107,7 @@
                     "ants": "2.6.2",
                     "imagemagick": "6.9.12-98",
                     "mrtrix": "3.0.7",
-                    "scilpy": "2.2.0"
+                    "scilpy": "2.2.2"
                 },
                 "Workflow": {
                     "scilus/sf-tractomics": "v1.0dev"
@@ -218,6 +218,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-24T17:46:50.012073146"
+        "timestamp": "2026-02-27T09:56:04.59398902"
     }
 }

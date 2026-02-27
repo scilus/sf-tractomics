@@ -63,16 +63,16 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,81cfd1ed44fe6baf7c62ce30bdb4c143",
-                    "versions.yml:md5,f6ebf4487f9581dfb1095405f32fdde6"
+                    "versions.yml:md5,f2d7748b1499acab929c78fd99b805d2",
+                    "versions.yml:md5,f385a220b9605ec099227e3c12f8c383"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-20T17:43:42.785937"
+        "timestamp": "2026-02-26T22:23:35.547426618"
     },
     "topup_eddy - ONLY Eddy - AP DWI | PA sbref": {
         "content": [
@@ -138,16 +138,16 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,81cfd1ed44fe6baf7c62ce30bdb4c143",
-                    "versions.yml:md5,f6ebf4487f9581dfb1095405f32fdde6"
+                    "versions.yml:md5,f2d7748b1499acab929c78fd99b805d2",
+                    "versions.yml:md5,f385a220b9605ec099227e3c12f8c383"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-20T17:42:40.509401"
+        "timestamp": "2026-02-26T22:23:17.16712078"
     },
     "topup_eddy - AP DWI+sbref | PA DWI+sbref": {
         "content": [
@@ -213,15 +213,15 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,81cfd1ed44fe6baf7c62ce30bdb4c143",
-                    "versions.yml:md5,f6ebf4487f9581dfb1095405f32fdde6"
+                    "versions.yml:md5,f2d7748b1499acab929c78fd99b805d2",
+                    "versions.yml:md5,f385a220b9605ec099227e3c12f8c383"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-20T17:44:57.388694"
+        "timestamp": "2026-02-26T22:23:53.777548866"
     }
 }

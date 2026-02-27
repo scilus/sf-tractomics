@@ -27,16 +27,16 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,43c929afa23d3d0382a449b9ba99d7fb",
-                    "versions.yml:md5,afaf6c2953accc507d8777303eea8718"
+                    "versions.yml:md5,3c2a7cf1723c95390ee45ee209e08994",
+                    "versions.yml:md5,43c929afa23d3d0382a449b9ba99d7fb"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.4"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-29T09:27:01.536790351"
+        "timestamp": "2026-02-26T14:26:41.784029405"
     },
     "rbx - download atlas - ants registration": {
         "content": [
@@ -66,15 +66,15 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,9a3df973fb36ebec9763f10ff59ad875",
-                    "versions.yml:md5,afaf6c2953accc507d8777303eea8718"
+                    "versions.yml:md5,3c2a7cf1723c95390ee45ee209e08994",
+                    "versions.yml:md5,9a3df973fb36ebec9763f10ff59ad875"
                 ]
             }
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.4"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-29T09:22:36.01881451"
+        "timestamp": "2026-02-26T14:22:02.346511779"
     }
 }

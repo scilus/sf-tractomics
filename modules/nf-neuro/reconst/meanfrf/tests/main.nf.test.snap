@@ -9,7 +9,7 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,b552ca0c54b99e4f5e26e5b1af5b0811"
+                    "versions.yml:md5,115cd218f03f4c0e11946210cf554203"
                 ],
                 "meanfrf": [
                     [
@@ -18,14 +18,14 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,b552ca0c54b99e4f5e26e5b1af5b0811"
+                    "versions.yml:md5,115cd218f03f4c0e11946210cf554203"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "25.04.7"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-22T21:02:48.243194681"
+        "timestamp": "2026-02-26T14:52:30.568686982"
     }
 }

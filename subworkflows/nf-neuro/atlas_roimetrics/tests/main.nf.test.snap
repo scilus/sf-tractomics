@@ -30,9 +30,9 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,37dfe7104743280c6e8dd82191e4b9a2",
-                    "versions.yml:md5,a5af5e7977506198381bcf6742c334db",
-                    "versions.yml:md5,ed314f4bb56aca9fa497cd3500133ce0"
+                    "versions.yml:md5,10c3c16a89dcab69d4b036e0569aa826",
+                    "versions.yml:md5,3866571f819aa78d2b2d019c8df1a88b",
+                    "versions.yml:md5,4b945b03a70d84217c7916069100e024"
                 ]
             }
         ],
@@ -40,7 +40,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-19T21:24:42.984961614"
+        "timestamp": "2026-02-26T22:41:47.973024573"
     },
     "atlas_roimetrics - IIT atlas - binary": {
         "content": [
@@ -73,10 +73,10 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,37dfe7104743280c6e8dd82191e4b9a2",
-                    "versions.yml:md5,47d49a165d2ab40f37deba36f77c4bad",
-                    "versions.yml:md5,a5af5e7977506198381bcf6742c334db",
-                    "versions.yml:md5,ed314f4bb56aca9fa497cd3500133ce0"
+                    "versions.yml:md5,10c3c16a89dcab69d4b036e0569aa826",
+                    "versions.yml:md5,3866571f819aa78d2b2d019c8df1a88b",
+                    "versions.yml:md5,4b945b03a70d84217c7916069100e024",
+                    "versions.yml:md5,5aab53e71beaecf093af3c8c77d28e9e"
                 ]
             }
         ],
@@ -84,6 +84,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-19T21:24:27.471052765"
+        "timestamp": "2026-02-26T22:41:32.399271551"
     }
 }

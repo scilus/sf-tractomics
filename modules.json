@@ -37,12 +37,12 @@
                 "nf-neuro": {
                     "betcrop/antsbet": {
                         "branch": "main",
-                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "git_sha": "6fcc3344bd0bc606f27097a4ba05a5d9242a3ed3",
                         "installed_by": ["preproc_t1"]
                     },
                     "betcrop/fslbetcrop": {
                         "branch": "main",
-                        "git_sha": "c08d19a6f924f1b3f23028d0b3eb616d5a824075",
+                        "git_sha": "6fcc3344bd0bc606f27097a4ba05a5d9242a3ed3",
                         "installed_by": ["output_template_space", "preproc_dwi", "topup_eddy"]
                     },
                     "betcrop/synthstrip": {
@@ -52,32 +52,32 @@
                     },
                     "bundle/centroid": {
                         "branch": "main",
-                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "git_sha": "ffb3edf0fdca5a8c1262224da72d088043de7949",
                         "installed_by": ["tractometry"]
                     },
                     "bundle/fixelafd": {
                         "branch": "main",
-                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "git_sha": "ffb3edf0fdca5a8c1262224da72d088043de7949",
                         "installed_by": ["tractometry"]
                     },
                     "bundle/labelmap": {
                         "branch": "main",
-                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "git_sha": "ffb3edf0fdca5a8c1262224da72d088043de7949",
                         "installed_by": ["tractometry"]
                     },
                     "bundle/recognize": {
                         "branch": "main",
-                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "git_sha": "ffb3edf0fdca5a8c1262224da72d088043de7949",
                         "installed_by": ["bundle_seg"]
                     },
                     "bundle/stats": {
                         "branch": "main",
-                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "git_sha": "ffb3edf0fdca5a8c1262224da72d088043de7949",
                         "installed_by": ["tractometry"]
                     },
                     "bundle/uniformize": {
                         "branch": "main",
-                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "git_sha": "ffb3edf0fdca5a8c1262224da72d088043de7949",
                         "installed_by": ["tractometry"]
                     },
                     "denoising/mppca": {
@@ -87,7 +87,7 @@
                     },
                     "denoising/nlmeans": {
                         "branch": "main",
-                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "git_sha": "2c6b000e9e4e1d882a6c2d3739c440596ca039dd",
                         "installed_by": ["preproc_t1"]
                     },
                     "harmonization/clinicalcombat": {
@@ -97,12 +97,12 @@
                     },
                     "harmonization/combat2stats": {
                         "branch": "main",
-                        "git_sha": "23a78e8573d9ca364182f014ffb14dd5e77fdab6",
+                        "git_sha": "0606cd86e04ccf5c61da8b1b705620477ece5edc",
                         "installed_by": ["harmonization"]
                     },
                     "harmonization/stats2combat": {
                         "branch": "main",
-                        "git_sha": "23a78e8573d9ca364182f014ffb14dd5e77fdab6",
+                        "git_sha": "0606cd86e04ccf5c61da8b1b705620477ece5edc",
                         "installed_by": ["harmonization"]
                     },
                     "image/applymask": {
@@ -117,32 +117,32 @@
                     },
                     "image/cropvolume": {
                         "branch": "main",
-                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "git_sha": "c3a5dc48a6f49376557fecdd212d077946cf0c2e",
                         "installed_by": ["preproc_dwi", "preproc_t1"]
                     },
                     "image/math": {
                         "branch": "main",
-                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "git_sha": "c3a5dc48a6f49376557fecdd212d077946cf0c2e",
                         "installed_by": ["atlas_iit"]
                     },
                     "image/powderaverage": {
                         "branch": "main",
-                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "git_sha": "c3a5dc48a6f49376557fecdd212d077946cf0c2e",
                         "installed_by": ["preproc_dwi"]
                     },
                     "image/resample": {
                         "branch": "main",
-                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "git_sha": "c3a5dc48a6f49376557fecdd212d077946cf0c2e",
                         "installed_by": ["preproc_dwi", "preproc_t1"]
                     },
                     "io/readbids": {
                         "branch": "main",
-                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "git_sha": "ad1deb6ee4381f2a65fbe6fa27c201678d09f33d",
                         "installed_by": ["io_bids"]
                     },
                     "preproc/eddy": {
                         "branch": "main",
-                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "git_sha": "2c6b000e9e4e1d882a6c2d3739c440596ca039dd",
                         "installed_by": ["topup_eddy"]
                     },
                     "preproc/gibbs": {
@@ -157,12 +157,12 @@
                     },
                     "preproc/normalize": {
                         "branch": "main",
-                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "git_sha": "2c6b000e9e4e1d882a6c2d3739c440596ca039dd",
                         "installed_by": ["preproc_dwi"]
                     },
                     "preproc/topup": {
                         "branch": "main",
-                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "git_sha": "2c6b000e9e4e1d882a6c2d3739c440596ca039dd",
                         "installed_by": ["topup_eddy"]
                     },
                     "qc/multiqc": {
@@ -172,72 +172,72 @@
                     },
                     "qc/tractogram": {
                         "branch": "main",
-                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "git_sha": "2fadf66d00b295aac6a827fbbcf7bad579d52881",
                         "installed_by": ["modules"]
                     },
                     "reconst/diffusivitypriors": {
                         "branch": "main",
-                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "git_sha": "1cc9ba038097a6b5f8ea7a0bcb5f5f652471ff4e",
                         "installed_by": ["modules", "reconst_fw_noddi"]
                     },
                     "reconst/dtimetrics": {
                         "branch": "main",
-                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "git_sha": "2fd426c5ffa24bde82650f0b77d540dce84b0818",
                         "installed_by": ["reconst_fw_noddi", "tractoflow"]
                     },
                     "reconst/fodf": {
                         "branch": "main",
-                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "git_sha": "ca9f9b4404c70567f2de9ca9b42a12d0cd288520",
                         "installed_by": ["tractoflow"]
                     },
                     "reconst/freewater": {
                         "branch": "main",
-                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "git_sha": "1cc9ba038097a6b5f8ea7a0bcb5f5f652471ff4e",
                         "installed_by": ["modules", "reconst_fw_noddi"]
                     },
                     "reconst/frf": {
                         "branch": "main",
-                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "git_sha": "2fd426c5ffa24bde82650f0b77d540dce84b0818",
                         "installed_by": ["tractoflow"]
                     },
                     "reconst/meandiffusivitypriors": {
                         "branch": "main",
-                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "git_sha": "2fd426c5ffa24bde82650f0b77d540dce84b0818",
                         "installed_by": ["modules", "reconst_fw_noddi"]
                     },
                     "reconst/meanfrf": {
                         "branch": "main",
-                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "git_sha": "2fd426c5ffa24bde82650f0b77d540dce84b0818",
                         "installed_by": ["tractoflow"]
                     },
                     "reconst/noddi": {
                         "branch": "main",
-                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "git_sha": "1cc9ba038097a6b5f8ea7a0bcb5f5f652471ff4e",
                         "installed_by": ["modules", "reconst_fw_noddi"]
                     },
                     "reconst/qball": {
                         "branch": "main",
-                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "git_sha": "2fd426c5ffa24bde82650f0b77d540dce84b0818",
                         "installed_by": ["tractoflow"]
                     },
                     "reconst/shsignal": {
                         "branch": "main",
-                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "git_sha": "2fd426c5ffa24bde82650f0b77d540dce84b0818",
                         "installed_by": ["modules"]
                     },
                     "registration/anattodwi": {
                         "branch": "main",
-                        "git_sha": "3705c5fccfcd0916d0f54ed11a3034c66e06caec",
+                        "git_sha": "6fcc3344bd0bc606f27097a4ba05a5d9242a3ed3",
                         "installed_by": ["registration"]
                     },
                     "registration/ants": {
                         "branch": "main",
-                        "git_sha": "1872794302aed5c397f1f0eea6daa64526dbfa25",
+                        "git_sha": "6fcc3344bd0bc606f27097a4ba05a5d9242a3ed3",
                         "installed_by": ["atlas_roimetrics", "registration"]
                     },
                     "registration/antsapplytransforms": {
                         "branch": "main",
-                        "git_sha": "1921e14789e00d5f141a8d1775ccaa4ded35588a",
+                        "git_sha": "6fcc3344bd0bc606f27097a4ba05a5d9242a3ed3",
                         "installed_by": ["atlas_roimetrics", "output_template_space", "tractoflow"]
                     },
                     "registration/convert": {
@@ -257,17 +257,17 @@
                     },
                     "registration/tractogram": {
                         "branch": "main",
-                        "git_sha": "1921e14789e00d5f141a8d1775ccaa4ded35588a",
+                        "git_sha": "6fcc3344bd0bc606f27097a4ba05a5d9242a3ed3",
                         "installed_by": ["modules", "output_template_space"]
                     },
                     "segmentation/fastseg": {
                         "branch": "main",
-                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "git_sha": "6fcc3344bd0bc606f27097a4ba05a5d9242a3ed3",
                         "installed_by": ["anatomical_segmentation"]
                     },
                     "segmentation/freesurferseg": {
                         "branch": "main",
-                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "git_sha": "6fcc3344bd0bc606f27097a4ba05a5d9242a3ed3",
                         "installed_by": ["anatomical_segmentation"]
                     },
                     "segmentation/synthseg": {
@@ -277,37 +277,37 @@
                     },
                     "stats/metricsinroi": {
                         "branch": "main",
-                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "git_sha": "459c17f0b02a95abacb29d3145fdbaab98b45c01",
                         "installed_by": ["atlas_roimetrics", "modules"]
                     },
                     "tracking/localtracking": {
                         "branch": "main",
-                        "git_sha": "ac004b3f47ecb0cb22c053ee8cadfdfa69565269",
+                        "git_sha": "aab75dcdb4c1171688acb08e8e196c85b71a39df",
                         "installed_by": ["tractoflow"]
                     },
                     "tracking/pfttracking": {
                         "branch": "main",
-                        "git_sha": "d5eb15b16ebf16c5f86edd06f782afc8ac711a1c",
+                        "git_sha": "aab75dcdb4c1171688acb08e8e196c85b71a39df",
                         "installed_by": ["tractoflow"]
                     },
                     "tractogram/math": {
                         "branch": "main",
-                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "git_sha": "5b7fe27aa76119851726a0135d78be78d296c4ad",
                         "installed_by": ["modules"]
                     },
                     "tractogram/removeinvalid": {
                         "branch": "main",
-                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "git_sha": "5b7fe27aa76119851726a0135d78be78d296c4ad",
                         "installed_by": ["tractometry"]
                     },
                     "tractogram/resample": {
                         "branch": "main",
-                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "git_sha": "5b7fe27aa76119851726a0135d78be78d296c4ad",
                         "installed_by": ["tractometry"]
                     },
                     "utils/extractb0": {
                         "branch": "main",
-                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "git_sha": "feca233b6cd5a3c53f92573f94fddee34275e75b",
                         "installed_by": ["preproc_dwi", "topup_eddy"]
                     },
                     "utils/templateflow": {
@@ -321,77 +321,77 @@
                 "nf-neuro": {
                     "anatomical_segmentation": {
                         "branch": "main",
-                        "git_sha": "3582ff7b16ad2ac316a037c089f890f686356986",
+                        "git_sha": "6fcc3344bd0bc606f27097a4ba05a5d9242a3ed3",
                         "installed_by": ["tractoflow"]
                     },
                     "atlas_iit": {
                         "branch": "main",
-                        "git_sha": "d91ea8099cd5dceaff0be19fdd6b835f2b95e6f0",
+                        "git_sha": "c3a5dc48a6f49376557fecdd212d077946cf0c2e",
                         "installed_by": ["atlas_roimetrics"]
                     },
                     "atlas_roimetrics": {
                         "branch": "main",
-                        "git_sha": "3582ff7b16ad2ac316a037c089f890f686356986",
+                        "git_sha": "6fcc3344bd0bc606f27097a4ba05a5d9242a3ed3",
                         "installed_by": ["subworkflows"]
                     },
                     "bundle_seg": {
                         "branch": "main",
-                        "git_sha": "3582ff7b16ad2ac316a037c089f890f686356986",
+                        "git_sha": "ffb3edf0fdca5a8c1262224da72d088043de7949",
                         "installed_by": ["subworkflows"]
                     },
                     "harmonization": {
                         "branch": "main",
-                        "git_sha": "870df584ce6c3d899954601400fe8e85493f46df",
+                        "git_sha": "0606cd86e04ccf5c61da8b1b705620477ece5edc",
                         "installed_by": ["subworkflows"]
                     },
                     "io_bids": {
                         "branch": "main",
-                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "git_sha": "6e59d1d6986ce3c2901a72fb1323079bff981ac0",
                         "installed_by": ["subworkflows"]
                     },
                     "load_test_data": {
                         "branch": "main",
-                        "git_sha": "ca21922a7affe217f7391a98b5af1e50a79f094c",
+                        "git_sha": "870df584ce6c3d899954601400fe8e85493f46df",
                         "installed_by": ["subworkflows"]
                     },
                     "output_template_space": {
                         "branch": "main",
-                        "git_sha": "3582ff7b16ad2ac316a037c089f890f686356986",
+                        "git_sha": "6fcc3344bd0bc606f27097a4ba05a5d9242a3ed3",
                         "installed_by": ["subworkflows"]
                     },
                     "preproc_dwi": {
                         "branch": "main",
-                        "git_sha": "690fc6339cb49112ff351e4bbf3905734a26b03f",
+                        "git_sha": "e1bb71b853b2eeea456e2897240bf51251afad6b",
                         "installed_by": ["tractoflow"]
                     },
                     "preproc_t1": {
                         "branch": "main",
-                        "git_sha": "e6abc76679aa1eb42429a44d401c2190a52388bc",
+                        "git_sha": "e1bb71b853b2eeea456e2897240bf51251afad6b",
                         "installed_by": ["tractoflow"]
                     },
                     "reconst_fw_noddi": {
                         "branch": "main",
-                        "git_sha": "3582ff7b16ad2ac316a037c089f890f686356986",
+                        "git_sha": "1cc9ba038097a6b5f8ea7a0bcb5f5f652471ff4e",
                         "installed_by": ["subworkflows"]
                     },
                     "registration": {
                         "branch": "main",
-                        "git_sha": "3582ff7b16ad2ac316a037c089f890f686356986",
+                        "git_sha": "6fcc3344bd0bc606f27097a4ba05a5d9242a3ed3",
                         "installed_by": ["bundle_seg", "output_template_space", "tractoflow"]
                     },
                     "topup_eddy": {
                         "branch": "main",
-                        "git_sha": "3582ff7b16ad2ac316a037c089f890f686356986",
+                        "git_sha": "2c6b000e9e4e1d882a6c2d3739c440596ca039dd",
                         "installed_by": ["preproc_dwi"]
                     },
                     "tractoflow": {
                         "branch": "main",
-                        "git_sha": "3582ff7b16ad2ac316a037c089f890f686356986",
+                        "git_sha": "e1bb71b853b2eeea456e2897240bf51251afad6b",
                         "installed_by": ["subworkflows"]
                     },
                     "tractometry": {
                         "branch": "main",
-                        "git_sha": "d5eb15b16ebf16c5f86edd06f782afc8ac711a1c",
+                        "git_sha": "5b7fe27aa76119851726a0135d78be78d296c4ad",
                         "installed_by": ["subworkflows"]
                     },
                     "utils_options": {

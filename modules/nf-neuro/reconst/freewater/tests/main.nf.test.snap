@@ -2,32 +2,32 @@
     "reconst - freewater - stub-run": {
         "content": [
             [
-                "versions.yml:md5,b7348842aae4271b2d6831f596bae6f3"
+                "versions.yml:md5,8655aa3f6156a402b21af91cf01c0ed4"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "25.04.7"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-23T18:05:08.029531192"
+        "timestamp": "2026-02-26T23:24:39.878161525"
     },
     "reconst - freewater_no_mask_compute_only": {
         "content": [
             [
-                "versions.yml:md5,b7348842aae4271b2d6831f596bae6f3"
+                "versions.yml:md5,8655aa3f6156a402b21af91cf01c0ed4"
             ],
             11
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "25.04.7"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-23T18:54:46.117963036"
+        "timestamp": "2026-02-26T23:11:42.042994441"
     },
     "reconst - freewater": {
         "content": [
             [
-                "versions.yml:md5,b7348842aae4271b2d6831f596bae6f3"
+                "versions.yml:md5,8655aa3f6156a402b21af91cf01c0ed4"
             ],
             11,
             "test__dwi_fw_corrected.nii.gz",
@@ -38,14 +38,14 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-06T21:48:42.006348"
+        "timestamp": "2026-02-26T23:07:11.489341481"
     },
     "reconst - freewater - with priors": {
         "content": [
             [
-                "versions.yml:md5,b7348842aae4271b2d6831f596bae6f3"
+                "versions.yml:md5,8655aa3f6156a402b21af91cf01c0ed4"
             ],
             11,
             "test__dwi_fw_corrected.nii.gz",
@@ -56,8 +56,8 @@
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.8"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2026-01-06T21:50:50.568852"
+        "timestamp": "2026-02-26T23:08:05.039059796"
     }
 }

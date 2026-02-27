@@ -1,7 +1,7 @@
 process IO_READBIDS {
     label 'process_single'
 
-    container "scilus/scilpy:2.2.1_cpu"
+    container "scilus/scilpy:2.2.2_cpu"
 
     input:
         path(bids_folder)
@@ -22,6 +22,7 @@ process IO_READBIDS {
     def readout = task.ext.readout ? "--readout " + task.ext.readout : "--readout 0.062"
     def clean_flag = task.ext.clean_bids ? "--clean " : ''
     def relative = task.ext.relative_paths as Boolean
+    def match_t1_run = task.ext.match_t1_run ? "--match_t1_run " : ''
 
     """
     scil_bids_validate $bids_folder bids_struct.json\
@@ -29,6 +30,7 @@ process IO_READBIDS {
         $clean_flag \
         $fs_folder \
         $bids_ignore \
+        $match_t1_run \
         -v -f
 
     if [[ $relative == true ]]; then

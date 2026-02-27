@@ -2,7 +2,7 @@ process PREPROC_EDDY {
     tag "$meta.id"
     label 'process_high'
 
-    container "scilus/scilus:2.2.1"
+    container "scilus/scilus:2.2.2"
 
     input:
         tuple val(meta), path(dwi), path(bval), path(bvec), path(rev_dwi), path(rev_bval), path(rev_bvec), path(corrected_b0s), path(topup_fieldcoef), path(topup_movpart)

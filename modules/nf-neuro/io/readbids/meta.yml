@@ -42,6 +42,13 @@ args:
         If set to true, will convert absolute paths to relative paths
         in the output BIDS structure JSON file.
       default: false
+  - match_t1_run:
+      type: boolean
+      description: |
+        If set to true, when there's several T1w images for a subject,
+        will try to match the run number of the T1w with the run number
+        of the dwi.
+      default: false
 output:
   bidsstructure:
     - bids_struct.json:

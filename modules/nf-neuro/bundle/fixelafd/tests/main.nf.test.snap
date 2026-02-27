@@ -12,7 +12,7 @@
                     ]
                 ],
                 "1": [
-                    "versions.yml:md5,219de1df0d294327a5559c161a0f0dff"
+                    "versions.yml:md5,77f5807b8a4c9734cb77fd68ba1dddd5"
                 ],
                 "fixel_afd": [
                     [
@@ -24,26 +24,26 @@
                     ]
                 ],
                 "versions": [
-                    "versions.yml:md5,219de1df0d294327a5559c161a0f0dff"
+                    "versions.yml:md5,77f5807b8a4c9734cb77fd68ba1dddd5"
                 ]
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "25.04.7"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-17T17:38:11.324780769"
+        "timestamp": "2026-02-26T14:08:37.186560733"
     },
     "bundle - fixelafd - stub-run": {
         "content": [
             [
-                "versions.yml:md5,219de1df0d294327a5559c161a0f0dff"
+                "versions.yml:md5,77f5807b8a4c9734cb77fd68ba1dddd5"
             ]
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "25.04.7"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-09-17T17:38:22.322152638"
+        "timestamp": "2026-02-26T14:08:42.029636746"
     }
 }

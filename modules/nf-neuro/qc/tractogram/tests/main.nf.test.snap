@@ -2,14 +2,14 @@
     "qc - tractogram - stub-run": {
         "content": [
             [
-                "versions.yml:md5,54c57ab17954f1f7f7c7b98ba8c1f5a9"
+                "versions.yml:md5,9cc02a45546b3a87dd1a11dec877ca02"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.10.0"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-21T21:06:06.644825844"
+        "timestamp": "2026-02-26T15:43:18.422594415"
     },
     "qc - tractogram": {
         "content": [
@@ -51,13 +51,13 @@
             ],
             "test__coverage_overlay_mqc.png",
             [
-                "versions.yml:md5,54c57ab17954f1f7f7c7b98ba8c1f5a9"
+                "versions.yml:md5,9cc02a45546b3a87dd1a11dec877ca02"
             ]
         ],
         "meta": {
             "nf-test": "0.9.3",
-            "nextflow": "25.04.4"
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-11-28T10:35:36.493818054"
+        "timestamp": "2026-02-26T15:43:07.052668604"
     }
 }
