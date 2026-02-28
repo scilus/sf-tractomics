@@ -48,9 +48,6 @@
                 "RECONST_FRF": {
                     "scilpy": "2.2.2"
                 },
-                "RECONST_NODDI": {
-                    "scilpy": "2.2.2"
-                },
                 "RECONST_QBALL": {
                     "scilpy": "2.2.2"
                 },
@@ -218,6 +215,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-27T09:56:04.59398902"
+        "timestamp": "2026-02-27T21:52:27.432511148"
     }
 }
