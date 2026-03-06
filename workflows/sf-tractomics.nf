@@ -140,6 +140,7 @@ workflow SF_TRACTOMICS {
     else if ( params.run_local_tracking || params.run_pft_tracking ) {
         ch_input_tracking_qc = TRACTOFLOW.out.pft_tractogram
             .mix(TRACTOFLOW.out.local_tractogram)
+            .groupTuple()
     }
 
     QC_ENSEMBLE(ch_input_tracking_qc
@@ -168,9 +169,7 @@ workflow SF_TRACTOMICS {
     if ( params.run_bundle_seg ) {
         BUNDLE_SEG(
             TRACTOFLOW.out.dti_fa,
-            TRACTOFLOW.out.pft_tractogram
-                .mix(TRACTOFLOW.out.local_tractogram)
-                .groupTuple(),
+            ch_input_tracking_qc.map{ meta, trk -> [meta, [trk]] },
             channel.empty(),
             [
                 "run_easyreg": false, // BundleSeg does not support easyreg, so we set it to false to avoid confusion
