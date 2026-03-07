@@ -123,7 +123,7 @@ workflow PIPELINE_INITIALISATION {
                 wmparc: IO_BIDS.out.ch_wmparc,
                 aparc_aseg: IO_BIDS.out.ch_aparc_aseg,
                 dwi_bval_bvec: IO_BIDS.out.ch_dwi_bval_bvec,
-                b0: channel.empty(),
+                b0: IO_BIDS.out.ch_b0,
                 rev_dwi_bval_bvec: IO_BIDS.out.ch_rev_dwi_bval_bvec,
                 rev_b0: IO_BIDS.out.ch_rev_b0,
                 lesion: channel.empty()

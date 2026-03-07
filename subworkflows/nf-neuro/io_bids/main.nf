@@ -42,8 +42,8 @@ workflow IO_BIDS {
 
                 // ** Collecting TotalReadoutTime, PhaseEncodingDirection ** //
                 def dwi_tr = item.TotalReadoutTime ?: ""
-                def dwi_phase = item.DWIPhaseEncodingDirection ?: ""
-                def dwi_revphase = item.rev_DWIPhaseEncodingDirection ?: ""
+                def dwi_phase = item.DWIPhaseEncodingDir ?: ""
+                def dwi_revphase = item.rev_DWIPhaseEncodingDir ?: ""
 
                 // ** Validating there is not missing data ** //
                 item.each { _key, value ->
@@ -70,16 +70,18 @@ workflow IO_BIDS {
                     item.rev_dwi ? file(item.rev_dwi) : [],
                     item.rev_bval ? file(item.rev_bval) : [],
                     item.rev_bvec ? file(item.rev_bvec) : [],
+                    item.topup ? file(item.topup) : [],
                     item.rev_topup ? file(item.rev_topup) : [],
                 ]
             }
         }
-        .multiMap{ meta, t1, wmparc, aparc_aseg, dwi, bval, bvec, rev_dwi, rev_bval, rev_bvec, rev_b0 ->
+        .multiMap{ meta, t1, wmparc, aparc_aseg, dwi, bval, bvec, rev_dwi, rev_bval, rev_bvec, b0, rev_b0 ->
             t1: [meta, t1]
             wmparc: [meta, wmparc]
             aparc_aseg: [meta, aparc_aseg]
             dwi_bval_bvec: [meta, dwi, bval, bvec]
             rev_dwi_bval_bvec: [meta, rev_dwi, rev_bval, rev_bvec]
+            b0: [meta, b0]
             rev_b0: [meta, rev_b0]
         }
 
@@ -89,7 +91,8 @@ workflow IO_BIDS {
     ch_aparc_aseg           = ch_files.aparc_aseg           // channel: [ [meta], file(aparc_aseg) ]
     ch_dwi_bval_bvec        = ch_files.dwi_bval_bvec        // channel: [ [meta], file(dwi), file(bval), file(bvec) ]
     ch_rev_dwi_bval_bvec    = ch_files.rev_dwi_bval_bvec    // channel: [ [meta], file(rev_dwi), file(rev_bval), file(rev_bvec) ]
-    ch_rev_b0               = ch_files.rev_b0               // channel: [ [meta], file(fieldmap) ]
+    ch_b0                   = ch_files.b0                   // channel: [ [meta], file(b0) ]
+    ch_rev_b0               = ch_files.rev_b0               // channel: [ [meta], file(rev_b0) ]
 
     versions = ch_versions                     // channel: [ versions.yml ]
 }

@@ -141,6 +141,19 @@ output:
             description: B-vectors file for reverse-encoded DWI.
       pattern: "*.{nii.gz,bval,bvec}"
       mandatory: false
+  - ch_b0:
+      type: file
+      description: |
+        Channel containing all b0 images.
+      structure:
+        - meta:
+            type: map
+            description: Metadata map.
+        - b0:
+            type: file
+            description: B0 image file.
+      pattern: "*.nii.gz"
+      mandatory: false
   - ch_rev_b0:
       type: file
       description: |

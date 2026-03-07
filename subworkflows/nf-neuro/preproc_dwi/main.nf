@@ -23,7 +23,7 @@ workflow PREPROC_DWI {
     take:
         ch_dwi                  // channel: [ val(meta), dwi, bval, bvec ]
         ch_rev_dwi              // channel: [ val(meta), rev-dwi, bval, bvec ], optional
-        ch_b0                   // channel : [ val(meta), b0 ], optional
+        ch_b0                   // channel: [ val(meta), b0 ], optional
         ch_rev_b0               // channel: [ val(meta), rev-b0 ], optional
         ch_synthstrip_weights   // channel: [ val(meta), 'weights.pt' ] or [ 'weights.pt' ], optional
         ch_config_topup         // channel: [ 'topup.cnf' ], optional
