@@ -179,6 +179,8 @@
                 "sub-test-1/dwi/sub-test-1_model-tensor_param-rgb_dwimap.nii.gz",
                 "sub-test-1/dwi/sub-test-1_model-tensor_param-tensor_desc-fwc_dwimap.nii.gz",
                 "sub-test-1/dwi/sub-test-1_model-tensor_param-tensor_dwimap.nii.gz",
+                "sub-test-1/dwi/sub-test-1_space-DWI_label-exclude_desc-pft_probseg.nii.gz",
+                "sub-test-1/dwi/sub-test-1_space-DWI_label-include_desc-pft_probseg.nii.gz",
                 "sub-test-1/dwi/sub-test-1_space-DWI_label-seeding_desc-local_mask.nii.gz",
                 "sub-test-1/dwi/sub-test-1_space-DWI_label-seeding_desc-pft_mask.nii.gz",
                 "sub-test-1/dwi/sub-test-1_space-DWI_label-tracking_desc-local_mask.nii.gz",
@@ -215,6 +217,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-03-09T15:00:48.756350304"
+        "timestamp": "2026-03-13T12:58:09.876806632"
     }
 }
