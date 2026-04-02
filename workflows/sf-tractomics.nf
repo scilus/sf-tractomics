@@ -467,12 +467,12 @@ def collectStatsFiles(ch_stats_files, name, storeDir) {
 
     def output_file_path = "${storeDir}/${name}"
 
-    ch_stats_files = ch_stats_files
-        .map{ _meta, stats_file ->
+    return ch_stats_files
+        .map { _meta, stats_file ->
             return stats_file
         }
         .collect()
-        .subscribe { stats_files ->
+        .map { stats_files ->
             def header_written = false
             def all_columns = new LinkedHashSet()
 
@@ -518,9 +518,9 @@ def collectStatsFiles(ch_stats_files, name, storeDir) {
 
             // Close the file writer
             file_writer.close()
-        }
 
-    return channel.fromPath(output_file_path)
+            return output_file
+        }
 }
 
 /*
