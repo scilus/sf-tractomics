@@ -25,9 +25,13 @@ process PREPROC_N4 {
     def retain = task.ext.retain ?: "0.6"
     def anat_mask = mask ? "-w $mask" : ""
     def dwi_mask = mask ? "-mask $mask" : ""
+    def nthreads_mrtrix = task.ext.single_thread ? "-nthreads 0" : "-nthreads ${task.cpus}"
+
     """
-    export ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=$task.cpus
-    export ANTS_RANDOM_SEED=1234
+    export ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=${task.ext.single_thread ? 1 : task.cpus}
+    export OMP_NUM_THREADS=${task.ext.single_thread ? 1 : task.cpus}
+    export ANTS_RANDOM_SEED=${task.ext.ants_rng_seed ? task.ext.ants_rng_seed : "1234"}
+    export MRTRIX_RNG_SEED=${task.ext.mrtrix_rng_seed ? task.ext.mrtrix_rng_seed : "1234"}
 
     # Checking if the input image is a DWI volume, if so, extract the b0 volume
     # as the reference volume to use in the parameters calculation. Final N4 will
@@ -35,7 +39,7 @@ process PREPROC_N4 {
     # as the reference volume.
     if [[ -f "$bval" ]]
     then
-        dwiextract $image -fslgrad $bvec $bval - -bzero $b0threshold | mrmath - mean reference_for_formula.nii.gz -axis 3
+        dwiextract $image -fslgrad $bvec $bval - -bzero $b0threshold ${nthreads_mrtrix} | mrmath - mean reference_for_formula.nii.gz -axis 3 ${nthreads_mrtrix}
     else
         cp $image reference_for_formula.nii.gz
     fi
@@ -104,7 +108,7 @@ process PREPROC_N4 {
             -ants.s $shrink_factor \
             -fslgrad $bvec $bval \
             $dwi_mask \
-            -nthreads $task.cpus
+            ${nthreads_mrtrix}
 
     else
         N4BiasFieldCorrection -i $image\

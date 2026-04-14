@@ -42,6 +42,14 @@ args:
         Space separated list of b-values to use for DTI fitting. If None, all shells
         under max_dti_shell_value will be used.
       default: None
+  - single_thread:
+      type: boolean
+      description: If true, the command will be run in single-threaded mode. By default, the command will use multiple threads based on the number of CPUs allocated to the task.
+      default: false
+  - mrtrix_rng_seed:
+      type: integer
+      description: Random seed for MRtrix3. Setting a fixed seed can help with reproducibility of results.
+      default: 1234
 input:
   - - meta:
         type: map

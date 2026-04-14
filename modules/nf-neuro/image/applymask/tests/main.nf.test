@@ -12,12 +12,14 @@ nextflow_process {
     tag "subworkflows"
     tag "subworkflows/load_test_data"
 
+    config "./nextflow.config"
+
     setup {
         run("LOAD_TEST_DATA", alias: "LOAD_DATA") {
             script "../../../../../subworkflows/nf-neuro/load_test_data/main.nf"
             process {
                 """
-                input[0] = Channel.from( [ "heavy.zip" ] )
+                input[0] = channel.from( [ "heavy.zip" ] )
                 input[1] = "test.load-test-data"
                 """
             }

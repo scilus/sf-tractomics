@@ -19,7 +19,7 @@
                         {
                             "id": "test"
                         },
-                        "test_dwi_denoised.nii.gz:md5,89ea3e1f62f668d76118f82e977a7fc4"
+                        "test_dwi_denoised.nii.gz:md5,fbfdd71a4198c278a49b59b43b15d153"
                     ]
                 ],
                 "1": [
@@ -30,7 +30,7 @@
                         {
                             "id": "test"
                         },
-                        "test_dwi_denoised.nii.gz:md5,89ea3e1f62f668d76118f82e977a7fc4"
+                        "test_dwi_denoised.nii.gz:md5,fbfdd71a4198c278a49b59b43b15d153"
                     ]
                 ],
                 "versions": [
@@ -39,9 +39,9 @@
             }
         ],
         "meta": {
-            "nf-test": "0.9.0",
-            "nextflow": "25.04.4"
+            "nf-test": "0.9.3",
+            "nextflow": "25.10.2"
         },
-        "timestamp": "2025-06-25T23:45:41.782693715"
+        "timestamp": "2026-03-30T11:56:36.88548949"
     }
 }

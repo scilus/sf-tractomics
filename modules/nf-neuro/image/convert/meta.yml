@@ -28,6 +28,16 @@ input:
         pattern: "*.nii.gz"
         ontologies:
           - edam: http://edamontology.org/format_3989 # GZIP format
+args:
+  - datatype:
+      type: string
+      description:
+        Data type to convert the image to. This should be a valid data type supported by MRtrix3, such as "float32", "int16", etc.
+        If not specified, the module will fail.
+  - first_suffix:
+      type: string
+      description: Optional suffix to add to the output filename before the datatype.
+        If not specified, the output filename will only include the datatype as a suffix.
 output:
   image:
     - - meta:

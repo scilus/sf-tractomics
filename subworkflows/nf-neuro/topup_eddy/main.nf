@@ -75,7 +75,7 @@ workflow TOPUP_EDDY {
             //   - map  [ meta, dwi, bval, bvec, rev-dwi | [], rev-bval | [], rev-bvec | [], b0 | [], coeffs | [], movpar | [] ]
             ch_eddy_input = ch_dwi
                 .join(ch_rev_dwi, remainder: true)
-                .map{ it[0..3] + [it[4] ? it[4..-1] : [], [], []] }
+                .map{ it[0..3] + (it[4] ? it[4..-1] : [[], [], []]) }
                 .join(ch_b0_corrected, remainder: true)
                 .map{ it[0..6] + [it[7] ?: []] }
                 .join(ch_topup_fieldcoeff, remainder: true)

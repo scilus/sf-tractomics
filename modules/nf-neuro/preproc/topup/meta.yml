@@ -107,6 +107,15 @@ args:
       type: boolean
       description: Run quality control.
       default: true
+  - single_thread:
+      type: boolean
+      description: If true, the command will be run in single-threaded mode. By default, the command will use multiple threads based on the number of CPUs allocated to the task.
+      default: false
+  - ants_rng_seed:
+      type: integer
+      description: Random seed for ANTS. Setting a fixed seed can help with reproducibility of results.
+      default: 1234
+
 output:
   topup_corrected_b0s:
     - - meta:

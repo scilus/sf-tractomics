@@ -18,18 +18,16 @@ process DENOISING_MPPCA {
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
     def extent = task.ext.extent ? "-extent " + task.ext.extent : ""
-    def args = ["-nthreads ${task.cpus - 1}"]
-    if (mask) args += ["-mask $mask"]
+    def mask_opt = task.ext.mask ? "-mask $mask" : ""
+    def nthreads_mrtrix = task.ext.single_thread ? "-nthreads 0" : "-nthreads ${task.cpus}"
 
     """
-    export ITK_GLOBAL_DEFAULT_NUMBER_OF_THREADS=1
-    export OMP_NUM_THREADS=1
-    export OPENBLAS_NUM_THREADS=1
-    export MRTRIX_RNG_SEED=112524
+    export OMP_NUM_THREADS=${task.ext.single_thread ? 1 : task.cpus}
+    export MRTRIX_RNG_SEED=${task.ext.mrtrix_rng_seed ? task.ext.mrtrix_rng_seed : "1234"}
 
-    dwidenoise $dwi ${prefix}_dwi_denoised.nii.gz $extent ${args.join(" ")}
+    dwidenoise $dwi ${prefix}_dwi_denoised.nii.gz $extent ${nthreads_mrtrix} ${mask_opt}
     mrcalc ${prefix}_dwi_denoised.nii.gz 0 -gt ${prefix}_dwi_denoised.nii.gz 0 \
-        -if ${prefix}_dwi_denoised.nii.gz -force
+        -if ${prefix}_dwi_denoised.nii.gz -force ${nthreads_mrtrix}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

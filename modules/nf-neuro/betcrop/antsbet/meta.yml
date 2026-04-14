@@ -63,6 +63,15 @@ input:
         pattern: "*.{mat/txt}"
         mandatory: false
         ontologies: [] #TODO: add or find the right ontologies on EDAM
+args:
+  - single_thread:
+      type: boolean
+      description: If true, the command will be run in single-threaded mode. By default, the command will use multiple threads based on the number of CPUs allocated to the task.
+      default: false
+  - ants_rng_seed:
+      type: integer
+      description: Random seed for ANTs registration. Setting a fixed seed can help with reproducibility of results.
+      default: 1234
 output:
   t1:
     - - meta:
