@@ -15,7 +15,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-26T23:18:48.788717523"
+        "timestamp": "2026-04-14T17:04:15.564555666"
     },
     "reconst - noddi - with priors": {
         "content": [
@@ -33,7 +33,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-26T23:19:46.00348974"
+        "timestamp": "2026-04-14T17:05:45.922789256"
     },
     "reconst - noddi - save_kernels - no mask": {
         "content": [

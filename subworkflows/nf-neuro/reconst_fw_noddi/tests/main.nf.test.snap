@@ -561,7 +561,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-26T23:28:51.64962634"
+        "timestamp": "2026-04-14T17:07:58.910975216"
     },
     "reconst_fw_noddi - noddi & freewater": {
         "content": [
@@ -785,7 +785,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-26T23:28:24.016168121"
+        "timestamp": "2026-04-14T17:07:02.322925422"
     },
     "reconst_fw_noddi - noddi & freewater - average priors": {
         "content": [
@@ -1010,7 +1010,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-26T23:28:38.89054199"
+        "timestamp": "2026-04-14T17:07:28.225314278"
     },
     "reconst_fw_noddi - noddi": {
         "content": [
@@ -1070,7 +1070,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-26T23:27:55.253043493"
+        "timestamp": "2026-04-14T17:06:12.440587943"
     },
     "reconst_fw_noddi - freewater": {
         "content": [
@@ -1307,7 +1307,7 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-26T23:29:11.365231081"
+        "timestamp": "2026-04-14T17:08:34.29062954"
     },
     "reconst_fw_noddi - noddi & freewater - custom priors subject-bound": {
         "content": [
@@ -1530,6 +1530,6 @@
             "nf-test": "0.9.3",
             "nextflow": "25.10.2"
         },
-        "timestamp": "2026-02-26T23:29:04.257198065"
+        "timestamp": "2026-04-14T17:08:21.327744991"
     }
 }

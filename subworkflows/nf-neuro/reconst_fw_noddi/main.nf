@@ -160,6 +160,9 @@ workflow RECONST_FW_NODDI {
 
         // Then compute mean diffusivity priors across subjects.
         if ( options.average_diff_priors ) {
+            log.warn "Options.average_diff_priors is set to true. Averaging diffusivity priors across subjects. " +
+                "This is not recommended, as it applies the same diffusivity priors to all subjects, which may not be optimal " +
+                "if you have a wide age range."
             RECONST_MEANDIFFUSIVITYPRIORS(
                 RECONST_DIFFUSIVITYPRIORS.out.para_diff_file
                     .map{ _meta, path -> path }

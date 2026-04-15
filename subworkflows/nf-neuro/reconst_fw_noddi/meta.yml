@@ -142,7 +142,7 @@ output:
             description: Metadata map.
         - isovf:
             type: file
-            description: NODDI isotropic volume fraction file.
+            description: NODDI isotropic volume fraction or FreeWater fraction file.
       pattern: "*__isovf.nii.gz"
       mandatory: false
   - noddi_icvf:

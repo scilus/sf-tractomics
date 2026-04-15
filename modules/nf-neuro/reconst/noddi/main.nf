@@ -75,7 +75,7 @@ process RECONST_NODDI {
         mv results/fit_FWF.nii.gz ${prefix}__isovf.nii.gz   # ISOVF -> FWF
         mv results/fit_ODI.nii.gz ${prefix}__odi.nii.gz     # ODI -> OD
 
-        scil_volume_math subtraction 1 ${prefix}__isovf.nii.gz ${prefix}__ecvf.nii.gz
+        scil_volume_math subtraction 1 ${prefix}__icvf.nii.gz ${prefix}__ecvf.nii.gz
 
         rm -rf results
     fi
