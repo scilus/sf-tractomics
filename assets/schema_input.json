@@ -141,14 +141,14 @@
                     {
                         "format": "file-path",
                         "exists": true,
-                        "pattern": "^\\S+(\\.nii)?\\.gz$"
+                        "pattern": "^\\S+(?:(?:\\.nii)?\\.gz|\\.mgz)$"
                     },
                     {
                         "format": "url",
                         "mimetype": "application/gzip"
                     }
                 ],
-                "errorMessage": "T1-weighted image in Nifti format, cannot contain spaces and must have extension '.nii' or '.nii.gz'"
+                "errorMessage": "T1-weighted image in Nifti format, cannot contain spaces and must have extension '.nii', '.nii.gz' or '.mgz'"
             },
             "wmparc": {
                 "type": "string",
@@ -156,14 +156,14 @@
                     {
                         "format": "file-path",
                         "exists": true,
-                        "pattern": "^\\S+(\\.nii)?\\.gz$"
+                        "pattern": "^\\S+(?:(?:\\.nii)?\\.gz|\\.mgz)$"
                     },
                     {
                         "format": "url",
                         "mimetype": "application/gzip"
                     }
                 ],
-                "errorMessage": "Segmentation of the white matter parcellation in Nifti format, cannot contain spaces and must have extension '.nii' or '.nii.gz'"
+                "errorMessage": "Segmentation of the white matter parcellation in Nifti format, cannot contain spaces and must have extension '.nii', '.nii.gz' or '.mgz'"
             },
             "aparc_aseg": {
                 "type": "string",
@@ -171,14 +171,14 @@
                     {
                         "format": "file-path",
                         "exists": true,
-                        "pattern": "^\\S+(\\.nii)?\\.gz$"
+                        "pattern": "^\\S+(?:(?:\\.nii)?\\.gz|\\.mgz)$"
                     },
                     {
                         "format": "url",
                         "mimetype": "application/gzip"
                     }
                 ],
-                "errorMessage": "Segmentation of the cortical parcellation in Nifti format, cannot contain spaces and must have extension '.nii' or '.nii.gz'"
+                "errorMessage": "Segmentation of the cortical parcellation in Nifti format, cannot contain spaces and must have extension '.nii', '.nii.gz' or '.mgz'"
             },
             "lesion": {
                 "type": "string",
