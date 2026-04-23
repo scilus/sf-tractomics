@@ -30,10 +30,11 @@ workflow PIPELINE_INITIALISATION {
     take:
     version           // boolean: Display version and exit
     validate_params   // boolean: Boolean whether to validate parameters against the schema at runtime
-    monochrome_logs   // boolean: Do not use coloured log outputs
+    _monochrome_logs  // boolean: Do not use coloured log outputs
     nextflow_cli_args //   array: List of positional nextflow CLI args
     outdir            //  string: The output directory where the results will be saved
-    input             //  string: Path to input samplesheet
+    _input            //  string: Path to input samplesheet
+    _bids_config      //  string: Path to BIDS JSON configuration file
     help              // boolean: Display help message and exit
     help_full         // boolean: Show the full help message
     show_hidden       // boolean: Show hidden parameters in the help message
@@ -78,7 +79,7 @@ workflow PIPELINE_INITIALISATION {
  \033[0;35m  scilus/sf-tractomics ${workflow.manifest.version}\033[0m
 -\033[2m----------------------------------------------------------------------------------\033[0m-
     """
-    after_text = """${workflow.manifest.doi ? "\n* The pipeline\n" : ""}${workflow.manifest.doi.tokenize(",").collect { "    https://doi.org/${it.trim().replace('https://doi.org/','')}"}.join("\n")}${workflow.manifest.doi ? "\n" : ""}
+    after_text = """${workflow.manifest.doi ? "\n* The pipeline\n" : ""}${workflow.manifest.doi.tokenize(",").collect { doi -> "    https://doi.org/${doi.trim().replace('https://doi.org/','')}"}.join("\n")}${workflow.manifest.doi ? "\n" : ""}
     * The nf-neuro project
         https://scilus.github.io/nf-neuro
 
@@ -109,17 +110,63 @@ workflow PIPELINE_INITIALISATION {
     )
 
     //
-    // Create channel from input file provided through params.input
+    // Create channel from input file provided through params.bids_config or params.input
     //
-    if (params.input) {
+    if (_bids_config) {
+        ch_input_sheets = channel
+            .fromList(parseBidsConfig(_bids_config))
+            .map {
+                meta, dwi, bval, bvec, sbref, rev_dwi, rev_bval, rev_bvec, rev_sbref, t1, wmparc, aparc_aseg, lesion ->
+                    return [
+                        meta,
+                        dwi,
+                        bval,
+                        bvec,
+                        sbref ?: [],
+                        rev_dwi ?: [],
+                        rev_bval ?: [],
+                        rev_bvec ?: [],
+                        rev_sbref ?: [],
+                        t1,
+                        wmparc ?: [],
+                        aparc_aseg ?: [],
+                        lesion ?: []
+                    ]
+            }
+            .map { samplesheet ->
+                validateInputSamplesheet(samplesheet)
+            }
+
+        IO_SAFECASTINPUTS(ch_input_sheets)
+        ch_samplesheet = IO_SAFECASTINPUTS.out.safe_inputs
+            .multiMap { meta, dwi, bval, bvec, sbref, rev_dwi, rev_bval, rev_bvec, rev_sbref, t1, wmparc, aparc_aseg, lesion ->
+                t1: [meta, t1]
+                wmparc: [meta, wmparc]
+                aparc_aseg: [meta, aparc_aseg]
+                dwi_bval_bvec: [meta, dwi, bval, bvec]
+                b0: [meta, sbref]
+                rev_dwi_bval_bvec: [meta, rev_dwi, rev_bval, rev_bvec]
+                rev_b0: [meta, rev_sbref]
+                lesion: [meta, lesion]
+            }
+
+        if (params.participants_tsv) {
+            participants_tsv_path = params.participants_tsv
+        }
+        else {
+            participants_tsv_path = null
+            log.warn("No participants.tsv provided, covariates will not be used.")
+        }
+    }
+    else if (_input) {
         //
         // params.input is either a BIDS compliant directory or a samplesheet
         //   - if directory, we assume it is BIDS
         //   - everything else is a samplesheet
         //
-        if (file(params.input).isDirectory()) {
+        if (file(_input).isDirectory()) {
             IO_BIDS(
-                channel.fromPath(params.input),
+                channel.fromPath(_input),
                 channel.value(params.fsbids ?: []),
                 channel.value(params.bidsignore ?: [])
             )
@@ -137,8 +184,8 @@ workflow PIPELINE_INITIALISATION {
             if (params.participants_tsv) {
                 participants_tsv_path = "${params.participants_tsv}"
             }
-            else if (file("${params.input}/participants.tsv").exists()) {
-                participants_tsv_path = "${params.input}/participants.tsv"
+            else if (file("${_input}/participants.tsv").exists()) {
+                participants_tsv_path = "${_input}/participants.tsv"
             }
             else {
                 participants_tsv_path = null
@@ -146,8 +193,8 @@ workflow PIPELINE_INITIALISATION {
             }
         }
         else {
-            ch_input_sheets = Channel
-                .fromList(samplesheetToList(params.input, "${projectDir}/assets/schema_input.json"))
+            ch_input_sheets = channel
+                .fromList(samplesheetToList(_input, "${projectDir}/assets/schema_input.json"))
                 .map{
                     meta, dwi, bval, bvec, sbref, rev_dwi, rev_bval, rev_bvec, rev_sbref, t1, wmparc, aparc_aseg, lesion ->
                         return [
@@ -190,6 +237,9 @@ workflow PIPELINE_INITIALISATION {
                 log.warn("No participants.tsv provided, covariates will not be used.")
             }
         }
+    }
+    else {
+        error "Please provide one input source: --input or --bids_config"
     }
 
     // We avoid merging the covariates (i.e. the extra meta fields)
@@ -422,6 +472,58 @@ workflow PIPELINE_COMPLETION {
 //
 def validateInputSamplesheet(input) {
     return input
+}
+
+//
+// Parse subjects from a BIDS JSON configuration file.
+//
+def parseBidsConfig(config_path) {
+    def config_file = file(config_path)
+
+    if (!config_file.exists()) {
+        error "BIDS config file does not exist: ${config_path}"
+    }
+
+    def config = new groovy.json.JsonSlurper().parseText(config_file.text)
+
+    if (!(config instanceof List)) {
+        error "BIDS config must be a JSON array of subject objects"
+    }
+
+    return config.collect { sample ->
+        if (!sample.subject) {
+            error "Each entry in bids_config must define 'subject'"
+        }
+        if (!sample.dwi || !sample.bval || !sample.bvec || !sample.t1) {
+            error "Each entry in bids_config must define required fields: dwi, bval, bvec, t1"
+        }
+
+        def subject_raw = sample.subject.toString()
+        def session_raw = sample.session != null ? sample.session.toString() : ""
+        def run_raw = (sample.containsKey('run') && sample.run != null) ? sample.run.toString() : ""
+
+        def subject_id = subject_raw.startsWith("sub-") ? subject_raw : "sub-${subject_raw}"
+        def session_id = session_raw ? (session_raw.startsWith("ses-") ? session_raw : "ses-${session_raw}") : ""
+        def run_id = run_raw ? (run_raw.startsWith("run-") ? run_raw : "run-${run_raw}") : ""
+
+        def meta = [id: subject_id, session: session_id, run: run_id]
+
+        return [
+            meta,
+            sample.dwi,
+            sample.bval,
+            sample.bvec,
+            sample.topup ?: null,
+            sample.rev_dwi ?: null,
+            sample.rev_bval ?: null,
+            sample.rev_bvec ?: null,
+            sample.rev_topup ?: null,
+            sample.t1,
+            sample.wmparc ?: null,
+            sample.aparc_aseg ?: null,
+            sample.lesion ?: null
+        ]
+    }
 }
 
 //

@@ -15,9 +15,9 @@ process IO_SAFECASTINPUTS {
         out_rev_bval = rev_bval ? "rev_dwi.bval" : "$rev_bval"
         out_rev_bvec = rev_bvec ? "rev_dwi.bvec" : "$rev_bvec"
         out_rev_sbref = rev_sbref ? "rev_sbref.nii.gz" : "$rev_sbref"
-        out_t1 = t1 ? "t1.nii.gz" : "$t1"
-        out_wmparc = wmparc ? "wmparc.nii.gz" : "$wmparc"
-        out_aparc_aseg = aparc_aseg ? "aparc+aseg.nii.gz" : "$aparc_aseg"
+        out_t1 = t1 ? (t1.toString().endsWith('.mgz') ? "t1.mgz" : "t1.nii.gz") : "$t1"
+        out_wmparc = wmparc ? (wmparc.toString().endsWith('.mgz') ? "wmparc.mgz" : "wmparc.nii.gz") : "$wmparc"
+        out_aparc_aseg = aparc_aseg ? (aparc_aseg.toString().endsWith('.mgz') ? "aparc+aseg.mgz" : "aparc+aseg.nii.gz") : "$aparc_aseg"
         out_lesion = lesion ? "lesion.nii.gz" : "$lesion"
     """
     [ -f "$dwi" ] && ln -sf $dwi dwi.nii.gz
@@ -28,9 +28,9 @@ process IO_SAFECASTINPUTS {
     [ -f "$rev_bval" ] && ln -sf $rev_bval rev_dwi.bval
     [ -f "$rev_bvec" ] && ln -sf $rev_bvec rev_dwi.bvec
     [ -f "$rev_sbref" ] && ln -sf $rev_sbref rev_sbref.nii.gz
-    [ -f "$t1" ] && ln -sf $t1 t1.nii.gz
-    [ -f "$wmparc" ] && ln -sf $wmparc wmparc.nii.gz
-    [ -f "$aparc_aseg" ] && ln -sf $aparc_aseg aparc+aseg.nii.gz
+    [ -f "$t1" ] && ( [[ "$t1" == *.mgz ]] && ln -sf $t1 t1.mgz || ln -sf $t1 t1.nii.gz )
+    [ -f "$wmparc" ] && ( [[ "$wmparc" == *.mgz ]] && ln -sf $wmparc wmparc.mgz || ln -sf $wmparc wmparc.nii.gz )
+    [ -f "$aparc_aseg" ] && ( [[ "$aparc_aseg" == *.mgz ]] && ln -sf $aparc_aseg aparc+aseg.mgz || ln -sf $aparc_aseg aparc+aseg.nii.gz )
     [ -f "$lesion" ] && ln -sf $lesion lesion.nii.gz
     exit 0
     """

@@ -75,6 +75,7 @@ workflow {
         args,
         params.outdir,
         params.input,
+        params.bids_config,
         params.help,
         params.help_full,
         params.show_hidden
