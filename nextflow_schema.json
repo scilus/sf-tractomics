@@ -308,6 +308,19 @@
                     "description": "Path to the template for antsBrainExtraction. The folder must contain t1_template.nii.gz and t1_brain_probability_map.nii.gz. Defaults to the mni_152_sym_09c template directory delivered with the pipeline in the assets directory.",
                     "help_text": "Path to the template for antsBrainExtraction. The folder must contain t1_template.nii.gz and t1_brain_probability_map.nii.gz. Defaults to the mni_152_sym_09c template directory delivered with the pipeline in the assets directory.",
                     "format": "directory-path"
+                },
+                "run_fastsurfer": {
+                    "type": "boolean",
+                    "description": "Run FastSurfer on the raw T1 to produce the wmparc and aparc+aseg used for tissue segmentation. (Requires FreeSurfer license)",
+                    "help_text": "Runs the full FastSurfer pipeline (segmentation + surface reconstruction) on the input T1. The resulting wmparc and aparc+aseg replace any wmparc/aparc_aseg provided as input. The complete FastSurfer output folder is saved in the subject's anat output directory.",
+                    "default": false
+                },
+                "fs_license": {
+                    "type": "string",
+                    "description": "Path to the FreeSurfer license file. Required when run_fastsurfer is enabled.",
+                    "help_text": "To get one, go to https://surfer.nmr.mgh.harvard.edu/registration.html.",
+                    "format": "file-path",
+                    "exists": true
                 }
             }
         },
