@@ -9,6 +9,9 @@ include { paramsSummaryMap       } from 'plugin/nf-schema'
 include { paramsSummaryMultiqc   } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { softwareVersionsToYAML } from '../subworkflows/nf-core/utils_nfcore_pipeline'
 include { methodsDescriptionText } from '../subworkflows/local/utils_nfcore_sf-tractomics_pipeline'
+include { SEGMENTATION_FASTSURFER } from '../modules/nf-neuro/segmentation/fastsurfer/main'
+include { IMAGE_CONVERT as CONVERT_FASTSURFER_WMPARC } from '../modules/nf-neuro/image/convert/main'
+include { IMAGE_CONVERT as CONVERT_FASTSURFER_APARC_ASEG } from '../modules/nf-neuro/image/convert/main'
 include { TRACTOFLOW             } from '../subworkflows/nf-neuro/tractoflow'
 include { TRACTOGRAM_MATH as ENSEMBLE_TRACKING } from '../modules/nf-neuro/tractogram/math/main'
 include { QC_TRACTOGRAM as QC_ENSEMBLE } from '../modules/nf-neuro/qc/tractogram/main'
@@ -95,6 +98,37 @@ workflow SF_TRACTOMICS {
         ch_synthstrip_weights = channel.fromPath(params.synthstrip_weights, checkIfExists: true)
     }
 
+    /* Run FastSurfer if requested */
+    ch_wmparc = ch_inputs.wmparc
+    ch_aparc_aseg = ch_inputs.aparcaseg
+    if ( params.run_fastsurfer ) {
+        if ( !params.fs_license ) {
+            error "A FreeSurfer license is required to run FastSurfer. Provide it with params.fs_license."
+        }
+
+        SEGMENTATION_FASTSURFER(
+            ch_inputs.t1.combine(channel.fromPath(params.fs_license, checkIfExists: true))
+        )
+        ch_versions = ch_versions.mix(SEGMENTATION_FASTSURFER.out.versions)
+
+        // Output directory is <prefix>_fastsurfer/<prefix>/
+        ch_fastsurfer_mri = SEGMENTATION_FASTSURFER.out.fastsurferdirectory
+            .map{ meta, fs_dir -> [meta, fs_dir.resolve("${fs_dir.name - ~/_fastsurfer$/}/mri")] }
+
+        CONVERT_FASTSURFER_WMPARC(
+            ch_fastsurfer_mri.map{ meta, mri -> [meta, mri.resolve("wmparc.mgz")] }
+        )
+        ch_versions = ch_versions.mix(CONVERT_FASTSURFER_WMPARC.out.versions)
+
+        CONVERT_FASTSURFER_APARC_ASEG(
+            ch_fastsurfer_mri.map{ meta, mri -> [meta, mri.resolve("aparc+aseg.mgz")] }
+        )
+        ch_versions = ch_versions.mix(CONVERT_FASTSURFER_APARC_ASEG.out.versions)
+
+        ch_wmparc = CONVERT_FASTSURFER_WMPARC.out.image
+        ch_aparc_aseg = CONVERT_FASTSURFER_APARC_ASEG.out.image
+    }
+
     TRACTOFLOW(
         ch_inputs.dwi_bval_bvec,
         ch_inputs.t1,
@@ -104,9 +138,9 @@ workflow SF_TRACTOMICS {
             .filter{ it -> it[1] },
         ch_inputs.rev_b0
             .filter{ it -> it[1] },
-        ch_inputs.wmparc
+        ch_wmparc
             .filter{ it -> it[1] },
-        ch_inputs.aparcaseg
+        ch_aparc_aseg
             .filter{ it -> it[1] },
         ch_topup_config,
         ch_bet_template,
