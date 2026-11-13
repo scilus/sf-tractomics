@@ -1,6 +1,7 @@
 process BUNDLE_RECOGNIZE {
     tag "$meta.id"
     label 'process_high'
+    label 'bundle_recognize'
 
     container "scilus/scilpy:2.2.2_cpu"
 

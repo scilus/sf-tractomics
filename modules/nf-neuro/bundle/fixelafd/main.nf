@@ -1,6 +1,7 @@
 process BUNDLE_FIXELAFD {
     tag "$meta.id"
     label 'process_single'
+    label 'bundle_fixelafd'
 
     container "scilus/scilpy:2.2.2_cpu"
 

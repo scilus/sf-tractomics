@@ -2,6 +2,7 @@
 process BETCROP_ANTSBET {
     tag "$meta.id"
     label 'process_high'
+    label 'betcrop_antsbet'
 
     container 'scilus/scilus:2.2.2'
 

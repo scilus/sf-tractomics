@@ -1,6 +1,7 @@
 process RECONST_SHSIGNAL {
     tag "$meta.id"
     label 'process_single'
+    label 'reconst_shsignal'
 
     container "scilus/scilpy:2.2.2_cpu"
 

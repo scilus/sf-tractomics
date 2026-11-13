@@ -1,6 +1,7 @@
 process IMAGE_POWDERAVERAGE {
     tag "$meta.id"
     label 'process_single'
+    label 'image_powderaverage'
 
     container "scilus/scilpy:2.2.2_cpu"
 

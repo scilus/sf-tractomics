@@ -1,6 +1,7 @@
 process BUNDLE_STATS {
     tag "$meta.id"
     label 'process_single'
+    label 'bundle_stats'
 
     container "scilus/scilpy:2.2.2_cpu"
 

@@ -1,6 +1,7 @@
 process RECONST_QBALL {
     tag "$meta.id"
     label 'process_medium'
+    label 'reconst_qball'
 
     container "scilus/scilpy:2.2.2_cpu"
 

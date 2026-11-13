@@ -1,6 +1,7 @@
 process TRACKING_LOCALTRACKING {
     tag "$meta.id"
     label 'process_high_memory'
+    label 'tracking_localtracking'
 
     container "scilus/scilpy:2.2.2_gpu"
 

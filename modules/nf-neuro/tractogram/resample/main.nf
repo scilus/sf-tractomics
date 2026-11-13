@@ -1,6 +1,7 @@
 process TRACTOGRAM_RESAMPLE {
     tag "$meta.id"
     label 'process_single'
+    label 'tractogram_resample'
 
     container "scilus/scilpy:2.2.2_cpu"
 

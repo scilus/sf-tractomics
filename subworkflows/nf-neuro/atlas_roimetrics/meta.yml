@@ -21,7 +21,6 @@ components:
   - registration/ants
   - stats/metricsinroi
   - registration/antsapplytransforms
-  - utils_options
 input:
   - ch_subject_reference:
       type: file
@@ -55,27 +54,6 @@ input:
       pattern: "*.nii.gz"
       ontologies:
         - edam: http://edamontology.org/format_4001 # NIFTI format
-  - options:
-      type: map
-      description: Map of options for the subworkflow.
-      entries:
-        use_atlas_iit:
-          type: boolean
-          description: If 'true', the IIT Human Brain Atlas will be used for ROI metrics extraction.
-          default: false
-        atlas_iit_b0:
-          type: string
-          description: Path to a Mean B0 map of the IIT Human Brain Atlas. This input will be used instead of downloading the Mean B0 map if `use_atlas_iit` is set to 'true'.
-          default: null
-        atlas_iit_bundle_masks_dir:
-          type: string
-          description: Path to a directory containing IIT bundle masks. This input will be used instead of downloading and processing the bundle masks if `use_atlas_iit` is set to 'true'.
-          default: null
-        use_binary_masks:
-          type: boolean
-          description: If 'true', the IIT bundle masks will be thresholded to create binary masks before extracting the metrics.
-          default: false
-      mandatory: true
 output:
   - json:
       type: file

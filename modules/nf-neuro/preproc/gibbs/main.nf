@@ -1,6 +1,7 @@
 process PREPROC_GIBBS {
     tag "$meta.id"
     label 'process_single'
+    label 'preproc_gibbs'
 
     container "mrtrix3/mrtrix3:3.0.5"
 

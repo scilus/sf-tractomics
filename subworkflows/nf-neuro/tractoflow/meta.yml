@@ -6,8 +6,9 @@ description: |
 
   ----------  Configuration  ----------
 
-  - nextflow.config : contains an example configuration for the subworkflow. Imports modules.config.
-  - modules.config : contains the bindings to the modules parameters and some defaults making it Tractoflow.
+  - nextflow.config : default params of the subworkflow, and includes the nextflow.config of each
+    module it uses (module params + ext bindings). Include it first in the pipeline config, then
+    redefine params after it to override the defaults.
 
   --------------  Steps  --------------
 
@@ -57,7 +58,6 @@ components:
   - registration/antsapplytransforms
   - tracking/localtracking
   - tracking/pfttracking
-  - utils_options
 args:
   - b0_max_threshold:
       type: float
@@ -529,100 +529,6 @@ input:
             type: file
             description: Lesion mask file.
       mandatory: false
-  - options:
-      type: map
-      description: |
-        Map of options for the subworkflow.
-      entries:
-        run_bundleparc:
-          type: boolean
-          description: If 'true', we need to stride every single image to "-1 2 3 4" so it work with subworkflow bundleparc.
-          default: false
-        preproc_dwi_run_denoising:
-          type: boolean
-          description: If 'true', the DWI will be denoised using the MPPCA method from MRtrix3.
-          default: true
-        preproc_dwi_run_degibbs:
-          type: boolean
-          description: If 'true', the Gibbs artifact removal will be performed using the mrdegibbs method from MRtrix3.
-          default: true
-        eddy_nan_threshold:
-          type: float
-          description: Threshold for the percentage of NaN voxels in the brain mask after Eddy correction to raise a warning.
-          default: 0
-        topup_eddy_run_topup:
-          type: boolean
-          description: If 'true', the Topup correction will be performed using FSL's Topup.
-          default: true
-        topup_eddy_run_eddy:
-          type: boolean
-          description: If 'true', the Eddy correction will be performed using FSL's Eddy.
-          default: true
-        preproc_dwi_run_synthstrip:
-          type: boolean
-          description: If 'true', the brain extraction will be performed using SynthStrip. If 'false', FSL's BET will be used.
-          default: false
-        preproc_dwi_keep_dwi_with_skull:
-          type: boolean
-          description: If 'true', the DWI before brain extraction will be kept and used for the following steps. If 'false', the DWI after brain extraction will be used for the following steps.
-          default: false
-        preproc_dwi_run_N4:
-          type: boolean
-          description: If 'true', the N4 bias field correction will be performed using ANTs' N4BiasFieldCorrection.
-          default: true
-        preproc_dwi_run_normalize:
-          type: boolean
-          description: If 'true', the DWI will be normalized to have a mean value in the WM of approximately 1000 using MRtrix3's dwinormalise.
-          default: true
-        preproc_dwi_run_resampling:
-          type: boolean
-          description: If 'true', the DWI will be resampled to 1 mm isotropic spatial resolution using DIPY's resample.
-          default: true
-        preproc_t1_run_denoising:
-          type: boolean
-          description: If 'true', the anatomical image will be denoised using the nlmeans method from scilpy.
-          default: true
-        preproc_t1_run_N4:
-          type: boolean
-          description: If 'true', the N4 bias field correction will be performed using the N4BiasFieldCorrection method from ANTs.
-          default: true
-        preproc_t1_run_resample:
-          type: boolean
-          description: If 'true', the anatomical image will be resampled using the resample method from DIPY.
-          default: true
-        preproc_t1_run_synthstrip:
-          type: boolean
-          description: If 'true', the subworkflow will use SynthStrip for brain extraction.
-          default: false
-        preproc_t1_run_ants_bet:
-          type: boolean
-          description: If 'true', the subworkflow will use ANTs' BET for brain extraction.
-          default: true
-        preproc_t1_run_crop:
-          type: boolean
-          description: If 'true', the subworkflow will crop the image after brain extraction.
-          default: true
-        frf_average_from_data:
-          type: boolean
-          description: If 'true', the fiber response function will be averaged across all subjects. If 'false', the fiber response function will be estimated for each subject independently.
-          default: false
-        run_qball:
-          type: boolean
-          description: If 'true', the Q-Ball model will be fitted on the DWI data and used for fODF reconstruction and tracking.
-          default: false
-        use_qball_for_tracking:
-          type: boolean
-          description: If 'true', the Q-Ball model will be used for tractography instead of the fODF model. This option is only relevant if run_qball is 'true'.
-          default: false
-        run_pft_tracking:
-          type: boolean
-          description: If 'true', Particle Filtering Tractography (PFT) will be performed using DIPY.
-          default: true
-        run_local_tracking:
-          type: boolean
-          description: If 'true', Local Tracking will be performed.
-          default: false
-      mandatory: true
 output:
   - dwi:
       type: file

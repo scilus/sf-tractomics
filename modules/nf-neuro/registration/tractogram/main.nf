@@ -1,6 +1,7 @@
 process REGISTRATION_TRACTOGRAM {
     tag "$meta.id"
     label 'process_single'
+    label 'registration_tractogram'
 
     container "scilus/scilus:2.2.2"
 

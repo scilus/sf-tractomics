@@ -1,6 +1,7 @@
 process PREPROC_EDDY {
     tag "$meta.id"
     label 'process_high'
+    label 'preproc_eddy'
 
     container "scilus/scilus:2.2.2"
 

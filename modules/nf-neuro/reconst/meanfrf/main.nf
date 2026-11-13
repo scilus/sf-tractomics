@@ -2,6 +2,7 @@
 
 process RECONST_MEANFRF {
     label 'process_single'
+    label 'reconst_meanfrf'
 
     container "scilus/scilpy:2.2.2_cpu"
 

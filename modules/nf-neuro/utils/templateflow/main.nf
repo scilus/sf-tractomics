@@ -1,6 +1,7 @@
 process UTILS_TEMPLATEFLOW {
     tag "$template"
     label 'process_single'
+    label 'utils_templateflow'
 
     conda "${moduleDir}/environment.yml"
     container "${ 'community.wave.seqera.io/library/pip_templateflow:2f726c524c63271e' }"

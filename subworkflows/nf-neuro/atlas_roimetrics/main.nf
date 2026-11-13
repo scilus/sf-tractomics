@@ -2,34 +2,24 @@ include { REGISTRATION_ANTS as REGISTER_ATLAS_REF } from '../../../modules/nf-ne
 include { REGISTRATION_ANTSAPPLYTRANSFORMS as TRANSFORM_ATLAS_BUNDLES } from '../../../modules/nf-neuro/registration/antsapplytransforms/main.nf'
 include { STATS_METRICSINROI     } from '../../../modules/nf-neuro/stats/metricsinroi/main'
 include { ATLAS_IIT              } from '../../nf-neuro/atlas_iit/main'
-include { UTILS_OPTIONS } from '../utils_options/main'
 
 workflow ATLAS_ROIMETRICS {
     take:
         ch_subject_reference  // channel : [required] meta, subject_ref_image
         ch_metrics            // channel : [required] meta, [metrics]
-        options               // channel : [optional] map of options
 
     main:
         ch_versions = channel.empty()
         ch_bundle_masks = channel.empty()
         ch_template_ref = channel.empty()
 
-        UTILS_OPTIONS("${moduleDir}/meta.yml", options, true)
-        options = UTILS_OPTIONS.out.options.value
 
-        assert [options.use_atlas_iit].count(true) <= 1 :
+        assert [params.use_atlas_iit].count(true) <= 1 :
             "Only one atlas can be selected at a time for ROI metrics extraction." +
             " Please set only one of the options 'use_atlas_*' to 'true'."
 
-        if (options.use_atlas_iit) {
-            ATLAS_IIT(
-                [
-                    threshold_bundles: options.use_binary_masks ?: false,
-                    atlas_iit_b0: options.atlas_iit_b0,
-                    atlas_iit_bundle_masks_dir: options.atlas_iit_bundle_masks_dir
-                ]
-            )
+        if (params.use_atlas_iit) {
+            ATLAS_IIT()
             ch_versions = ch_versions.mix(ATLAS_IIT.out.versions)
             ch_bundle_masks = ATLAS_IIT.out.bundles.toList()
             ch_template_ref = ATLAS_IIT.out.b0

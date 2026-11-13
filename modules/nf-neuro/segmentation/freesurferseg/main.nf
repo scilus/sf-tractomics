@@ -1,6 +1,7 @@
 process SEGMENTATION_FREESURFERSEG {
     tag "$meta.id"
     label 'process_single'
+    label 'segmentation_freesurferseg'
 
     container 'scilus/scilus:2.2.2'
 

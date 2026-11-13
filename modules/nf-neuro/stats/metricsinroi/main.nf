@@ -1,6 +1,7 @@
 process STATS_METRICSINROI {
     tag "$meta.id"
     label 'process_single'
+    label 'stats_metricsinroi'
 
     container "scilus/scilpy:2.2.2_cpu"
 

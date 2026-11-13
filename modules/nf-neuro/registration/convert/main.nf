@@ -1,6 +1,7 @@
 process REGISTRATION_CONVERT {
     tag "$meta.id"
     label 'process_single'
+    label 'registration_convert'
 
     container "freesurfer/freesurfer:7.4.1"
     containerOptions "--env FSLOUTPUTTYPE='NIFTI_GZ'"

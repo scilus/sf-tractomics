@@ -9,7 +9,6 @@ include { REGISTRATION_ANTSAPPLYTRANSFORMS as WARPLABELS } from '../../../module
 include { REGISTRATION_TRACTOGRAM                        } from '../../../modules/nf-neuro/registration/tractogram/main.nf'
 include { REGISTRATION } from '../registration/main.nf'
 
-include { UTILS_OPTIONS } from '../utils_options/main'
 
 workflow OUTPUT_TEMPLATE_SPACE {
 
@@ -20,33 +19,29 @@ workflow OUTPUT_TEMPLATE_SPACE {
         ch_labels_files             // channel: [ val(meta), [ labels_files ] ]
         ch_trk_files                // channel: [ val(meta), [ trk_files ] ]
         ch_freesurfer_license       // channel: [ val(freesurfer_license) ]
-        options                     // Map of options [ options ]
 
     main:
-        // Merge options with defaults from meta.yml
-        UTILS_OPTIONS("${moduleDir}/meta.yml", options, true)
-        options = UTILS_OPTIONS.out.options.value
         ch_versions = channel.empty()
         ch_mqc = channel.empty()
 
         // ** First, let's assess if the desired template exists in      ** //
         // ** the templateflow home directory (user-specified as options. ** //
         // ** or default to $outdir/../templateflow)                     ** //
-        if ( !file("${options.templateflow_home}/tpl-${options.template}").exists() ) {
-            log.info("Template ${options.template} not found in " +
-                    "${options.templateflow_home}. Will be downloaded. " +
+        if ( !file("${params.templateflow_home}/tpl-${params.template}").exists() ) {
+            log.info("Template ${params.template} not found in " +
+                    "${params.templateflow_home}. Will be downloaded. " +
                     "If you do not have access to the internet while running " +
                     "this pipeline, please download the template manually " +
                     "and provide the location using --templateflow_home.")
-            log.info("Downloading ${options.template} :")
-            log.info(" - Resolution : ${options.templateflow_res}mm ")
-            log.info(" - Cohort : ${options.templateflow_cohort ?: "none"}")
+            log.info("Downloading ${params.template} :")
+            log.info(" - Resolution : ${params.templateflow_resolution}mm ")
+            log.info(" - Cohort : ${params.templateflow_cohort ?: "none"}")
 
             UTILS_TEMPLATEFLOW (
                 [
-                    options.template,
-                    options.templateflow_res != null ? options.templateflow_res : [],
-                    options.templateflow_cohort != null ? options.templateflow_cohort : []
+                    params.template,
+                    params.templateflow_resolution != null ? params.templateflow_resolution : [],
+                    params.templateflow_cohort != null ? params.templateflow_cohort : []
                 ]
             )
             // TODO: look into adding metadata and citations to MultiQC report
@@ -58,35 +53,35 @@ workflow OUTPUT_TEMPLATE_SPACE {
             ch_brain_mask = UTILS_TEMPLATEFLOW.out.brain_mask
         } else {
             // ** If the template exists, we will not download it again. ** //
-            log.info("Template ${options.template} found in " +
-                    "${options.templateflow_home}. Will be used.")
+            log.info("Template ${params.template} found in " +
+                    "${params.templateflow_home}. Will be used.")
 
             // ** Load the files from the templateflow directory ** //
-            def path = "${options.templateflow_home}/tpl-${options.template}/"
-            if ( options.templateflow_cohort ) {
+            def path = "${params.templateflow_home}/tpl-${params.template}/"
+            if ( params.templateflow_cohort ) {
                 ch_t1w_tpl = channel.fromPath(
-                    "${path}/cohort-${options.templateflow_cohort}/*res-*${options.templateflow_res}_T1w.nii.gz",
+                    "${path}/cohort-${params.templateflow_cohort}/*res-*${params.templateflow_resolution}_T1w.nii.gz",
                     checkIfExists: false
                 )
                 ch_t2w_tpl = channel.fromPath(
-                    "${path}/cohort-${options.templateflow_cohort}/*res-*${options.templateflow_res}_T2w.nii.gz",
+                    "${path}/cohort-${params.templateflow_cohort}/*res-*${params.templateflow_resolution}_T2w.nii.gz",
                     checkIfExists: false
                 )
                 ch_brain_mask = channel.fromPath(
-                    "${path}/cohort-${options.templateflow_cohort}/*res-*${options.templateflow_res}_desc-brain_mask.nii.gz",
+                    "${path}/cohort-${params.templateflow_cohort}/*res-*${params.templateflow_resolution}_desc-brain_mask.nii.gz",
                     checkIfExists: false
                 ) ?: channel.empty()
             } else {
                 ch_t1w_tpl = channel.fromPath(
-                    "${path}/*res-*${options.templateflow_res}_T1w.nii.gz",
+                    "${path}/*res-*${params.templateflow_resolution}_T1w.nii.gz",
                     checkIfExists: false
                 )
                 ch_t2w_tpl = channel.fromPath(
-                    "${path}/*res-*${options.templateflow_res}_T2w.nii.gz",
+                    "${path}/*res-*${params.templateflow_resolution}_T2w.nii.gz",
                     checkIfExists: false
                 )
                 ch_brain_mask = channel.fromPath(
-                    "${path}/*res-*${options.templateflow_res}_desc-brain_mask.nii.gz",
+                    "${path}/*res-*${params.templateflow_resolution}_desc-brain_mask.nii.gz",
                     checkIfExists: false
                 ) ?: channel.empty()
             }
@@ -142,7 +137,7 @@ workflow OUTPUT_TEMPLATE_SPACE {
 
         ch_template = ch_anat
             .map{ meta, _anat -> meta }
-            .combine(options.use_template_t2w ? ch_t2w_tpl_out : ch_t1w_tpl_out)
+            .combine(params.use_template_t2w ? ch_t2w_tpl_out : ch_t1w_tpl_out)
 
         ch_brain_mask = ch_anat
             .map{ meta, _anat -> meta }
@@ -157,11 +152,7 @@ workflow OUTPUT_TEMPLATE_SPACE {
             channel.empty(),
             channel.empty(),
             channel.empty(),
-            ch_freesurfer_license,
-            [
-                "run_easyreg": options.run_easyreg,
-                "run_synthmorph": options.run_synthmorph,
-            ]
+            ch_freesurfer_license
         )
         ch_versions = ch_versions.mix(REGISTRATION.out.versions)
         ch_mqc = ch_mqc.mix(REGISTRATION.out.mqc)

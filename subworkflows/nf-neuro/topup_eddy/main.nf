@@ -2,7 +2,6 @@
 include { PREPROC_TOPUP } from '../../../modules/nf-neuro/preproc/topup/main'
 include { PREPROC_EDDY } from '../../../modules/nf-neuro/preproc/eddy/main'
 include { UTILS_EXTRACTB0 } from '../../../modules/nf-neuro/utils/extractb0/main'
-include { UTILS_OPTIONS } from '../utils_options/main'
 
 workflow TOPUP_EDDY {
 
@@ -15,12 +14,8 @@ workflow TOPUP_EDDY {
         ch_rev_dwi      // channel: [ val(meta), rev-dwi, rev-bval, rev-bvec ], optional
         ch_rev_b0       // channel: [ val(meta), rev-b0 ], optional
         ch_config_topup // channel: [ 'topup.cnf' ], optional
-        options         // Map of options [ options ]
 
     main:
-        // Merge options with defaults from meta.yml
-        UTILS_OPTIONS("${moduleDir}/meta.yml", options, true)
-        options = UTILS_OPTIONS.out.options.value
 
         ch_versions = channel.empty()
         ch_multiqc_files = channel.empty()
@@ -30,7 +25,7 @@ workflow TOPUP_EDDY {
         ch_b0_corrected = channel.empty()
         ch_b0_mask = channel.empty()
 
-        if ( options.topup_eddy_run_topup ) {
+        if ( params.run_topup ) {
             // ** Create channel for TOPUP ** //
             // Result : [ meta, dwi, bval, bvec, b0 | [], rev-dwi | [], rev-bval | [], rev-bvec | [], rev-b0 | [] ]
             //  Steps :
@@ -61,7 +56,7 @@ workflow TOPUP_EDDY {
             ch_b0_corrected = PREPROC_TOPUP.out.topup_corrected_b0s
         }
 
-        if ( options.topup_eddy_run_eddy ) {
+        if ( params.run_eddy ) {
             // ** Create channel for EDDY ** //
             // Result : [ meta, dwi, bval, bvec, rev-dwi | [], rev-bval | [], rev-bvec | [], b0 | [], coeffs | [], movpar | [] ]
             //  Steps :
@@ -87,7 +82,7 @@ workflow TOPUP_EDDY {
             PREPROC_EDDY ( ch_eddy_input )
 
             PREPROC_EDDY.out.nan_percentage.subscribe { meta, nan_percentage ->
-                if (nan_percentage.toFloat() > options.eddy_nan_threshold) {
+                if (nan_percentage.toFloat() > params.eddy_nan_threshold) {
                     log.warn "Subject ${meta.id} has ${nan_percentage}% of voxels in the brain mask that are NaN after eddy correction."
                 }
             }

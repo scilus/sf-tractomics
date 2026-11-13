@@ -1,6 +1,7 @@
 process QC_TRACTOGRAM {
     tag "$meta.id"
     label 'process_single'
+    label 'qc_tractogram'
 
     container 'scilus/scilus:2.2.2'
 

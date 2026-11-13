@@ -90,7 +90,6 @@ components:
   - utils/extractb0
   - preproc/gibbs
   - topup_eddy
-  - utils_options
 
 input:
   - ch_dwi:
@@ -180,51 +179,6 @@ input:
             description: Topup configuration file.
       pattern: "*.{cnf}"
       mandatory: false
-  - options:
-      type: map
-      description: Map of options for the preproc_dwi subworkflow.
-      mandatory: false
-      entries:
-        preproc_dwi_run_denoising:
-          type: boolean
-          description: Denoise the DWI using the MPPCA method from MRtrix3.
-          default: true
-        preproc_dwi_run_degibbs:
-          type: boolean
-          description: Remove Gibbs artifacts using the mrdegibbs method from MRtrix3.
-          default: true
-        eddy_nan_threshold:
-          type: float
-          description: Threshold for the percentage of NaN voxels in the brain mask after Eddy correction to raise a warning.
-          default: 0
-        topup_eddy_run_topup:
-          type: boolean
-          description: Perform Topup correction using FSL's Topup.
-          default: true
-        topup_eddy_run_eddy:
-          type: boolean
-          description: Perform Eddy currents and motion correction using FSL's Eddy.
-          default: true
-        preproc_dwi_run_synthstrip:
-          type: boolean
-          description: Use SynthStrip for brain extraction instead of FSL's BET.
-          default: false
-        preproc_dwi_keep_dwi_with_skull:
-          type: boolean
-          description: BET the DWI to generate masks, but keep the DWI with skull in processing.
-          default: false
-        preproc_dwi_run_N4:
-          type: boolean
-          description: Perform N4 bias field correction using ANTs' N4BiasFieldCorrection.
-          default: true
-        preproc_dwi_run_normalize:
-          type: boolean
-          description: Normalize the DWI to an average value of 1000 in WM using MRtrix3's dwinormalise.
-          default: true
-        preproc_dwi_run_resampling:
-          type: boolean
-          description: Resample the DWI to 1 mm isotropic spatial resolution.
-          default: true
 output:
   - dwi_resample:
       type: file

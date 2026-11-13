@@ -1,6 +1,7 @@
 process IMAGE_MATH {
     tag "$meta.id"
     label 'process_single'
+    label 'image_math'
 
     container "scilus/scilpy:2.2.2_cpu"
 

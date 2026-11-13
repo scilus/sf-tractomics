@@ -20,7 +20,6 @@ components:
   - segmentation/fastseg
   - segmentation/freesurferseg
   - segmentation/synthseg
-  - utils_options
 input:
   - ch_image:
       type: file
@@ -78,15 +77,6 @@ input:
             type: file
             description: FreeSurfer license file.
       mandatory: false
-  - options:
-      type: map
-      description: |
-        Map of options for the subworkflow.
-      entries:
-        run_synthseg:
-          type: boolean
-          description: Whether to run SynthSeg for segmentation. If false, FSL's fast will be used for segmentation.
-          default: false
 output:
   - wm_mask:
       type: file

@@ -2,6 +2,7 @@
 process DENOISING_NLMEANS {
     tag "$meta.id"
     label 'process_medium'
+    label 'denoising_nlmeans'
 
     container "scilus/scilpy:2.2.2_cpu"
 

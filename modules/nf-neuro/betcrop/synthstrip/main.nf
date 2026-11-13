@@ -1,6 +1,7 @@
 process BETCROP_SYNTHSTRIP {
     tag "$meta.id"
     label 'process_single'
+    label 'betcrop_synthstrip'
 
     container "${ task.ext.gpu ?
         "freesurfer/synthstrip:1.8-gpu" :

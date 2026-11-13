@@ -1,6 +1,7 @@
 process REGISTRATION_ANATTODWI {
     tag "$meta.id"
     label 'process_single'
+    label 'registration_anattodwi'
 
     container "scilus/scilus:2.2.2"
 

@@ -3,6 +3,7 @@
 process REGISTRATION_EASYREG {
     tag "$meta.id"
     label 'process_high'
+    label 'registration_easyreg'
 
     container "freesurfer/freesurfer:7.4.1"
 

@@ -1,6 +1,7 @@
 process IMAGE_RESAMPLE {
     tag "$meta.id"
     label 'process_single'
+    label 'image_resample'
     label 'process_high_memory'
 
     container "scilus/scilpy:2.2.2_cpu"

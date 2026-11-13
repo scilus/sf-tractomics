@@ -25,29 +25,7 @@ keywords:
   - template
 components:
   - image/math
-  - utils_options
-input:
-  - options:
-      type: map
-      description: Map of options for the atlas_iit subworkflow.
-      mandatory: false
-      entries:
-        threshold_bundles:
-          type: boolean
-          description: If enabled, this will threshold the TDI bundle maps with the recommended thresholds to create binary bundle masks. If disabled, the subworkflow will output the TDI bundle maps.
-          default: false
-        smooth_sigma:
-          type: float
-          description: If `threshold_bundles` is enabled, this will apply a gaussian smoothing with the specified sigma to the TDI bundle maps before thresholding. This is based on the recommendation of the IIT atlas authors to apply some smoothing to the TDI maps before thresholding.
-          default: 1.0
-        atlas_iit_b0:
-          type: string
-          description: Path to a Mean B0 map of the IIT Human Brain Atlas. If provided, this input will be used instead of downloading the Mean B0 map.
-          default: null
-        atlas_iit_bundle_masks_dir:
-          type: string
-          description: Path to a directory containing IIT bundle masks. If provided, these inputs will be used instead of downloading and processing the bundle masks.
-          default: null
+input: []
 output:
   - bundle_masks:
       type: file
