@@ -268,8 +268,7 @@
                 },
                 "eddy_extra_args": {
                     "type": "string",
-                    "description": "Extra arguments passed to eddy.",
-                    "default": ""
+                    "description": "Extra arguments passed to eddy."
                 }
             }
         },
