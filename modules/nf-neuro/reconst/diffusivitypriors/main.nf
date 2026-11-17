@@ -1,6 +1,7 @@
 process RECONST_DIFFUSIVITYPRIORS {
     tag "$meta.id"
     label 'process_single'
+    label 'reconst_diffusivitypriors'
 
     container "scilus/scilpy:2.2.2_cpu"
 

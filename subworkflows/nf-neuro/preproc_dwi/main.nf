@@ -15,7 +15,6 @@ include { IMAGE_RESAMPLE as RESAMPLE_DWI } from '../../../modules/nf-neuro/image
 include { IMAGE_RESAMPLE as RESAMPLE_MASK } from '../../../modules/nf-neuro/image/resample/main'
 include { UTILS_EXTRACTB0 as EXTRACT_B0 } from '../../../modules/nf-neuro/utils/extractb0/main'
 include { TOPUP_EDDY } from '../topup_eddy/main'
-include { UTILS_OPTIONS } from '../utils_options/main'
 
 
 workflow PREPROC_DWI {
@@ -27,19 +26,15 @@ workflow PREPROC_DWI {
         ch_rev_b0               // channel: [ val(meta), rev-b0 ], optional
         ch_synthstrip_weights   // channel: [ val(meta), 'weights.pt' ] or [ 'weights.pt' ], optional
         ch_config_topup         // channel: [ 'topup.cnf' ], optional
-        options                 // Map of options [ options ]
 
     main:
 
-        // Merge options with defaults from meta.yml
-        UTILS_OPTIONS("${moduleDir}/meta.yml", options, true)
-        options = UTILS_OPTIONS.out.options.value
 
         ch_versions = channel.empty()
         ch_multiqc_files = channel.empty()
 
         // ** Denoise DWI ** //
-        if ( options.preproc_dwi_run_denoising ) {
+        if ( params.run_dwi_denoising ) {
             ch_dwi_bvalbvec = ch_dwi
                 .multiMap { meta, dwi, bval, bvec ->
                     dwi:    [ meta, dwi ]
@@ -77,7 +72,7 @@ workflow PREPROC_DWI {
                 .join(ch_rev_dwi_bvalbvec.rev_bvs_files)
         } // No else, we just use ch_dwi
 
-        if ( options.preproc_dwi_run_degibbs ) {
+        if ( params.run_gibbs_correction ) {
             ch_dwi_bvalbvec = ch_dwi
                 .multiMap { meta, dwi, bval, bvec ->
                     dwi:    [ meta, dwi ]
@@ -109,18 +104,13 @@ workflow PREPROC_DWI {
         } // No else, we just use ch_dwi
 
         // ** Eddy Topup ** //
-        if ( options.topup_eddy_run_topup || options.topup_eddy_run_eddy ) {
+        if ( params.run_topup || params.run_eddy ) {
             TOPUP_EDDY (
                 ch_dwi,
                 ch_b0,
                 ch_rev_dwi,
                 ch_rev_b0,
-                ch_config_topup.ifEmpty( "b02b0.cnf" ),
-                [
-                    "eddy_nan_threshold": options.eddy_nan_threshold,
-                    "topup_eddy_run_topup": options.topup_eddy_run_topup,
-                    "topup_eddy_run_eddy": options.topup_eddy_run_eddy
-                ] )
+                ch_config_topup.ifEmpty( "b02b0.cnf" ) )
             ch_versions = ch_versions.mix(TOPUP_EDDY.out.versions.first())
             ch_multiqc_files = ch_multiqc_files.mix(TOPUP_EDDY.out.mqc)
 
@@ -129,7 +119,7 @@ workflow PREPROC_DWI {
                         .join(TOPUP_EDDY.out.bvec)
         }
         // ** Bet-crop DWI ** //
-        if ( options.preproc_dwi_run_synthstrip ) {
+        if ( params.run_dwi_synthstrip ) {
 
             ch_pwd_avg = ch_dwi
                 .map{ meta, dwi, bval, _bvec -> [ meta, dwi, bval, [] ] }
@@ -191,7 +181,7 @@ workflow PREPROC_DWI {
             CONVERT ( CROPMASK.out.image )
             ch_versions = ch_versions.mix(CONVERT.out.versions.first())
 
-            if ( !options.preproc_dwi_keep_dwi_with_skull) {
+            if ( !params.keep_dwi_with_skull) {
                 ch_dwi = CROPDWI.out.image
                             .join(ch_bvals_bvecs)
             }
@@ -212,7 +202,7 @@ workflow PREPROC_DWI {
             ch_bbox = BETCROP_FSLBETCROP.out.bbox
         } // No else, we just use ch_dwi
 
-        if ( options.preproc_dwi_run_N4 ) {
+        if ( params.run_dwi_N4 ) {
             // ** N4 DWI ** //
             ch_N4 = ch_dwi
                 .join(ch_mask, remainder: true)
@@ -227,7 +217,7 @@ workflow PREPROC_DWI {
                         .join(ch_bvals_bvecs)
         } // No else, we just use ch_dwi
 
-        if ( options.preproc_dwi_run_normalize ) {
+        if ( params.run_dwi_normalize ) {
             // ** Normalize DWI ** //
             ch_normalize = ch_dwi
                 .join(ch_mask)
@@ -242,7 +232,7 @@ workflow PREPROC_DWI {
                         .join(ch_bvals_bvecs)
         } // No else, we just use ch_dwi
 
-        if ( options.preproc_dwi_run_resampling ) {
+        if ( params.run_dwi_resampling ) {
             // ** Resample DWI ** //
             ch_resample_dwi = ch_dwi
                 .map{ meta, dwi, _bval, _bvec -> [ meta, dwi, [] ] }
@@ -261,7 +251,7 @@ workflow PREPROC_DWI {
         EXTRACT_B0 ( ch_dwi )
         ch_versions = ch_versions.mix(EXTRACT_B0.out.versions.first())
 
-        if ( options.preproc_dwi_run_resampling ) {
+        if ( params.run_dwi_resampling ) {
             // ** Resample mask ** //
             ch_resample_mask = ch_mask
                 .join(EXTRACT_B0.out.b0)

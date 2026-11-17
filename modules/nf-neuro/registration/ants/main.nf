@@ -2,6 +2,7 @@
 process REGISTRATION_ANTS {
     tag "$meta.id"
     label 'process_medium'
+    label 'registration_ants'
 
     container "scilus/scilus:2.2.2"
 

@@ -1,5 +1,6 @@
 process HARMONIZATION_CLINICALCOMBAT {
     label 'process_medium'
+    label 'harmonization_clinicalcombat'
 
     container "scilus/clinical_combat:1.1.2"
 

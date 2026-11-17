@@ -35,7 +35,6 @@ components:
   - betcrop/fslbetcrop
   - utils/templateflow
   - registration
-  - utils_options
 input:
   - ch_anat:
       type: file
@@ -116,35 +115,6 @@ input:
             description: Freesurfer license file.
       pattern: "*.txt"
       mandatory: false
-  - options:
-      type: map
-      description: Map of options for the output_template_space subworkflow.
-      mandatory: false
-      entries:
-        template:
-          type: string
-          description: Name of the template to use (see https://templateflow.org).
-          default: null
-        templateflow_home:
-          type: string
-          description: Path to the templateflow local home directory where files are located and/or downloaded.
-          default: "./templateflow"
-        templateflow_res:
-          type: integer
-          description: Template resolution to use or download.
-          default: null
-        templateflow_cohort:
-          type: string
-          description: Name/type of the cohort to use.
-          default: null
-        run_easyreg:
-          type: boolean
-          description: Use Easyreg any-to-any registration model.
-          default: false
-        run_synthmorph:
-          type: boolean
-          description: Use Synthmorph ML registration model.
-          default: false
 output:
   - ch_t1w_tpl:
       type: file

@@ -2,6 +2,7 @@
 process DENOISING_MPPCA {
     tag "$meta.id"
     label 'process_medium'
+    label 'denoising_mppca'
 
     container "mrtrix3/mrtrix3:3.0.5"
 

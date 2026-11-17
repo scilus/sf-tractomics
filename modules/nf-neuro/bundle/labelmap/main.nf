@@ -1,6 +1,7 @@
 process BUNDLE_LABELMAP {
     tag "$meta.id"
     label 'process_single'
+    label 'bundle_labelmap'
 
     container "scilus/scilpy:2.2.2_cpu"
 

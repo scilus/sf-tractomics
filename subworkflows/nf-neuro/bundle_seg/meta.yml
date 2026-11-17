@@ -32,7 +32,6 @@ keywords:
 components:
   - bundle/recognize
   - registration
-  - utils_options
 input:
   - ch_fa:
       type: file
@@ -74,24 +73,6 @@ input:
             description: Freesurfer license file.
       pattern: "*.txt"
       mandatory: false
-  - options:
-      type: map
-      description: Map of options for the bundle_seg subworkflow.
-      mandatory: false
-      entries:
-        run_synthmorph:
-          type: boolean
-          description: Use Synthmorph ML registration model instead of ANTs.
-          default: false
-        run_easyreg:
-          type: boolean
-          description: This option is not supported and will throw an error if set to 'true'.
-          default: false
-        atlas_directory:
-          type: string
-          description: Use an alternative atlas to the default BundleSeg one available on Zenodo (https://zenodo.org/records/10103446). The folder MUST follow the same organisation as archive `atlas.zip` hosted on Zenodo.
-          default: null
-
 output:
   - bundles:
       type: file

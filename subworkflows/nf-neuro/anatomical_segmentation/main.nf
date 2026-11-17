@@ -2,7 +2,6 @@
 include { SEGMENTATION_FASTSEG       } from '../../../modules/nf-neuro/segmentation/fastseg/main'
 include { SEGMENTATION_FREESURFERSEG } from '../../../modules/nf-neuro/segmentation/freesurferseg/main'
 include { SEGMENTATION_SYNTHSEG      } from '../../../modules/nf-neuro/segmentation/synthseg/main'
-include { UTILS_OPTIONS } from '../utils_options/main'
 
 
 workflow ANATOMICAL_SEGMENTATION {
@@ -15,16 +14,12 @@ workflow ANATOMICAL_SEGMENTATION {
         ch_freesurferseg    // channel: [ val(meta), [ aparc_aseg, wmparc ] ], optional
         ch_lesion           // channel: [ val(meta), [ lesion ] ], optional
         ch_fs_license       // channel: [ val[meta], [ fs_license ] ], optional
-        options             // Map of options [ options ]
 
     main:
-        // Merge options with defaults from meta.yml
-        UTILS_OPTIONS("${moduleDir}/meta.yml", options, true)
-        options = UTILS_OPTIONS.out.options.value
 
         ch_versions = channel.empty()
 
-        if ( options.run_synthseg ) {
+        if ( params.run_synthseg ) {
             // ** Freesurfer synthseg segmentation ** //
             SEGMENTATION_SYNTHSEG (
                 ch_image

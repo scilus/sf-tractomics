@@ -1,6 +1,7 @@
 process IMAGE_CONVERTDWI {
     tag "$meta.id"
     label 'process_single'
+    label 'image_convertdwi'
 
     container "mrtrix3/mrtrix3:3.0.5"
 

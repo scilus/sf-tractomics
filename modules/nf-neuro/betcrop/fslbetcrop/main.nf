@@ -2,6 +2,7 @@
 process BETCROP_FSLBETCROP {
     tag "$meta.id"
     label 'process_single'
+    label 'betcrop_fslbetcrop'
 
     container "scilus/scilus:2.2.2"
 

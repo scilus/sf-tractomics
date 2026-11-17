@@ -1,5 +1,6 @@
 process HARMONIZATION_STATS2COMBAT {
     label 'process_single'
+    label 'harmonization_stats2combat'
 
     container "scilus/scilpy:2.2.2_cpu"
 

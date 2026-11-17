@@ -1,6 +1,7 @@
 process QC_MULTIQC {
     tag "$meta.id"
     label 'process_single'
+    label 'qc_multiqc'
 
     conda "${moduleDir}/environment.yml"
     container "gagnonanthony/multiqc-neuroimaging:0.1.4"

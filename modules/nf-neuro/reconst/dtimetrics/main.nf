@@ -2,6 +2,7 @@
 process RECONST_DTIMETRICS {
     tag "$meta.id"
     label 'process_single'
+    label 'reconst_dtimetrics'
 
     container "scilus/scilus:2.2.2"
 

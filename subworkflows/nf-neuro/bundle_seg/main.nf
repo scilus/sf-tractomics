@@ -1,6 +1,5 @@
 include { BUNDLE_RECOGNIZE  } from '../../../modules/nf-neuro/bundle/recognize/main'
 include { REGISTRATION } from '../registration/main'
-include { UTILS_OPTIONS } from '../utils_options/main'
 
 def fetch_bundleseg_atlas(atlasUrl, configUrl, dest) {
 
@@ -48,23 +47,17 @@ workflow BUNDLE_SEG {
         ch_fa                   // channel: [ val(meta), [ fa ] ]
         ch_tractogram           // channel: [ val(meta), [ tractogram ] ]
         ch_freesurfer_license   // channel: [ val(meta), path(fs_license) ]
-        options                 // Map of options [ options ]
 
     main:
-        // Merge options with defaults from meta.yml
-        UTILS_OPTIONS("${moduleDir}/meta.yml", options, true)
-        options = UTILS_OPTIONS.out.options.value
-
-        if ( options.run_easyreg ) error "The BUNDLE_SEG workflow does not support the easyreg registration method."
 
         ch_versions = channel.empty()
         ch_mqc = channel.empty()
 
         // ** Setting up Atlas reference channels. ** //
-        if ( options.atlas_directory ) {
-            ch_atlas_anat = channel.fromPath("$options.atlas_directory/atlas/mni_masked.nii.gz", checkIfExists: true, relative: true)
-            ch_atlas_config = channel.fromPath("$options.atlas_directory/config/config_fss_1.json", checkIfExists: true, relative: true)
-            ch_atlas_average = channel.fromPath("$options.atlas_directory/atlas/atlas/", checkIfExists: true, relative: true)
+        if ( params.atlas_directory ) {
+            ch_atlas_anat = channel.fromPath("$params.atlas_directory/atlas/mni_masked.nii.gz", checkIfExists: true, relative: true)
+            ch_atlas_config = channel.fromPath("$params.atlas_directory/config/config_fss_1.json", checkIfExists: true, relative: true)
+            ch_atlas_average = channel.fromPath("$params.atlas_directory/atlas/atlas/", checkIfExists: true, relative: true)
         }
         else {
             if ( !file("$workflow.workDir/atlas/mni_masked.nii.gz").exists() ) {
@@ -93,11 +86,7 @@ workflow BUNDLE_SEG {
             channel.empty(),
             channel.empty(),
             channel.empty(),
-            ch_freesurfer_license,
-            [
-                "run_easyreg": options.run_easyreg,
-                "run_synthmorph": options.run_synthmorph,
-            ]
+            ch_freesurfer_license
         )
         ch_versions = ch_versions.mix(REGISTRATION.out.versions.first())
         ch_mqc = ch_mqc.mix(REGISTRATION.out.mqc)

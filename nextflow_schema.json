@@ -265,6 +265,10 @@
                     "description": "Use Q-Ball model for tractography instead of fODFs.",
                     "help_text": "Use Q-Ball model for tractography instead of fODFs.",
                     "default": false
+                },
+                "eddy_extra_args": {
+                    "type": "string",
+                    "description": "Extra arguments passed to eddy."
                 }
             }
         },
@@ -308,6 +312,11 @@
                     "description": "Path to the template for antsBrainExtraction. The folder must contain t1_template.nii.gz and t1_brain_probability_map.nii.gz. Defaults to the mni_152_sym_09c template directory delivered with the pipeline in the assets directory.",
                     "help_text": "Path to the template for antsBrainExtraction. The folder must contain t1_template.nii.gz and t1_brain_probability_map.nii.gz. Defaults to the mni_152_sym_09c template directory delivered with the pipeline in the assets directory.",
                     "format": "directory-path"
+                },
+                "run_synthseg": {
+                    "type": "boolean",
+                    "description": "Run SynthSeg for the tissue segmentation instead of FAST/FreeSurfer.",
+                    "default": false
                 }
             }
         },
@@ -916,6 +925,11 @@
                     "type": "string",
                     "description": "Path to the BundleSeg atlas directory.",
                     "help_text": "Path to the BundleSeg atlas directory. If not set, the default bundle_seg atlas will automatically downloaded."
+                },
+                "run_bundleparc": {
+                    "type": "boolean",
+                    "description": "Prepare the data for BundleParc (strides all images to '-1 2 3 4').",
+                    "default": false
                 }
             }
         },
@@ -1032,6 +1046,11 @@
                     "type": "number",
                     "description": "Freewater second regularization parameter.",
                     "default": 0.25
+                },
+                "noddi_silence_single_shell_warnings": {
+                    "type": "boolean",
+                    "description": "Silence the warnings raised when NODDI runs on single-shell data.",
+                    "default": false
                 }
             }
         },
@@ -1078,6 +1097,11 @@
                     "description": "If 'true', the IIT bundle masks will be thresholded to create binary masks before extracting the metrics.",
                     "help_text": "IIT bundle masks will be thresholded to create binary masks before extracting the metrics.",
                     "default": false
+                },
+                "atlas_iit_smooth_sigma": {
+                    "type": "number",
+                    "description": "Sigma of the gaussian smoothing applied to the IIT TDI bundle maps before thresholding.",
+                    "default": 1.0
                 }
             }
         },

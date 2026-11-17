@@ -2,6 +2,7 @@
 process RECONST_FODF {
     tag "$meta.id"
     label 'process_high'
+    label 'reconst_fodf'
 
     container 'scilus/scilpy:2.2.2_cpu'
 

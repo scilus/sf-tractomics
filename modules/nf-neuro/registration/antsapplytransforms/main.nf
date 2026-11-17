@@ -1,6 +1,7 @@
 process REGISTRATION_ANTSAPPLYTRANSFORMS {
     tag "$meta.id"
     label 'process_low'
+    label 'registration_antsapplytransforms'
 
     container "scilus/scilus:2.2.2"
 

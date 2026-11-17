@@ -1,6 +1,7 @@
 process REGISTRATION_SYNTHMORPH {
     tag "$meta.id"
     label 'process_high'
+    label 'registration_synthmorph'
 
     container "freesurfer/synthmorph:4"
     containerOptions((workflow.containerEngine == 'docker') ? '--entrypoint ""' : "")

@@ -2,6 +2,7 @@
 process TRACKING_PFTTRACKING {
     tag "$meta.id"
     label 'process_high_memory'
+    label 'tracking_pfttracking'
 
     container "scilus/scilpy:2.2.2_cpu"
 

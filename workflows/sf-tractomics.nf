@@ -113,30 +113,7 @@ workflow SF_TRACTOMICS {
         ch_bet_probability,
         ch_synthstrip_weights,
         ch_inputs.lesion
-            .filter{ it -> it[1] },
-        [
-            "preproc_dwi_run_denoising": params.run_dwi_denoising,
-            "preproc_dwi_run_degibbs": params.run_gibbs_correction,
-            "eddy_nan_threshold": params.eddy_nan_threshold,
-            "topup_eddy_run_topup": params.run_topup,
-            "topup_eddy_run_eddy": params.run_eddy,
-            "preproc_dwi_run_synthstrip": params.run_dwi_synthstrip,
-            "preproc_dwi_keep_dwi_with_skull": params.keep_dwi_with_skull,
-            "preproc_dwi_run_N4": params.run_dwi_N4,
-            "preproc_dwi_run_normalize": params.run_dwi_normalize,
-            "preproc_dwi_run_resampling": params.run_dwi_resampling,
-            "preproc_t1_run_denoising": params.run_t1_denoising,
-            "preproc_t1_run_N4": params.run_t1_N4,
-            "preproc_t1_run_resample": params.run_t1_resampling,
-            "preproc_t1_run_synthstrip": params.run_t1_synthstrip,
-            "preproc_t1_run_ants_bet": params.run_t1_ants_bet,
-            "preproc_t1_run_crop": params.run_t1_crop,
-            "frf_average_from_data": params.mean_frf,
-            "run_qball": params.run_qball,
-            "use_qball_for_tracking": params.use_qball_for_tracking,
-            "run_pft_tracking": params.run_pft_tracking,
-            "run_local_tracking": params.run_local_tracking
-        ]
+            .filter{ it -> it[1] }
     )
     ch_versions = ch_versions.mix(TRACTOFLOW.out.versions)
     ch_sub_multiqc_files = ch_sub_multiqc_files.mix(TRACTOFLOW.out.mqc)
@@ -188,12 +165,7 @@ workflow SF_TRACTOMICS {
         BUNDLE_SEG(
             TRACTOFLOW.out.dti_fa,
             ch_input_tracking_qc.map { meta, trk -> [meta, (trk instanceof List ? trk : [trk])] },
-            channel.empty(),
-            [
-                "run_easyreg": false, // BundleSeg does not support easyreg, so we set it to false to avoid confusion
-                "run_synthmorph": params.run_synthmorph,
-                "atlas_directory": params.atlas_directory
-            ]
+            channel.empty()
         )
 
         ch_versions = ch_versions.mix(BUNDLE_SEG.out.versions)
@@ -229,11 +201,6 @@ workflow SF_TRACTOMICS {
                 iso_diff: params.iso_diff ? channel.value(params.iso_diff) : channel.empty(),
                 perp_diff_min: params.perp_diff_min ? channel.value(params.perp_diff_min) : channel.empty(),
                 perp_diff_max: params.perp_diff_max ? channel.value(params.perp_diff_max) : channel.empty()
-            ],
-            [
-                run_noddi: params.run_noddi,
-                run_freewater: params.run_freewater,
-                silence_single_shell_warnings: params.noddi_silence_single_shell_warnings
             ]
         )
         ch_versions = ch_versions.mix(RECONST_FW_NODDI.out.versions)
@@ -261,13 +228,7 @@ workflow SF_TRACTOMICS {
     if ( params.run_atlas_roimetrics ) {
         ATLAS_ROIMETRICS(
             TRACTOFLOW.out.b0,
-            ch_input_metrics,
-            [
-                use_atlas_iit: params.use_atlas_iit,
-                use_binary_masks: params.use_binary_masks,
-                atlas_iit_b0: params.atlas_iit_b0,
-                atlas_iit_bundle_masks_dir: params.atlas_iit_bundle_masks_dir
-            ]
+            ch_input_metrics
         )
         ch_versions = ch_versions.mix(ATLAS_ROIMETRICS.out.versions)
 
@@ -353,15 +314,7 @@ workflow SF_TRACTOMICS {
             channel.empty(),
             channel.empty(),
             ch_bundle_seg,
-            channel.empty(),
-            [
-                template: params.template,
-                templateflow_home: params.templateflow_home,
-                templateflow_res: params.templateflow_resolution,
-                templateflow_cohort: params.templateflow_cohort,
-                run_easyreg: params.run_easyreg,
-                run_synthmorph: params.run_synthmorph
-            ]
+            channel.empty()
         )
         ch_versions = ch_versions.mix(OUTPUT_TEMPLATE_SPACE.out.versions)
     }

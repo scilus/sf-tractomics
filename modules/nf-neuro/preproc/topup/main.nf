@@ -1,6 +1,7 @@
 process PREPROC_TOPUP {
     tag "$meta.id"
     label 'process_medium'
+    label 'preproc_topup'
 
     container "scilus/scilus:2.2.2"
 

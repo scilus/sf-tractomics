@@ -393,23 +393,6 @@
                         "branch": "main",
                         "git_sha": "5b7fe27aa76119851726a0135d78be78d296c4ad",
                         "installed_by": ["subworkflows"]
-                    },
-                    "utils_options": {
-                        "branch": "main",
-                        "git_sha": "302587949514d7aad468928e3bd247d0342853d1",
-                        "installed_by": [
-                            "anatomical_segmentation",
-                            "atlas_iit",
-                            "atlas_roimetrics",
-                            "bundle_seg",
-                            "output_template_space",
-                            "preproc_dwi",
-                            "preproc_t1",
-                            "reconst_fw_noddi",
-                            "registration",
-                            "topup_eddy",
-                            "tractoflow"
-                        ]
                     }
                 }
             }

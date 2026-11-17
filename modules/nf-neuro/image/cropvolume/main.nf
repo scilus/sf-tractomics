@@ -2,6 +2,7 @@
 process IMAGE_CROPVOLUME {
     tag "$meta.id"
     label 'process_single'
+    label 'image_cropvolume'
 
     container "scilus/scilpy:2.2.2_cpu"
 

@@ -1,6 +1,7 @@
 process SEGMENTATION_FASTSEG {
     tag "$meta.id"
     label 'process_single'
+    label 'segmentation_fastseg'
 
     container 'scilus/scilus:2.2.2'
 

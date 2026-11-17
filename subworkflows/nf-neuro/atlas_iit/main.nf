@@ -1,7 +1,6 @@
 include { IMAGE_MATH as THR_BUNDLE_MASK } from '../../../modules/nf-neuro/image/math/main'
 include { IMAGE_MATH as SMOOTH_MASK } from '../../../modules/nf-neuro/image/math/main'
 include { IMAGE_MATH as THR_SMOOTHED_MASK } from '../../../modules/nf-neuro/image/math/main'
-include { UTILS_OPTIONS } from '../utils_options/main'
 
 def download_file(url, output_path) {
     HttpURLConnection connection = new URL(url).openConnection()
@@ -126,18 +125,11 @@ boolean allBundleFilesExist(Map thresholds, File dir) {
 }
 
 workflow ATLAS_IIT {
-    take:
-        options             // Map of options [ options ]
-
     main:
         ch_versions = channel.empty()
 
-        // Merge options with defaults from meta.yml
-        UTILS_OPTIONS("${moduleDir}/meta.yml", options, true)
-        options = UTILS_OPTIONS.out.options.value
-
-        def input_b0 = options.atlas_iit_b0 ?: null
-        def input_bundle_masks_dir = options.atlas_iit_bundle_masks_dir ?: null
+        def input_b0 = params.atlas_iit_b0 ?: null
+        def input_bundle_masks_dir = params.atlas_iit_bundle_masks_dir ?: null
 
         // Fetch Mean B0
         if ( input_b0 ) {
@@ -182,7 +174,7 @@ workflow ATLAS_IIT {
             // use the track density maps as "soft" bundle masks instead of binary
             // masks.
             //
-            if (options.threshold_bundles) {
+            if (params.use_binary_masks) {
                 // Pair all bundle maps with their respective thresholds
                 ch_bundle_maps_with_thresholds = ch_bundles.map { file ->
                     def file_base_name = file.baseName.replace(".nii.gz", "").replace(".nii", "")
@@ -198,7 +190,7 @@ workflow ATLAS_IIT {
 
                 // Smooth the mask with a gaussian kernel of sigma 1
                 ch_smooth_mask_input = THR_BUNDLE_MASK.out.image
-                    .map { meta, image -> [meta, image, options.smooth_sigma ?: 1.0] }
+                    .map { meta, image -> [meta, image, params.atlas_iit_smooth_sigma ?: 1.0] }
                 SMOOTH_MASK(ch_smooth_mask_input)
                 ch_versions = ch_versions.mix(SMOOTH_MASK.out.versions).first()
 

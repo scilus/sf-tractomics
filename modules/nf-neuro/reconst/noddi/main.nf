@@ -1,6 +1,7 @@
 process RECONST_NODDI {
     tag "$meta.id"
     label 'process_medium'
+    label 'reconst_noddi'
 
     container "scilus/scilpy:2.2.2_cpu"
 

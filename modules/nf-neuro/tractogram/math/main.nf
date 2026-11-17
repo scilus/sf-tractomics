@@ -1,6 +1,7 @@
 process TRACTOGRAM_MATH {
     tag "$meta.id"
     label 'process_single'
+    label 'tractogram_math'
 
     conda "${moduleDir}/environment.yml"
     container "scilus/scilpy:2.2.2_cpu"

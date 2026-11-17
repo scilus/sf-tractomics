@@ -1,6 +1,7 @@
 process TRACTOGRAM_REMOVEINVALID {
     tag "$meta.id"
     label 'process_single'
+    label 'tractogram_removeinvalid'
 
     container "scilus/scilpy:2.2.2_cpu"
 

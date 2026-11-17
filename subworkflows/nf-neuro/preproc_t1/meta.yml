@@ -59,7 +59,6 @@ components:
   - betcrop/antsbet
   - betcrop/synthstrip
   - image/cropvolume
-  - utils_options
 
 input:
   - ch_image:
@@ -168,35 +167,6 @@ input:
             description: SynthStrip model weights file.
       pattern: "*.pt"
       mandatory: false
-  - options:
-      type: map
-      description: Map of options for the preproc_t1 subworkflow.
-      mandatory: false
-      entries:
-        preproc_t1_run_denoising:
-          type: boolean
-          description: Denoise the anatomical image using the nlmeans method from scilpy.
-          default: true
-        preproc_t1_run_N4:
-          type: boolean
-          description: Perform N4 bias field correction using ANTs' N4BiasFieldCorrection.
-          default: true
-        preproc_t1_run_resampling:
-          type: boolean
-          description: Resample the anatomical image using the resample method from DIPY.
-          default: true
-        preproc_t1_run_synthstrip:
-          type: boolean
-          description: Use SynthStrip for brain extraction.
-          default: true
-        preproc_t1_run_ants_bet:
-          type: boolean
-          description: Use ANTs BET for brain extraction.
-          default: false
-        preproc_t1_run_crop:
-          type: boolean
-          description: Crop the image after brain extraction.
-          default: true
 output:
   - image_nlmeans:
       type: file

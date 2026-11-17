@@ -1,6 +1,7 @@
 process PREPROC_NORMALIZE {
     tag "$meta.id"
     label 'process_single'
+    label 'preproc_normalize'
 
     container "scilus/scilus:2.2.2"
 

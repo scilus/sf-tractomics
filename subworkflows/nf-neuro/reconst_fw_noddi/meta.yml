@@ -18,7 +18,6 @@ components:
   - reconst/diffusivitypriors
   - reconst/meandiffusivitypriors
   - reconst/dtimetrics
-  - utils_options
 input:
   - dwi_bval_bvec:
       type: file
@@ -95,28 +94,6 @@ input:
             tuple([ id:'subj2' ], 0.00065)
           )
         ]
-      mandatory: false
-  - options:
-      type: Map
-      description: |
-        Map of options for the subworkflow.
-      entries:
-        run_noddi:
-          type: boolean
-          description: If 'true', the NODDI reconstruction will be performed.
-          default: false
-        run_freewater:
-          type: boolean
-          description: If 'true', the FreeWater correction will be performed.
-          default: false
-        average_diff_priors:
-          type: boolean
-          description: If 'true', the diffusivity priors computed from the RECONST/DIFFUSIVITYPRIORS module will be averaged across all subjects. (Recommended)
-          default: false
-        silence_single_shell_warnings:
-          type: boolean
-          description: If 'true', the workflow will silence warnings about single-shell data (e.g. when filtering subjects for NODDI).
-          default: false
       mandatory: false
 output:
   - noddi_dir:
